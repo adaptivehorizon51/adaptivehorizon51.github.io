@@ -1,5 +1,5 @@
 /* ============================================================
-   1. ANIMASI CANVAS MATRIX RAIN EFFECT
+   1. ANIMASI CANVAS MATRIX RAIN (ADAPTIF DARK & LIGHT)
    ============================================================ */
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
@@ -27,10 +27,14 @@ initDrops();
 window.addEventListener('resize', initDrops);
 
 function drawMatrix() {
-  ctx.fillStyle = 'rgba(7, 10, 16, 0.12)';
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
+  // Latar transparan sesuai tema
+  ctx.fillStyle = isLight ? 'rgba(241, 245, 249, 0.16)' : 'rgba(7, 10, 16, 0.12)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = '#00f0ff';
+  // Karakter matrix kontras
+  ctx.fillStyle = isLight ? 'rgba(2, 132, 199, 0.4)' : '#00f0ff';
   ctx.font = fontSize + 'px monospace';
 
   for (let i = 0; i < drops.length; i++) {
@@ -68,10 +72,10 @@ window.addEventListener('DOMContentLoaded', () => {
     progress += Math.floor(Math.random() * 12) + 8;
     if (progress > 100) progress = 100;
 
-    preBar.style.width = progress + '%';
-    prePerc.textContent = (progress < 10 ? '0' : '') + progress + '%';
+    if (preBar) preBar.style.width = progress + '%';
+    if (prePerc) prePerc.textContent = (progress < 10 ? '0' : '') + progress + '%';
 
-    if (progress > logIdx * 25 && logIdx < logs.length) {
+    if (progress > logIdx * 25 && logIdx < logs.length && preLog) {
       preLog.textContent = logs[logIdx];
       logIdx++;
     }
@@ -79,8 +83,10 @@ window.addEventListener('DOMContentLoaded', () => {
     if (progress >= 100) {
       clearInterval(interval);
       setTimeout(() => {
-        preloader.style.opacity = '0';
-        preloader.style.visibility = 'hidden';
+        if (preloader) {
+          preloader.style.opacity = '0';
+          preloader.style.visibility = 'hidden';
+        }
       }, 400);
     }
   }, 90);
@@ -193,6 +199,7 @@ let isDeleting = false;
 const typewriterEl = document.getElementById("typewriter");
 
 function typeLoop() {
+  if (!typewriterEl) return;
   const current = phrases[phraseIdx];
   if (!isDeleting) {
     typewriterEl.textContent = current.substring(0, charIdx + 1);
@@ -239,9 +246,9 @@ const playBtn = document.getElementById("lcd-play-btn");
 const ledEl = document.getElementById("lcd-led");
 
 function renderLcd() {
-  row1El.textContent = lyricPresets[currentPreset].row1;
-  row2El.textContent = lyricPresets[currentPreset].row2;
-  modeEl.textContent = lyricPresets[currentPreset].mode;
+  if (row1El) row1El.textContent = lyricPresets[currentPreset].row1;
+  if (row2El) row2El.textContent = lyricPresets[currentPreset].row2;
+  if (modeEl) modeEl.textContent = lyricPresets[currentPreset].mode;
 }
 
 function nextLcd() {
@@ -257,36 +264,36 @@ function prevLcd() {
 function startAutoPlay() {
   if (!playInterval) {
     playInterval = setInterval(nextLcd, 2800);
-    ledEl.classList.add("active");
+    if (ledEl) ledEl.classList.add("active");
   }
 }
 
 function stopAutoPlay() {
   clearInterval(playInterval);
   playInterval = null;
-  ledEl.classList.remove("active");
+  if (ledEl) ledEl.classList.remove("active");
 }
 
-document.getElementById("lcd-next-btn").addEventListener("click", () => {
-  nextLcd();
-});
+const nextBtn = document.getElementById("lcd-next-btn");
+const prevBtn = document.getElementById("lcd-prev-btn");
 
-document.getElementById("lcd-prev-btn").addEventListener("click", () => {
-  prevLcd();
-});
+if (nextBtn) nextBtn.addEventListener("click", nextLcd);
+if (prevBtn) prevBtn.addEventListener("click", prevLcd);
 
-playBtn.addEventListener("click", () => {
-  isPlaying = !isPlaying;
-  if (isPlaying) {
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    playBtn.classList.add("active");
-    startAutoPlay();
-  } else {
-    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-    playBtn.classList.remove("active");
-    stopAutoPlay();
-  }
-});
+if (playBtn) {
+  playBtn.addEventListener("click", () => {
+    isPlaying = !isPlaying;
+    if (isPlaying) {
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      playBtn.classList.add("active");
+      startAutoPlay();
+    } else {
+      playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      playBtn.classList.remove("active");
+      stopAutoPlay();
+    }
+  });
+}
 startAutoPlay();
 
 /* ============================================================
@@ -336,39 +343,41 @@ WhatsApp : Saluran Adaptive Horizon 5.1`,
   }
 };
 
-terminalInput.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    const raw = this.value.trim();
-    const cmd = raw.toLowerCase();
+if (terminalInput && terminalBody) {
+  terminalInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      const raw = this.value.trim();
+      const cmd = raw.toLowerCase();
 
-    if (raw !== "") {
-      const inputLine = document.createElement("div");
-      inputLine.className = "terminal-line";
-      inputLine.innerHTML = `<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`;
-      terminalBody.appendChild(inputLine);
+      if (raw !== "") {
+        const inputLine = document.createElement("div");
+        inputLine.className = "terminal-line";
+        inputLine.innerHTML = `<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`;
+        terminalBody.appendChild(inputLine);
 
-      if (cliCommands[cmd]) {
-        const res = cliCommands[cmd]();
-        if (res !== null) {
-          const out = document.createElement("div");
-          out.className = "terminal-line";
-          out.style.color = "#94a3b8";
-          out.innerHTML = res.replace(/\n/g, "<br>");
-          terminalBody.appendChild(out);
+        if (cliCommands[cmd]) {
+          const res = cliCommands[cmd]();
+          if (res !== null) {
+            const out = document.createElement("div");
+            out.className = "terminal-line";
+            out.style.color = "#cbd5e1";
+            out.innerHTML = res.replace(/\n/g, "<br>");
+            terminalBody.appendChild(out);
+          }
+        } else {
+          const err = document.createElement("div");
+          err.className = "terminal-line";
+          err.style.color = "#ff5f56";
+          err.textContent = `bash: ${raw}: command not found. Ketik 'help' untuk panduan.`;
+          terminalBody.appendChild(err);
         }
-      } else {
-        const err = document.createElement("div");
-        err.className = "terminal-line";
-        err.style.color = "#ff5f56";
-        err.textContent = `bash: ${raw}: command not found. Ketik 'help' untuk panduan.`;
-        terminalBody.appendChild(err);
-      }
 
-      this.value = "";
-      terminalBody.scrollTop = terminalBody.scrollHeight;
+        this.value = "";
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+      }
     }
-  }
-});
+  });
+}
 
 function escapeHtml(text) {
   const d = document.createElement("div");
@@ -383,6 +392,7 @@ const shareBtn = document.getElementById("share-btn");
 const toast = document.getElementById("toast-container");
 
 function showToast(msg) {
+  if (!toast) return;
   toast.textContent = msg;
   toast.classList.add("show");
   setTimeout(() => {
@@ -390,34 +400,43 @@ function showToast(msg) {
   }, 2500);
 }
 
-shareBtn.addEventListener("click", async () => {
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: "Adaptive Horizon 5.1",
-        url: window.location.href
-      });
-    } catch (err) {}
-  } else {
-    navigator.clipboard.writeText(window.location.href);
-    showToast("Tautan berhasil disalin ke clipboard!");
-  }
-});
+if (shareBtn) {
+  shareBtn.addEventListener("click", async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Adaptive Horizon 5.1",
+          url: window.location.href
+        });
+      } catch (err) {}
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      showToast("Tautan berhasil disalin ke clipboard!");
+    }
+  });
+}
 
 /* ============================================================
-   9. THEME TOGGLE (DARK / LIGHT)
+   9. THEME TOGGLE (DARK / LIGHT DENGAN REFRESH CANVAS)
    ============================================================ */
 const themeToggle = document.getElementById("theme-toggle");
-themeToggle.addEventListener("click", () => {
-  const html = document.documentElement;
-  const current = html.getAttribute("data-theme");
-  const next = current === "light" ? "dark" : "light";
-  html.setAttribute("data-theme", next);
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const html = document.documentElement;
+    const current = html.getAttribute("data-theme");
+    const next = current === "light" ? "dark" : "light";
+    html.setAttribute("data-theme", next);
 
-  const icon = themeToggle.querySelector("i");
-  if (next === "light") {
-    icon.className = "fas fa-moon";
-  } else {
-    icon.className = "fas fa-sun";
-  }
-});
+    const icon = themeToggle.querySelector("i");
+    if (icon) {
+      if (next === "light") {
+        icon.className = "fas fa-moon";
+      } else {
+        icon.className = "fas fa-sun";
+      }
+    }
+
+    // Bersihkan canvas sekejap agar tidak ada jejak hitam tertinggal
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+}
