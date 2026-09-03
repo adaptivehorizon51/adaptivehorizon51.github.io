@@ -1,14 +1,8 @@
 'use strict';
 
 /**
- * Adaptive Horizon 5.1 | Master Interactive Script Engine
- * - 3D Tilt & Mouse Spotlight Tracking
- * - Multi-Role Dynamic Typewriter
- * - Real-Time Indonesia (WIB) Clock & Status
- * - Mini Interactive ESP32 BetterLyrics LCD 16x2 Simulator
- * - Toast Notification System & Link Sharing
- * - Multi-Language Controller (ID, EN, MS)
- * - Theme Switcher (Dark OLED / Light Frosted Glass)
+ * Adaptive Horizon 5.1 | Lightweight High-Performance Script
+ * Optimized to run at 0-1% GPU/CPU idle
  */
 
 const App = (() => {
@@ -17,13 +11,13 @@ const App = (() => {
         lang: localStorage.getItem('ah_lang') || 'id',
         theme: localStorage.getItem('ah_theme') || 'dark',
         lcdPlaying: true,
-        lcdIndex: 0
+        lcdIndex: 0,
+        isTabActive: true
     };
 
     const TRANSLATIONS = {
         id: {
             pre_sub: "Memuat Sistem...",
-            pre_ready: "Sistem Siap!",
             status_active: "Aktif Berkreasi",
             greeting_morning: "Selamat Pagi!",
             greeting_noon: "Selamat Siang!",
@@ -42,8 +36,7 @@ const App = (() => {
             support_heading: "Dukung Terus Karya Kreatif",
             support_para: "Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.",
             copyright: "© A.H 5.1 · Hak Cipta Dilindungi",
-            toast_shared: "Tautan portofolio berhasil disalin ke clipboard!",
-            toast_copied: "Berhasil disalin!",
+            toast_shared: "Tautan portofolio berhasil disalin!",
             roles: [
                 "Tech Enthusiast",
                 "IoT & Embedded Developer",
@@ -54,7 +47,6 @@ const App = (() => {
         },
         en: {
             pre_sub: "Initializing System...",
-            pre_ready: "System Ready!",
             status_active: "Active Creator",
             greeting_morning: "Good Morning!",
             greeting_noon: "Good Afternoon!",
@@ -74,7 +66,6 @@ const App = (() => {
             support_para: "Your support keeps hardware prototypes, firmware development, and open-source tech research moving forward.",
             copyright: "© A.H 5.1 · All Rights Reserved",
             toast_shared: "Portfolio link copied to clipboard!",
-            toast_copied: "Copied successfully!",
             roles: [
                 "Tech Enthusiast",
                 "IoT & Embedded Developer",
@@ -85,7 +76,6 @@ const App = (() => {
         },
         ms: {
             pre_sub: "Memuatkan Sistem...",
-            pre_ready: "Sistem Sedia!",
             status_active: "Aktif Berkarya",
             greeting_morning: "Selamat Pagi!",
             greeting_noon: "Selamat Tengahari!",
@@ -104,8 +94,7 @@ const App = (() => {
             support_heading: "Sokong Karya Kreatif",
             support_para: "Sokongan anda amat bermakna bagi membiayai komponen perkakasan, perisian tegar, dan penyelidikan projek sumber terbuka seterusnya.",
             copyright: "© A.H 5.1 · Hak Cipta Terpelihara",
-            toast_shared: "Pautan portfolio berjaya disalin ke papan klip!",
-            toast_copied: "Berjaya disalin!",
+            toast_shared: "Pautan portfolio berjaya disalin!",
             roles: [
                 "Peminat Teknologi",
                 "Pembangun IoT & Terbenam",
@@ -116,21 +105,17 @@ const App = (() => {
         }
     };
 
-    // Simulated Lyrics for ESP32 BetterLyrics Showcase
     const LCD_TRACKS = [
-        { title: "BetterLyrics v2.0", lyric: "♪ Syncing Wi-Fi..." },
-        { title: "Bohemian Rhapsody", lyric: "Mama, just killed.." },
-        { title: "Counting Stars", lyric: "♪ No more counting $" },
-        { title: "Viva La Vida", lyric: "I used to rule..." },
-        { title: "Adaptive Horizon", lyric: "★ Hardware Active ★" }
+        { title: "DJ BLYATMAN - KAMAZ", lyric: "High track speed, vodka no limit" },
+        { title: "OneRepublic - Counting", lyric: "♪ No more counting dollars, we'll be counting stars ♪" },
+        { title: "Queen - Bohemian", lyric: "Mama, just killed a man, put a gun against his head" },
+        { title: "Coldplay - Viva", lyric: "I used to rule the world, seas would rise when I gave the word" },
+        { title: "BetterLyrics ESP32", lyric: "★ Real-time Sync Active · 20 Modes ★" }
     ];
 
-    // DOM Cache
     const DOM = {
         html: document.documentElement,
-        body: document.body,
         preloader: document.getElementById('preloader'),
-        preSub: document.getElementById('pre-sub'),
         preLog: document.getElementById('pre-log'),
         greeting: document.getElementById('greeting-text'),
         themeToggle: document.getElementById('theme-toggle'),
@@ -140,7 +125,6 @@ const App = (() => {
         typewriter: document.getElementById('typewriter'),
         liveClock: document.getElementById('live-clock'),
         translatables: document.querySelectorAll('[data-i18n]'),
-        cursorGlow: document.getElementById('cursor-glow'),
         cards: document.querySelectorAll('.bento-card'),
         toastContainer: document.getElementById('toast-container'),
         lcdRow1: document.getElementById('lcd-row-1'),
@@ -151,66 +135,31 @@ const App = (() => {
         lcdModeBadge: document.getElementById('lcd-mode-badge')
     };
 
-    // --- Toast Notification Engine ---
-    const Toast = {
-        show(message, iconClass = 'fas fa-circle-check') {
-            if (!DOM.toastContainer) return;
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
-            DOM.toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('toast-out');
-                setTimeout(() => toast.remove(), 320);
-            }, 3000);
-        }
-    };
-
-    // --- Preloader Driver ---
+    // --- Fast Lightweight Preloader ---
     const Loader = {
         init() {
             const percentEl = document.querySelector('.pre-percentage');
             const progressBar = document.querySelector('.pre-progress-bar');
             let count = 0;
 
-            const logs = [
-                "Loading kernel modules...",
-                "Mounting virtual DOM...",
-                "Configuring ESP32 simulator...",
-                "Activating frosted glass shaders...",
-                "System online."
-            ];
-
-            const counterInterval = setInterval(() => {
-                count += Math.floor(Math.random() * 3) + 2;
+            const timer = setInterval(() => {
+                count += 5;
                 if (count > 100) count = 100;
-
-                if (percentEl) percentEl.textContent = count.toString().padStart(2, '0') + "%";
+                if (percentEl) percentEl.textContent = count + "%";
                 if (progressBar) progressBar.style.width = count + "%";
 
-                if (DOM.preLog) {
-                    const logIdx = Math.min(Math.floor((count / 100) * logs.length), logs.length - 1);
-                    DOM.preLog.textContent = logs[logIdx];
-                }
-
                 if (count >= 100) {
-                    clearInterval(counterInterval);
-                    setTimeout(() => this.dismiss(), 200);
+                    clearInterval(timer);
+                    if (DOM.preloader) {
+                        DOM.preloader.classList.add('preloader-hidden');
+                        setTimeout(() => DOM.preloader.remove(), 500);
+                    }
                 }
-            }, 25);
-        },
-        dismiss() {
-            if (DOM.preloader) {
-                DOM.preloader.classList.add('preloader-hidden');
-                setTimeout(() => {
-                    if (DOM.preloader) DOM.preloader.remove();
-                }, 700);
-            }
+            }, 18);
         }
     };
 
-    // --- Dynamic Typewriter Engine ---
+    // --- Optimized Typewriter Engine ---
     const Typewriter = {
         roles: [],
         roleIndex: 0,
@@ -225,15 +174,15 @@ const App = (() => {
 
         updateRoles() {
             const t = TRANSLATIONS[STATE.lang];
-            this.roles = (t && t.roles) ? t.roles : [
-                "Tech Enthusiast",
-                "IoT & Embedded Developer",
-                "ESP32 & Arduino Creator"
-            ];
+            this.roles = (t && t.roles) ? t.roles : ["Tech Enthusiast", "IoT & Embedded Developer"];
         },
 
         tick() {
-            if (!DOM.typewriter) return;
+            if (!STATE.isTabActive || !DOM.typewriter) {
+                this.timer = setTimeout(() => this.tick(), 500);
+                return;
+            }
+
             const currentRole = this.roles[this.roleIndex % this.roles.length];
 
             if (this.isDeleting) {
@@ -244,76 +193,61 @@ const App = (() => {
                 DOM.typewriter.textContent = currentRole.substring(0, this.charIndex);
             }
 
-            let typeSpeed = this.isDeleting ? 40 : 80;
+            let speed = this.isDeleting ? 35 : 70;
 
             if (!this.isDeleting && this.charIndex === currentRole.length) {
-                typeSpeed = 2200; // Pause at full word
+                speed = 2000;
                 this.isDeleting = true;
             } else if (this.isDeleting && this.charIndex === 0) {
                 this.isDeleting = false;
                 this.roleIndex++;
-                typeSpeed = 400; // Pause before typing new word
+                speed = 300;
             }
 
             clearTimeout(this.timer);
-            this.timer = setTimeout(() => this.tick(), typeSpeed);
+            this.timer = setTimeout(() => this.tick(), speed);
         }
     };
 
-    // --- Interactive Mouse Spotlight & 3D Tilt ---
-    const SpotlightAndTilt = {
+    // --- Lightweight Spotlight (Only when hovering, 0% CPU/GPU idle) ---
+    const Spotlight = {
         init() {
-            // Global cursor glow follower
-            window.addEventListener('pointermove', (e) => {
-                if (DOM.cursorGlow) {
-                    DOM.cursorGlow.style.left = `${e.clientX}px`;
-                    DOM.cursorGlow.style.top = `${e.clientY}px`;
-                }
-            });
+            if (window.matchMedia('(pointer: coarse)').matches) return; // Skip on mobile
 
-            // Card spotlight and subtle 3D tilt
-            DOM.cards.forEach((card) => {
+            DOM.cards.forEach(card => {
+                let rafId = null;
+
                 card.addEventListener('pointermove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
-
-                    // 3D Tilt calculation (subtle and high performance)
-                    if (window.innerWidth > 820) {
-                        const centerX = rect.width / 2;
-                        const centerY = rect.height / 2;
-                        const rotateX = ((y - centerY) / centerY) * -5;
-                        const rotateY = ((x - centerX) / centerX) * 5;
-                        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.015, 1.015, 1.015)`;
-                    }
-                });
-
-                card.addEventListener('pointerleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-                });
+                    if (rafId) return;
+                    rafId = requestAnimationFrame(() => {
+                        const rect = card.getBoundingClientRect();
+                        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                        rafId = null;
+                    });
+                }, { passive: true });
             });
         }
     };
 
     // --- Real-time Indonesia Time (WIB) Clock ---
     const LiveClock = {
+        timer: null,
         init() {
             this.update();
-            setInterval(() => this.update(), 1000);
+            this.timer = setInterval(() => {
+                if (STATE.isTabActive) this.update();
+            }, 1000);
         },
         update() {
             if (!DOM.liveClock) return;
             const now = new Date();
-            // WIB is UTC+7
             const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            const wibDate = new Date(utc + (3600000 * 7));
+            const wib = new Date(utc + (3600000 * 7));
 
-            const h = String(wibDate.getHours()).padStart(2, '0');
-            const m = String(wibDate.getMinutes()).padStart(2, '0');
-            const s = String(wibDate.getSeconds()).padStart(2, '0');
+            const h = String(wib.getHours()).padStart(2, '0');
+            const m = String(wib.getMinutes()).padStart(2, '0');
+            const s = String(wib.getSeconds()).padStart(2, '0');
             DOM.liveClock.textContent = `${h}:${m}:${s} WIB`;
         }
     };
@@ -344,6 +278,7 @@ const App = (() => {
             if (!STATE.lcdPlaying) return;
 
             this.timer = setInterval(() => {
+                if (!STATE.isTabActive) return;
                 const track = LCD_TRACKS[STATE.lcdIndex % LCD_TRACKS.length];
                 const fullText = track.lyric + "       ";
                 this.charOffset = (this.charOffset + 1) % fullText.length;
@@ -454,45 +389,42 @@ const App = (() => {
     const Share = {
         init() {
             if (!DOM.shareBtn) return;
-            DOM.shareBtn.addEventListener('click', async () => {
+            DOM.shareBtn.addEventListener('click', () => {
                 const url = window.location.href;
-                const shareData = {
-                    title: "Adaptive Horizon 5.1",
-                    text: "Check out the official portfolio of Adaptive Horizon 5.1",
-                    url: url
-                };
-
-                if (navigator.share) {
-                    try {
-                        await navigator.share(shareData);
-                    } catch (err) {
-                        // Dismissed share or error, fallback to clipboard
-                        this.copyToClipboard(url);
+                navigator.clipboard.writeText(url).then(() => {
+                    const msg = (TRANSLATIONS[STATE.lang] && TRANSLATIONS[STATE.lang].toast_shared)
+                        ? TRANSLATIONS[STATE.lang].toast_shared
+                        : "Link copied!";
+                    
+                    if (DOM.toastContainer) {
+                        const toast = document.createElement('div');
+                        toast.className = 'toast';
+                        toast.innerHTML = `<i class="fas fa-circle-check"></i><span>${msg}</span>`;
+                        DOM.toastContainer.appendChild(toast);
+                        setTimeout(() => toast.remove(), 2500);
                     }
-                } else {
-                    this.copyToClipboard(url);
-                }
+                });
             });
-        },
-        copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const msg = (TRANSLATIONS[STATE.lang] && TRANSLATIONS[STATE.lang].toast_shared)
-                    ? TRANSLATIONS[STATE.lang].toast_shared
-                    : "Link copied to clipboard!";
-                Toast.show(msg);
-            }).catch(() => {
-                Toast.show("URL: " + text, "fas fa-link");
+        }
+    };
+
+    // --- Background Tab Visibility Guard (Zero CPU/GPU when minimized) ---
+    const Visibility = {
+        init() {
+            document.addEventListener('visibilitychange', () => {
+                STATE.isTabActive = !document.hidden;
             });
         }
     };
 
     return {
         start() {
+            Visibility.init();
             Loader.init();
             Content.init();
             Theme.init();
             LiveClock.init();
-            SpotlightAndTilt.init();
+            Spotlight.init();
             Typewriter.init();
             LCDSimulator.init();
             Share.init();
