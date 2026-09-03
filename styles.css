@@ -26,6 +26,9 @@
   --terminal-input-bg: #060910;
   --terminal-text: #94a3b8;
 
+  --shield-bg: rgba(7, 11, 19, 0.78);
+  --shield-border: rgba(245, 158, 11, 0.4);
+
   --font-mono: 'Fira Code', monospace;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
   --font-lcd: 'VT323', monospace;
@@ -52,12 +55,14 @@
   --icon-box-bg: rgba(15, 23, 42, 0.05);
   --tw-icon-color: #0f172a;
 
-  /* Terminal tetap dark console agar sintaks CLI kontras & otentik */
   --terminal-bg: #0f172a;
   --terminal-bar-bg: #1e293b;
   --terminal-body-bg: #0f172a;
   --terminal-input-bg: #0a0f1d;
   --terminal-text: #cbd5e1;
+
+  --shield-bg: rgba(255, 255, 255, 0.85);
+  --shield-border: rgba(217, 119, 6, 0.45);
 }
 
 * {
@@ -439,7 +444,7 @@ body {
   50% { opacity: 0; }
 }
 
-/* Linux Terminal CLI Simulator */
+/* Terminal CLI */
 .terminal-card {
   padding: 0;
   overflow: hidden;
@@ -567,7 +572,7 @@ body {
 .info-val {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-title); /* Adaptif di mode terang & gelap */
+  color: var(--text-title);
 }
 
 .badge-sub {
@@ -687,7 +692,7 @@ body {
   color: var(--text-dim);
 }
 
-/* BetterLyrics Project Card */
+/* Project Cards */
 .project-header {
   display: flex;
   align-items: center;
@@ -709,12 +714,19 @@ body {
   flex-shrink: 0;
 }
 
+.project-icon-box.oled-icon {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+}
+
 .project-headline {
   flex: 1;
 }
 
 .project-headline h2 {
   color: var(--text-title);
+  font-size: 1.25rem;
 }
 
 .project-badge-row {
@@ -740,12 +752,21 @@ body {
   gap: 4px;
 }
 
+.project-status-tag.status-wip {
+  color: #f59e0b;
+}
+
 .pulse-dot {
   width: 5px;
   height: 5px;
   background: var(--accent-green);
   border-radius: 50%;
   animation: pulse 1.4s infinite;
+}
+
+.pulse-dot.orange {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
 }
 
 .project-desc {
@@ -782,7 +803,7 @@ body {
   width: 100%;
 }
 
-/* Interactive Mini LCD 16x2 Simulator */
+/* Single LCD Simulator */
 .lcd-hardware-showcase {
   background: #0f1724;
   border: 2px solid #1e293b;
@@ -802,9 +823,7 @@ body {
   margin-bottom: 10px;
 }
 
-.lcd-brand i {
-  color: #f59e0b;
-}
+.lcd-brand i { color: #f59e0b; }
 
 .lcd-indicator {
   display: flex;
@@ -893,6 +912,226 @@ body {
   border: 1px solid rgba(0, 255, 136, 0.2);
   padding: 5px 10px;
   border-radius: 6px;
+}
+
+/* ============================================================
+   UPCOMING PROJECT & SPOILER BLUR SHIELD
+   ============================================================ */
+.upcoming-card {
+  border-left: 3px solid #f59e0b;
+}
+
+.prototype-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.spoiler-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+/* Blur Filter: Konten Hardware Disamarkan */
+.blurred-content {
+  filter: blur(9px) saturate(0.65) brightness(0.6);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.4s ease;
+}
+
+/* Overlay Keamanan / Anti-Spoiler */
+.spoiler-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: var(--shield-bg);
+  backdrop-filter: blur(5px);
+  border: 1px dashed var(--shield-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.shield-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.shield-title {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f59e0b;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.shield-desc {
+  font-size: 0.84rem;
+  color: var(--text-dim);
+  max-width: 480px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.shield-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.shield-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Multi-Hardware Rack */
+.multi-hardware-rack {
+  background: #0b111c;
+  border: 2px solid #1e293b;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+}
+
+.rack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+}
+
+.rack-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00ff88;
+}
+
+.display-cluster-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 14px;
+}
+
+.hardware-module {
+  background: #070c14;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.module-bar {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.mod-addr {
+  background: rgba(0, 240, 255, 0.1);
+  color: #00f0ff;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.oled-screen-bezel {
+  background: #04060a;
+  border: 2px solid #131d2e;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.oled-screen {
+  background: #000a12;
+  border-radius: 4px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  color: #00f0ff;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.8);
+}
+
+.oled-top-meta, .oled-bot-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+}
+
+#oledVisualizer {
+  width: 100%;
+  height: 38px;
+  background: #01080e;
+  border-radius: 3px;
+  display: block;
+}
+
+.dual-lcd-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mini-lcd {
+  font-size: 1.35rem !important;
+  padding: 8px 12px !important;
+}
+
+.mini-lcd .lcd-row {
+  height: 22px !important;
+  line-height: 22px !important;
+}
+
+.rack-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+}
+
+.rack-mode-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #f59e0b;
+  margin-left: auto;
 }
 
 /* Support Card */
@@ -1020,6 +1259,12 @@ body {
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .display-cluster-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 680px) {
   .profile-card {
     flex-direction: column;
