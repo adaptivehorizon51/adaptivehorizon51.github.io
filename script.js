@@ -2,9 +2,10 @@
    1. ANIMASI CANVAS MATRIX RAIN (ADAPTIF DARK & LIGHT)
    ============================================================ */
 const canvas = document.getElementById('matrixCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
 function resizeCanvas() {
+  if (!canvas) return;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
@@ -13,10 +14,11 @@ window.addEventListener('resize', resizeCanvas);
 
 const matrixChars = '0101AH51ESP32C++I2CWIFI<>#&*$%';
 const fontSize = 14;
-let columns = Math.floor(canvas.width / fontSize);
+let columns = canvas ? Math.floor(canvas.width / fontSize) : 0;
 let drops = [];
 
 function initDrops() {
+  if (!canvas) return;
   columns = Math.floor(canvas.width / fontSize);
   drops = [];
   for (let i = 0; i < columns; i++) {
@@ -27,13 +29,12 @@ initDrops();
 window.addEventListener('resize', initDrops);
 
 function drawMatrix() {
+  if (!ctx || !canvas) return;
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
 
-  // Latar transparan sesuai tema
   ctx.fillStyle = isLight ? 'rgba(241, 245, 249, 0.16)' : 'rgba(7, 10, 16, 0.12)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Karakter matrix kontras
   ctx.fillStyle = isLight ? 'rgba(2, 132, 199, 0.4)' : '#00f0ff';
   ctx.font = fontSize + 'px monospace';
 
@@ -60,7 +61,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const logs = [
     "Checking ESP32 Core...",
-    "Mounting I2C Bus at 0x27...",
+    "Mounting I2C Bus at 0x27 & 0x26...",
     "Synchronizing NTP Clock...",
     "System Ready: Kernel Online."
   ];
@@ -87,7 +88,7 @@ window.addEventListener('DOMContentLoaded', () => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
         }
-      }, 400);
+      }, 350);
     }
   }, 90);
 });
@@ -129,6 +130,9 @@ const translations = {
     project_kicker: "PROJECT UNGGULAN",
     project_link: "Lihat Repository",
     project_description: "Perangkat lirik karaoke pintar untuk modul LCD 16×2 dengan dashboard kontrol Wi-Fi, 20 model sinkronisasi lirik, dan 20 preset animasi transisi mulus.",
+    upcoming_kicker: "PROYEK MENDATANG",
+    upcoming_title: "Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Evolusi arsitektur multi-layar dengan sinkronisasi simultan: 1 unit OLED 1.3″ I2C untuk spektrum visualizer & telemetri sistem, dipadukan 2 unit LCD 16×2 I2C untuk lirik aktif dan antrean baris berikutnya.",
     support_heading: "Dukung Terus Karya Kreatif",
     support_para: "Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.",
     copyright: "© A.H 5.1 · All Rights Reserved"
@@ -145,6 +149,9 @@ const translations = {
     project_kicker: "FEATURED PROJECT",
     project_link: "View Repository",
     project_description: "Smart karaoke lyric display for LCD 16×2 with Wi-Fi dashboard, 20 sync models, and 20 smooth transition presets.",
+    upcoming_kicker: "UPCOMING PROJECT",
+    upcoming_title: "Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Next-gen multi-display architecture with simultaneous I2C sync: 1x 1.3″ I2C OLED for audio spectrum and system telemetry, paired with 2x 16×2 I2C LCDs for active lyrics and upcoming queue lines.",
     support_heading: "Support Creative Innovations",
     support_para: "Your support fuels hardware components, embedded system development, and future open-source projects.",
     copyright: "© A.H 5.1 · All Rights Reserved"
@@ -161,6 +168,9 @@ const translations = {
     project_kicker: "PROJEK UTAMA",
     project_link: "Lihat Repositori",
     project_description: "Peranti lirik karaoke pintar untuk modul LCD 16×2 dengan papan pemuka Wi-Fi, 20 model penyelarasan lirik, dan 20 animasi lancar.",
+    upcoming_kicker: "PROJEK AKAN DATANG",
+    upcoming_title: "Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Evolusi seni bina berbilang paparan dengan penyelarasan I2C serentak: 1 unit OLED 1.3″ I2C untuk visualizer spektrum audio dan telemetri sistem, digandingkan 2 unit LCD 16×2 I2C untuk lirik aktif dan barisan seterusnya.",
     support_heading: "Sokong Terus Karya Kreatif",
     support_para: "Sokongan anda amat bermakna untuk komponen perkakasan, pembangunan sistem, dan penyelidikan projek sumber terbuka.",
     copyright: "© A.H 5.1 · Hak Cipta Terpelihara"
@@ -189,7 +199,7 @@ langButtons.forEach(btn => {
 const phrases = [
   "IoT & Embedded Developer",
   "Creator of BetterLyrics ESP32",
-  "C/C++ & Microcontroller Enthusiast",
+  "Tri-Screen I2C Workstation in Dev",
   "Adaptive Horizon 5.1 Core System"
 ];
 
@@ -224,7 +234,7 @@ function typeLoop() {
 typeLoop();
 
 /* ============================================================
-   6. INTERACTIVE MINI LCD 16x2 SIMULATOR
+   6. INTERACTIVE MINI LCD 16x2 SIMULATOR (PROYEK 1)
    ============================================================ */
 const lyricPresets = [
   { row1: "A.H 5.1 Karaoke", row2: "♪ BetterLyrics ♫", mode: "SYNC MODE 01/20" },
@@ -297,7 +307,37 @@ if (playBtn) {
 startAutoPlay();
 
 /* ============================================================
-   7. INTERACTIVE LINUX TERMINAL CLI SIMULATOR
+   7. OLED 1.3" AUDIO SPECTRUM (BERJALAN DI BALIK BLUR SPOILER)
+   ============================================================ */
+const oledCanvas = document.getElementById("oledVisualizer");
+if (oledCanvas) {
+  const oledCtx = oledCanvas.getContext("2d");
+  const numBars = 22;
+  const barWidth = 4;
+  const gap = 1.4;
+
+  function drawOledVisualizer() {
+    oledCtx.fillStyle = "#01080e";
+    oledCtx.fillRect(0, 0, oledCanvas.width, oledCanvas.height);
+
+    for (let i = 0; i < numBars; i++) {
+      const height = Math.floor(Math.sin(Date.now() / 220 + i * 0.45) * 10 + Math.random() * 10 + 10);
+      const x = i * (barWidth + gap) + 4;
+      const y = oledCanvas.height - height;
+
+      oledCtx.fillStyle = "#00f0ff";
+      oledCtx.fillRect(x, y, barWidth, height);
+
+      oledCtx.fillStyle = "#ffffff";
+      oledCtx.fillRect(x, Math.max(0, y - 3), barWidth, 1.5);
+    }
+    requestAnimationFrame(drawOledVisualizer);
+  }
+  drawOledVisualizer();
+}
+
+/* ============================================================
+   8. INTERACTIVE LINUX TERMINAL CLI SIMULATOR
    ============================================================ */
 const terminalInput = document.getElementById("terminal-input");
 const terminalBody = document.getElementById("terminal-body");
@@ -306,10 +346,11 @@ const cliCommands = {
   help: () => `Perintah Tersedia:
 - <span class="highlight-cmd">about</span>    : Profil Adaptive Horizon 5.1
 - <span class="highlight-cmd">esp32</span>    : Info proyek BetterLyrics ESP32
+- <span class="highlight-cmd">upcoming</span> : Bocoran status proyek Tri-Screen (OLED + Dual LCD)
 - <span class="highlight-cmd">skills</span>   : Tech stack hardware & software
 - <span class="highlight-cmd">socials</span>  : Daftar tautan medsos resmi
 - <span class="highlight-cmd">donate</span>   : Tautan donasi (Sociabuzz & Saweria)
-- <span class="highlight-cmd">time</span>     : Menampilkan waktu server saat ini
+- <span class="highlight-cmd">time</span>     : Menampilkan waktu WIB server
 - <span class="highlight-cmd">whoami</span>   : Menampilkan peran pengguna
 - <span class="highlight-cmd">clear</span>    : Bersihkan layar terminal`,
 
@@ -320,7 +361,12 @@ Pengembang IoT & Embedded System berbasis ESP32, C/C++, dan sistem otomatisasi w
 Perangkat lirik karaoke pintar modul LCD 16x2 dengan dashboard kontrol Wi-Fi dan 20 mode transisi lirik.
 Repo: https://github.com/adaptivehorizon51/A.H51-esp32`,
 
-  skills: () => `Hardware: ESP32, Arduino, I2C Display, Sensor Array
+  upcoming: () => `[CLASSIFIED R&D] Tri-Screen Multi-Display Hub:
+- 1x OLED 1.3" I2C (0x3C) : Spektrum audio visualizer dinamis
+- 2x LCD 16x2 I2C (0x27 & 0x26): Dual line live lyrics & queue
+- Status: Phase 2 Hardware Prototype. Detail preview disamarkan demi mencegah spoiler.`,
+
+  skills: () => `Hardware: ESP32, Arduino, I2C Bus, LCD 1602, OLED 1.3", Sensor Array
 Software: C/C++, Embedded C, JavaScript, Python, Git CLI, HTML5/CSS3`,
 
   socials: () => `Instagram: @rfa_glng_p._a.h_5.1
@@ -386,7 +432,7 @@ function escapeHtml(text) {
 }
 
 /* ============================================================
-   8. SHARE BUTTON & TOAST NOTIFICATION
+   9. SHARE BUTTON & TOAST NOTIFICATION
    ============================================================ */
 const shareBtn = document.getElementById("share-btn");
 const toast = document.getElementById("toast-container");
@@ -417,7 +463,7 @@ if (shareBtn) {
 }
 
 /* ============================================================
-   9. THEME TOGGLE (DARK / LIGHT DENGAN REFRESH CANVAS)
+   10. THEME TOGGLE (DARK / LIGHT DENGAN REFRESH CANVAS)
    ============================================================ */
 const themeToggle = document.getElementById("theme-toggle");
 if (themeToggle) {
@@ -436,7 +482,8 @@ if (themeToggle) {
       }
     }
 
-    // Bersihkan canvas sekejap agar tidak ada jejak hitam tertinggal
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (ctx && canvas) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
   });
 }
