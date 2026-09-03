@@ -104,7 +104,7 @@
             </div>
         </section>
 
-        <!-- 2. Interactive Linux Terminal CLI (Hacker / IT Console) -->
+        <!-- 2. Interactive Linux Terminal CLI Simulator -->
         <section class="bento-card terminal-card" id="terminal">
             <div class="terminal-bar">
                 <div class="terminal-dots">
@@ -285,7 +285,116 @@
             </a>
         </section>
 
-        <!-- 6. Support / Sponsorship Card -->
+        <!-- 6. UPCOMING PROJECT: Tri-Screen ESP32 (SPOILER BLUR PROTECTED) -->
+        <section class="bento-card upcoming-card">
+            <div class="project-header">
+                <div class="project-icon-box oled-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="project-headline">
+                    <div class="project-badge-row">
+                        <span class="project-kicker" data-i18n="upcoming_kicker">PROYEK MENDATANG</span>
+                        <span class="project-status-tag status-wip"><span class="pulse-dot orange"></span> In Development</span>
+                    </div>
+                    <h2 data-i18n="upcoming_title">Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C</h2>
+                </div>
+                <span class="prototype-badge"><i class="fas fa-lock"></i> Classified R&D</span>
+            </div>
+
+            <p class="project-desc" data-i18n="upcoming_description">
+                Evolusi arsitektur multi-layar dengan sinkronisasi simultan: 1 unit OLED 1.3″ I2C untuk spektrum visualizer & telemetri sistem, dipadukan 2 unit LCD 16×2 I2C untuk lirik aktif dan antrean baris berikutnya.
+            </p>
+
+            <!-- Spoiler Blurred Container -->
+            <div class="spoiler-wrapper">
+                <!-- Overlay Spoiler Lock (Tidak bocor) -->
+                <div class="spoiler-shield">
+                    <div class="shield-icon"><i class="fas fa-shield-halved"></i></div>
+                    <div class="shield-title">TOP SECRET // HARDWARE IN DEVELOPMENT</div>
+                    <p class="shield-desc">
+                        Konfigurasi sirkuit & preview tampilan disamarkan untuk mencegah spoiler fitur sebelum peluncuran resmi.
+                    </p>
+                    <div class="shield-tags">
+                        <span><i class="fas fa-microchip"></i> 1x OLED 1.3" I2C</span>
+                        <span><i class="fas fa-bars-staggered"></i> 2x LCD 16x2 I2C</span>
+                        <span><i class="fas fa-lock"></i> Protected Phase</span>
+                    </div>
+                </div>
+
+                <!-- Blurred Hardware Rack (Pendaran neon tetap bergerak di balik blur) -->
+                <div class="multi-hardware-rack blurred-content">
+                    <div class="rack-header">
+                        <span><i class="fas fa-microchip"></i> ESP32 MASTER I2C BUS [SDA: GPIO21 | SCL: GPIO22]</span>
+                        <span class="rack-status"><span class="pulse-dot green"></span> DUAL I2C SYNC LIVE</span>
+                    </div>
+
+                    <div class="display-cluster-grid">
+                        <!-- OLED 1.3" Screen -->
+                        <div class="hardware-module oled-module">
+                            <div class="module-bar">
+                                <span class="mod-title">OLED 1.3" I2C</span>
+                                <span class="mod-addr">0x3C</span>
+                            </div>
+                            <div class="oled-screen-bezel">
+                                <div class="oled-screen">
+                                    <div class="oled-top-meta">
+                                        <span id="oled-track">A.H 5.1 AUDIO FX</span>
+                                        <span>60 FPS</span>
+                                    </div>
+                                    <canvas id="oledVisualizer" width="128" height="34"></canvas>
+                                    <div class="oled-bot-meta">
+                                        <span>SYNC: BUFFER OK</span>
+                                        <span>44.1kHz</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dual LCD 16x2 -->
+                        <div class="dual-lcd-container">
+                            <div class="hardware-module lcd-half-module">
+                                <div class="module-bar">
+                                    <span class="mod-title">LCD-1 (ACTIVE LYRIC)</span>
+                                    <span class="mod-addr">0x27</span>
+                                </div>
+                                <div class="lcd-screen mini-lcd">
+                                    <div class="lcd-row" id="tri-lcd1-row1">▶ CLASSIFIED LYRIC</div>
+                                    <div class="lcd-row" id="tri-lcd1-row2">Confidential line...</div>
+                                </div>
+                            </div>
+
+                            <div class="hardware-module lcd-half-module">
+                                <div class="module-bar">
+                                    <span class="mod-title">LCD-2 (UPCOMING QUEUE)</span>
+                                    <span class="mod-addr">0x26</span>
+                                </div>
+                                <div class="lcd-screen mini-lcd">
+                                    <div class="lcd-row" id="tri-lcd2-row1">NEXT QUEUE:</div>
+                                    <div class="lcd-row" id="tri-lcd2-row2">Data Encrypted...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rack-toolbar">
+                        <button type="button" class="lcd-btn"><i class="fas fa-backward-step"></i></button>
+                        <button type="button" class="lcd-btn active"><i class="fas fa-pause"></i></button>
+                        <button type="button" class="lcd-btn"><i class="fas fa-forward-step"></i></button>
+                        <span class="rack-mode-badge" id="tri-mode-badge">MULTI-DISPLAY I2C LOCKED</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Highlights -->
+            <div class="project-tags">
+                <span class="tag-pill"><i class="fas fa-tv"></i> OLED 1.3" 128×64 (SH1106)</span>
+                <span class="tag-pill"><i class="fas fa-bars-staggered"></i> 2x LCD 1602 HD44780</span>
+                <span class="tag-pill"><i class="fas fa-network-wired"></i> PCF8574 I2C Expander</span>
+                <span class="tag-pill"><i class="fas fa-bolt"></i> FreeRTOS Dual-Task</span>
+            </div>
+        </section>
+
+        <!-- 7. Support / Sponsorship Card -->
         <section class="bento-card support-card">
             <div class="support-content">
                 <div class="support-icon-halo">
