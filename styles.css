@@ -1,5 +1,5 @@
 :root {
-  /* DARK THEME (DEFAULT) */
+  /* DARK THEME (DEFAULT CYBER TECH) */
   --bg-color: #070a10;
   --nav-bg: rgba(7, 10, 16, 0.85);
   --card-bg: rgba(13, 20, 32, 0.82);
@@ -26,8 +26,8 @@
   --terminal-input-bg: #060910;
   --terminal-text: #94a3b8;
 
-  --shield-bg: rgba(7, 11, 19, 0.78);
-  --shield-border: rgba(245, 158, 11, 0.4);
+  --shield-bg: rgba(7, 11, 19, 0.82);
+  --shield-border: rgba(245, 158, 11, 0.45);
 
   --font-mono: 'Fira Code', monospace;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -61,8 +61,23 @@
   --terminal-input-bg: #0a0f1d;
   --terminal-text: #cbd5e1;
 
-  --shield-bg: rgba(255, 255, 255, 0.85);
-  --shield-border: rgba(217, 119, 6, 0.45);
+  --shield-bg: rgba(255, 255, 255, 0.88);
+  --shield-border: rgba(217, 119, 6, 0.5);
+}
+
+/* Custom Cyberpunk Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
 }
 
 * {
@@ -117,7 +132,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .pre-container {
@@ -205,6 +220,7 @@ body {
   z-index: 100;
   background: var(--nav-bg);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-color);
   padding: 12px 20px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -269,7 +285,7 @@ body {
   cursor: pointer;
   font-family: var(--font-mono);
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .lang-btn.active, .lang-btn:hover {
@@ -290,7 +306,7 @@ body {
   justify-content: center;
   cursor: pointer;
   font-size: 0.88rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .icon-btn:hover {
@@ -313,6 +329,7 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
   padding: 26px;
   box-shadow: var(--card-shadow);
@@ -342,6 +359,7 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  background: #ffffff;
   border: 2px solid var(--accent-cyan);
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
 }
@@ -451,6 +469,7 @@ body {
   font-family: var(--font-mono);
   background: var(--terminal-bg) !important;
   border: 1px solid var(--border-color);
+  cursor: text;
 }
 
 .terminal-bar {
@@ -788,7 +807,7 @@ body {
   border-radius: 8px;
   font-size: 0.8rem;
   font-family: var(--font-mono);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .project-link:hover {
@@ -882,7 +901,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .lcd-btn:hover, .lcd-btn.active {
@@ -915,10 +934,61 @@ body {
 }
 
 /* ============================================================
-   UPCOMING PROJECT & SPOILER BLUR SHIELD
+   UPCOMING PROJECT & ESP32 ARCHITECTURE
    ============================================================ */
 .upcoming-card {
   border-left: 3px solid #f59e0b;
+}
+
+.esp32-architecture-box {
+  background: var(--card-inner-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.arch-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #f59e0b;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.arch-item {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.arch-core {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  background: rgba(0, 240, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.arch-desc {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.45;
 }
 
 .prototype-badge {
@@ -939,7 +1009,7 @@ body {
   margin-bottom: 18px;
 }
 
-/* Blur Filter: Konten Hardware Disamarkan */
+/* Blur Filter */
 .blurred-content {
   filter: blur(9px) saturate(0.65) brightness(0.6);
   pointer-events: none;
@@ -947,13 +1017,20 @@ body {
   transition: filter 0.4s ease;
 }
 
-/* Overlay Keamanan / Anti-Spoiler */
+.blurred-content.unlocked {
+  filter: none;
+  pointer-events: auto;
+  user-select: auto;
+}
+
+/* Overlay Spoiler Shield */
 .spoiler-shield {
   position: absolute;
   inset: 0;
   z-index: 10;
   background: var(--shield-bg);
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border: 1px dashed var(--shield-border);
   border-radius: 12px;
   display: flex;
@@ -962,6 +1039,13 @@ body {
   justify-content: center;
   text-align: center;
   padding: 24px;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.spoiler-shield.hidden-shield {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .shield-icon {
@@ -993,6 +1077,29 @@ body {
   max-width: 480px;
   line-height: 1.5;
   margin-bottom: 14px;
+}
+
+.decrypt-trigger-btn {
+  background: #f59e0b;
+  color: #070a10;
+  border: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.decrypt-trigger-btn:hover {
+  background: #fbbf24;
+  transform: translateY(-2px);
 }
 
 .shield-tags {
@@ -1183,7 +1290,7 @@ body {
   text-decoration: none;
   font-weight: 600;
   font-size: 0.88rem;
-  transition: all 0.25s;
+  transition: all 0.25s ease;
 }
 
 .sociabuzz-btn {
@@ -1232,7 +1339,7 @@ body {
   opacity: 0.6;
 }
 
-/* Toast */
+/* Toast Notification */
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -1258,9 +1365,12 @@ body {
   transform: translateY(0);
 }
 
-/* Responsive */
+/* Responsive Media Queries */
 @media (max-width: 768px) {
   .display-cluster-grid {
+    grid-template-columns: 1fr;
+  }
+  .arch-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -1281,5 +1391,9 @@ body {
   }
   .social-grid {
     grid-template-columns: 1fr;
+  }
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }
