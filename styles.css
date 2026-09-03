@@ -934,61 +934,10 @@ body {
 }
 
 /* ============================================================
-   UPCOMING PROJECT & ESP32 ARCHITECTURE
+   UPCOMING PROJECT (MISTERIUS & RAPI TANPA BOCORAN)
    ============================================================ */
 .upcoming-card {
   border-left: 3px solid #f59e0b;
-}
-
-.esp32-architecture-box {
-  background: var(--card-inner-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 18px;
-}
-
-.arch-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: #f59e0b;
-  margin-bottom: 10px;
-  letter-spacing: 0.5px;
-}
-
-.arch-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.arch-item {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 10px 12px;
-  border-radius: 8px;
-}
-
-.arch-core {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
-  background: rgba(0, 240, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-bottom: 6px;
-}
-
-.arch-desc {
-  font-size: 0.78rem;
-  color: var(--text-dim);
-  line-height: 1.45;
 }
 
 .prototype-badge {
@@ -1368,9 +1317,6 @@ body {
 /* Responsive Media Queries */
 @media (max-width: 768px) {
   .display-cluster-grid {
-    grid-template-columns: 1fr;
-  }
-  .arch-grid {
     grid-template-columns: 1fr;
   }
 }
