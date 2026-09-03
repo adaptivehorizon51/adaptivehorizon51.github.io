@@ -1,5 +1,5 @@
 /* ============================================================
-   1. ANIMASI CANVAS MATRIX / DIGITAL RAIN EFFECT
+   1. ANIMASI CANVAS MATRIX RAIN EFFECT
    ============================================================ */
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
@@ -11,7 +11,7 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*+-/<>~';
+const matrixChars = '0101AH51ESP32C++I2CWIFI<>#&*$%';
 const fontSize = 14;
 let columns = Math.floor(canvas.width / fontSize);
 let drops = [];
@@ -27,14 +27,14 @@ initDrops();
 window.addEventListener('resize', initDrops);
 
 function drawMatrix() {
-  ctx.fillStyle = 'rgba(8, 11, 17, 0.12)';
+  ctx.fillStyle = 'rgba(7, 10, 16, 0.12)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = '#00f0ff';
   ctx.font = fontSize + 'px monospace';
 
   for (let i = 0; i < drops.length; i++) {
-    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+    const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
     if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
@@ -46,85 +46,289 @@ function drawMatrix() {
 setInterval(drawMatrix, 45);
 
 /* ============================================================
-   2. TYPEWRITER EFFECT UNTUK SUBTITLE
+   2. PRELOADER ANIMATION
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  const preloader = document.getElementById('preloader');
+  const preBar = document.getElementById('pre-bar');
+  const prePerc = document.getElementById('pre-perc');
+  const preLog = document.getElementById('pre-log');
+
+  const logs = [
+    "Checking ESP32 Core...",
+    "Mounting I2C Bus at 0x27...",
+    "Synchronizing NTP Clock...",
+    "System Ready: Kernel Online."
+  ];
+
+  let progress = 0;
+  let logIdx = 0;
+
+  const interval = setInterval(() => {
+    progress += Math.floor(Math.random() * 12) + 8;
+    if (progress > 100) progress = 100;
+
+    preBar.style.width = progress + '%';
+    prePerc.textContent = (progress < 10 ? '0' : '') + progress + '%';
+
+    if (progress > logIdx * 25 && logIdx < logs.length) {
+      preLog.textContent = logs[logIdx];
+      logIdx++;
+    }
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+      }, 400);
+    }
+  }, 90);
+});
+
+/* ============================================================
+   3. JAM REAL-TIME WIB (INDONESIA)
+   ============================================================ */
+function updateLiveClock() {
+  const clockEl = document.getElementById('live-clock');
+  if (!clockEl) return;
+
+  const now = new Date();
+  const options = {
+    timeZone: 'Asia/Jakarta',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  };
+  const timeString = new Intl.DateTimeFormat('id-ID', options).format(now);
+  clockEl.textContent = `${timeString.replace(/\./g, ':')} WIB`;
+}
+setInterval(updateLiveClock, 1000);
+updateLiveClock();
+
+/* ============================================================
+   4. MULTI-LANGUAGE TRANSLATION (ID, EN, MS)
+   ============================================================ */
+const translations = {
+  id: {
+    status_active: "Aktif Berkreasi",
+    brand_core: "BRAND CORE",
+    local_time: "WAKTU LOKAL (INDONESIA)",
+    base_on: "BASE ON",
+    established: "ESTABLISHED",
+    social_title: "Hubungkan & Ikuti",
+    social_badge: "Official Links",
+    whatsapp_channel: "Saluran WhatsApp",
+    project_kicker: "PROJECT UNGGULAN",
+    project_link: "Lihat Repository",
+    project_description: "Perangkat lirik karaoke pintar untuk modul LCD 16×2 dengan dashboard kontrol Wi-Fi, 20 model sinkronisasi lirik, dan 20 preset animasi transisi mulus.",
+    support_heading: "Dukung Terus Karya Kreatif",
+    support_para: "Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.",
+    copyright: "© A.H 5.1 · All Rights Reserved"
+  },
+  en: {
+    status_active: "Actively Creating",
+    brand_core: "BRAND CORE",
+    local_time: "LOCAL TIME (INDONESIA)",
+    base_on: "BASE ON",
+    established: "ESTABLISHED",
+    social_title: "Connect & Follow",
+    social_badge: "Official Links",
+    whatsapp_channel: "WhatsApp Channel",
+    project_kicker: "FEATURED PROJECT",
+    project_link: "View Repository",
+    project_description: "Smart karaoke lyric display for LCD 16×2 with Wi-Fi dashboard, 20 sync models, and 20 smooth transition presets.",
+    support_heading: "Support Creative Innovations",
+    support_para: "Your support fuels hardware components, embedded system development, and future open-source projects.",
+    copyright: "© A.H 5.1 · All Rights Reserved"
+  },
+  ms: {
+    status_active: "Aktif Berkarya",
+    brand_core: "TERAS JENAMA",
+    local_time: "WAKTU TEMPATAN (INDONESIA)",
+    base_on: "PANGKALAN",
+    established: "DITUBUHKAN",
+    social_title: "Sambung & Ikuti",
+    social_badge: "Pautan Rasmi",
+    whatsapp_channel: "Saluran WhatsApp",
+    project_kicker: "PROJEK UTAMA",
+    project_link: "Lihat Repositori",
+    project_description: "Peranti lirik karaoke pintar untuk modul LCD 16×2 dengan papan pemuka Wi-Fi, 20 model penyelarasan lirik, dan 20 animasi lancar.",
+    support_heading: "Sokong Terus Karya Kreatif",
+    support_para: "Sokongan anda amat bermakna untuk komponen perkakasan, pembangunan sistem, dan penyelidikan projek sumber terbuka.",
+    copyright: "© A.H 5.1 · Hak Cipta Terpelihara"
+  }
+};
+
+const langButtons = document.querySelectorAll('.lang-btn');
+langButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    langButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const lang = btn.dataset.lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+  });
+});
+
+/* ============================================================
+   5. TYPEWRITER SUBTITLE EFFECT
    ============================================================ */
 const phrases = [
-  "Cybersecurity Enthusiast & Tech Explorer",
-  "Fullstack Web & Systems Developer",
-  "Automating the Future with Code",
-  "Secret Code Core Initialized..."
+  "IoT & Embedded Developer",
+  "Creator of BetterLyrics ESP32",
+  "C/C++ & Microcontroller Enthusiast",
+  "Adaptive Horizon 5.1 Core System"
 ];
 
-let phraseIndex = 0;
-let charIndex = 0;
+let phraseIdx = 0;
+let charIdx = 0;
 let isDeleting = false;
-const typedElement = document.getElementById("typed-text");
+const typewriterEl = document.getElementById("typewriter");
 
 function typeLoop() {
-  const currentPhrase = phrases[phraseIndex];
-
+  const current = phrases[phraseIdx];
   if (!isDeleting) {
-    typedElement.textContent = currentPhrase.substring(0, charIndex + 1);
-    charIndex++;
-
-    if (charIndex === currentPhrase.length) {
+    typewriterEl.textContent = current.substring(0, charIdx + 1);
+    charIdx++;
+    if (charIdx === current.length) {
       isDeleting = true;
       setTimeout(typeLoop, 2000);
       return;
     }
   } else {
-    typedElement.textContent = currentPhrase.substring(0, charIndex - 1);
-    charIndex--;
-
-    if (charIndex === 0) {
+    typewriterEl.textContent = current.substring(0, charIdx - 1);
+    charIdx--;
+    if (charIdx === 0) {
       isDeleting = false;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      setTimeout(typeLoop, 500);
+      phraseIdx = (phraseIdx + 1) % phrases.length;
+      setTimeout(typeLoop, 400);
       return;
     }
   }
-
-  const speed = isDeleting ? 40 : 80;
-  setTimeout(typeLoop, speed);
+  setTimeout(typeLoop, isDeleting ? 40 : 80);
 }
-document.addEventListener("DOMContentLoaded", typeLoop);
+typeLoop();
 
 /* ============================================================
-   3. INTERACTIVE LINUX TERMINAL CLI SIMULATOR
+   6. INTERACTIVE MINI LCD 16x2 SIMULATOR
+   ============================================================ */
+const lyricPresets = [
+  { row1: "A.H 5.1 Karaoke", row2: "♪ BetterLyrics ♫", mode: "SYNC MODE 01/20" },
+  { row1: "[ESP32 System]", row2: "WiFi: Connected", mode: "I2C BUS 0x27" },
+  { row1: "Now Playing:", row2: "Radiohead - Creep", mode: "SYNC MODE 07/20" },
+  { row1: "I'm a creep...", row2: "I'm a weirdo...", mode: "SYNC MODE 07/20" },
+  { row1: "What the hell am", row2: "I doing here?...", mode: "SYNC MODE 07/20" },
+  { row1: "Status: OK", row2: "Latency: 12ms", mode: "HARDWARE LIVE" }
+];
+
+let currentPreset = 0;
+let isPlaying = true;
+let playInterval = null;
+
+const row1El = document.getElementById("lcd-row-1");
+const row2El = document.getElementById("lcd-row-2");
+const modeEl = document.getElementById("lcd-mode-badge");
+const playBtn = document.getElementById("lcd-play-btn");
+const ledEl = document.getElementById("lcd-led");
+
+function renderLcd() {
+  row1El.textContent = lyricPresets[currentPreset].row1;
+  row2El.textContent = lyricPresets[currentPreset].row2;
+  modeEl.textContent = lyricPresets[currentPreset].mode;
+}
+
+function nextLcd() {
+  currentPreset = (currentPreset + 1) % lyricPresets.length;
+  renderLcd();
+}
+
+function prevLcd() {
+  currentPreset = (currentPreset - 1 + lyricPresets.length) % lyricPresets.length;
+  renderLcd();
+}
+
+function startAutoPlay() {
+  if (!playInterval) {
+    playInterval = setInterval(nextLcd, 2800);
+    ledEl.classList.add("active");
+  }
+}
+
+function stopAutoPlay() {
+  clearInterval(playInterval);
+  playInterval = null;
+  ledEl.classList.remove("active");
+}
+
+document.getElementById("lcd-next-btn").addEventListener("click", () => {
+  nextLcd();
+});
+
+document.getElementById("lcd-prev-btn").addEventListener("click", () => {
+  prevLcd();
+});
+
+playBtn.addEventListener("click", () => {
+  isPlaying = !isPlaying;
+  if (isPlaying) {
+    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    playBtn.classList.add("active");
+    startAutoPlay();
+  } else {
+    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    playBtn.classList.remove("active");
+    stopAutoPlay();
+  }
+});
+startAutoPlay();
+
+/* ============================================================
+   7. INTERACTIVE LINUX TERMINAL CLI SIMULATOR
    ============================================================ */
 const terminalInput = document.getElementById("terminal-input");
 const terminalBody = document.getElementById("terminal-body");
 
-function focusTerminal() {
-  terminalInput.focus();
-}
+const cliCommands = {
+  help: () => `Perintah Tersedia:
+- <span class="highlight-cmd">about</span>    : Profil Adaptive Horizon 5.1
+- <span class="highlight-cmd">esp32</span>    : Info proyek BetterLyrics ESP32
+- <span class="highlight-cmd">skills</span>   : Tech stack hardware & software
+- <span class="highlight-cmd">socials</span>  : Daftar tautan medsos resmi
+- <span class="highlight-cmd">donate</span>   : Tautan donasi (Sociabuzz & Saweria)
+- <span class="highlight-cmd">time</span>     : Menampilkan waktu server saat ini
+- <span class="highlight-cmd">whoami</span>   : Menampilkan peran pengguna
+- <span class="highlight-cmd">clear</span>    : Bersihkan layar terminal`,
 
-const commands = {
-  help: () => `Perintah yang tersedia:
-- <span class="highlight-cmd">about</span>    : Informasi profil Adaptive Horizon
-- <span class="highlight-cmd">skills</span>   : Daftar keahlian teknis & tools
-- <span class="highlight-cmd">projects</span> : Informasi proyek yang sedang dikembangkan
-- <span class="highlight-cmd">whoami</span>   : Menampilkan identitas pengguna saat ini
-- <span class="highlight-cmd">date</span>     : Menampilkan waktu server saat ini
-- <span class="highlight-cmd">clear</span>    : Membersihkan layar terminal`,
+  about: () => `Adaptive Horizon 5.1 (A.H 5.1):
+Pengembang IoT & Embedded System berbasis ESP32, C/C++, dan sistem otomatisasi web. Berbasis di Indonesia sejak 2020.`,
 
-  about: () => `Adaptive Horizon:
-Spesialis dalam eksplorasi teknologi, sistem keamanan informasi,
-serta pengembangan aplikasi web modern yang adaptif dan terstruktur.`,
+  esp32: () => `BetterLyrics ESP32:
+Perangkat lirik karaoke pintar modul LCD 16x2 dengan dashboard kontrol Wi-Fi dan 20 mode transisi lirik.
+Repo: https://github.com/adaptivehorizon51/A.H51-esp32`,
 
-  skills: () => `Daftar Keahlian:
-[+] OS       : Linux (Arch, Debian, Ubuntu)
-[+] Dev      : Python, JavaScript, HTML5, CSS3, Bash
-[+] Security : Network Analysis, Penetration Testing Basics
-[+] Tools    : Git, Docker, VS Code, Terminal CLI`,
+  skills: () => `Hardware: ESP32, Arduino, I2C Display, Sensor Array
+Software: C/C++, Embedded C, JavaScript, Python, Git CLI, HTML5/CSS3`,
 
-  projects: () => `Proyek Terdaftar:
-1. adaptivehorizon51.github.io [Live Portfolio]
-2. Secret Code Engine [Research Project]`,
+  socials: () => `Instagram: @rfa_glng_p._a.h_5.1
+YouTube  : @A.H_5.1
+TikTok   : @intel_uhd_graphics
+Twitter  : @absurd_humor_51
+WhatsApp : Saluran Adaptive Horizon 5.1`,
 
-  whoami: () => `guest@adaptivehorizon-system [Privilege: Read-Only]`,
+  donate: () => `Dukung karya kreatif hardware A.H 5.1:
+- Sociabuzz: https://sociabuzz.com/ah51
+- Saweria  : https://saweria.co/Absurdhumor51`,
 
-  date: () => new Date().toUTCString(),
+  time: () => new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + " WIB",
+
+  whoami: () => `guest@adaptivehorizon-system [Auth: Level 1 Read-Only]`,
 
   clear: () => {
     terminalBody.innerHTML = '';
@@ -134,32 +338,30 @@ serta pengembangan aplikasi web modern yang adaptif dan terstruktur.`,
 
 terminalInput.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
-    const rawInput = this.value.trim();
-    const cmd = rawInput.toLowerCase();
+    const raw = this.value.trim();
+    const cmd = raw.toLowerCase();
 
-    if (rawInput !== "") {
-      // Tampilkan prompt input yang baru dimasukkan
+    if (raw !== "") {
       const inputLine = document.createElement("div");
       inputLine.className = "terminal-line";
-      inputLine.innerHTML = `<span class="terminal-prompt">adaptive@horizon:~$</span> <span>${escapeHtml(rawInput)}</span>`;
+      inputLine.innerHTML = `<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`;
       terminalBody.appendChild(inputLine);
 
-      // Eksekusi Perintah
-      if (commands[cmd]) {
-        const outputText = commands[cmd]();
-        if (outputText !== null) {
-          const outputLine = document.createElement("div");
-          outputLine.className = "terminal-line";
-          outputLine.style.color = "#94a3b8";
-          outputLine.innerHTML = outputText.replace(/\n/g, "<br>");
-          terminalBody.appendChild(outputLine);
+      if (cliCommands[cmd]) {
+        const res = cliCommands[cmd]();
+        if (res !== null) {
+          const out = document.createElement("div");
+          out.className = "terminal-line";
+          out.style.color = "#94a3b8";
+          out.innerHTML = res.replace(/\n/g, "<br>");
+          terminalBody.appendChild(out);
         }
       } else {
-        const errorLine = document.createElement("div");
-        errorLine.className = "terminal-line";
-        errorLine.style.color = "#ff5f56";
-        errorLine.textContent = `bash: ${rawInput}: command not found. Ketik 'help' untuk bantuan.`;
-        terminalBody.appendChild(errorLine);
+        const err = document.createElement("div");
+        err.className = "terminal-line";
+        err.style.color = "#ff5f56";
+        err.textContent = `bash: ${raw}: command not found. Ketik 'help' untuk panduan.`;
+        terminalBody.appendChild(err);
       }
 
       this.value = "";
@@ -169,7 +371,53 @@ terminalInput.addEventListener("keydown", function (e) {
 });
 
 function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
+  const d = document.createElement("div");
+  d.textContent = text;
+  return d.innerHTML;
 }
+
+/* ============================================================
+   8. SHARE BUTTON & TOAST NOTIFICATION
+   ============================================================ */
+const shareBtn = document.getElementById("share-btn");
+const toast = document.getElementById("toast-container");
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
+
+shareBtn.addEventListener("click", async () => {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Adaptive Horizon 5.1",
+        url: window.location.href
+      });
+    } catch (err) {}
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    showToast("Tautan berhasil disalin ke clipboard!");
+  }
+});
+
+/* ============================================================
+   9. THEME TOGGLE (DARK / LIGHT)
+   ============================================================ */
+const themeToggle = document.getElementById("theme-toggle");
+themeToggle.addEventListener("click", () => {
+  const html = document.documentElement;
+  const current = html.getAttribute("data-theme");
+  const next = current === "light" ? "dark" : "light";
+  html.setAttribute("data-theme", next);
+
+  const icon = themeToggle.querySelector("i");
+  if (next === "light") {
+    icon.className = "fas fa-moon";
+  } else {
+    icon.className = "fas fa-sun";
+  }
+});
