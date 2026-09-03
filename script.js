@@ -1,5 +1,5 @@
 /* ============================================================
-   1. ANIMASI CANVAS MATRIX RAIN (ADAPTIF DARK & LIGHT)
+   1. ANIMASI CANVAS MATRIX RAIN (HEMAT DAYA / VISIBILITY SENSITIVE)
    ============================================================ */
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
@@ -28,6 +28,8 @@ function initDrops() {
 initDrops();
 window.addEventListener('resize', initDrops);
 
+let matrixInterval = null;
+
 function drawMatrix() {
   if (!ctx || !canvas) return;
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -48,21 +50,41 @@ function drawMatrix() {
     drops[i]++;
   }
 }
-setInterval(drawMatrix, 45);
+
+function startMatrix() {
+  if (!matrixInterval) matrixInterval = setInterval(drawMatrix, 45);
+}
+
+function stopMatrix() {
+  clearInterval(matrixInterval);
+  matrixInterval = null;
+}
+startMatrix();
+
+// Pause Matrix jika tab browser tidak aktif untuk menghemat daya
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopMatrix();
+  } else {
+    startMatrix();
+  }
+});
 
 /* ============================================================
-   2. PRELOADER ANIMATION
+   2. PRELOADER ANIMATION DENGAN SCROLL-LOCK
    ============================================================ */
 window.addEventListener('DOMContentLoaded', () => {
+  document.body.style.overflow = 'hidden'; // Kunci scroll saat loading
+
   const preloader = document.getElementById('preloader');
   const preBar = document.getElementById('pre-bar');
   const prePerc = document.getElementById('pre-perc');
   const preLog = document.getElementById('pre-log');
 
   const logs = [
-    "Checking ESP32 Core...",
-    "Mounting I2C Bus at 0x27 & 0x26...",
-    "Synchronizing NTP Clock...",
+    "Checking ESP32 Dual-Core Xtensa...",
+    "Mounting I2C Bus at 0x3C, 0x27 & 0x26...",
+    "Synchronizing FreeRTOS Tasks...",
     "System Ready: Kernel Online."
   ];
 
@@ -87,10 +109,11 @@ window.addEventListener('DOMContentLoaded', () => {
         if (preloader) {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
+          document.body.style.overflow = 'auto'; // Kembalikan scroll
         }
       }, 350);
     }
-  }, 90);
+  }, 80);
 });
 
 /* ============================================================
@@ -115,7 +138,7 @@ setInterval(updateLiveClock, 1000);
 updateLiveClock();
 
 /* ============================================================
-   4. MULTI-LANGUAGE TRANSLATION (ID, EN, MS)
+   4. MULTI-LANGUAGE TRANSLATION (ID, EN, MS, & CS - CEKO)
    ============================================================ */
 const translations = {
   id: {
@@ -131,11 +154,12 @@ const translations = {
     project_link: "Lihat Repository",
     project_description: "Perangkat lirik karaoke pintar untuk modul LCD 16×2 dengan dashboard kontrol Wi-Fi, 20 model sinkronisasi lirik, dan 20 preset animasi transisi mulus.",
     upcoming_kicker: "PROYEK MENDATANG",
-    upcoming_title: "Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
-    upcoming_description: "Evolusi arsitektur multi-layar dengan sinkronisasi simultan: 1 unit OLED 1.3″ I2C untuk spektrum visualizer & telemetri sistem, dipadukan 2 unit LCD 16×2 I2C untuk lirik aktif dan antrean baris berikutnya.",
+    upcoming_title: "Tri-Screen ESP32 Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Arsitektur multi-display bertenaga ESP32 Dual-Core (FreeRTOS): Core 0 mengelola konektivitas Wi-Fi & data pipeline, sementara Core 1 merender visualizer audio spektrum 60 FPS pada OLED 1.3″ serta sinkronisasi lirik ganda pada dua modul LCD 16×2 secara real-time.",
     support_heading: "Dukung Terus Karya Kreatif",
     support_para: "Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.",
-    copyright: "© A.H 5.1 · All Rights Reserved"
+    copyright: "© A.H 5.1 · All Rights Reserved",
+    decrypt_btn: "Buka Kunci Preview R&D"
   },
   en: {
     status_active: "Actively Creating",
@@ -150,11 +174,12 @@ const translations = {
     project_link: "View Repository",
     project_description: "Smart karaoke lyric display for LCD 16×2 with Wi-Fi dashboard, 20 sync models, and 20 smooth transition presets.",
     upcoming_kicker: "UPCOMING PROJECT",
-    upcoming_title: "Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
-    upcoming_description: "Next-gen multi-display architecture with simultaneous I2C sync: 1x 1.3″ I2C OLED for audio spectrum and system telemetry, paired with 2x 16×2 I2C LCDs for active lyrics and upcoming queue lines.",
+    upcoming_title: "Tri-Screen ESP32 Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Multi-display architecture powered by ESP32 Dual-Core (FreeRTOS): Core 0 manages Wi-Fi telemetry & data pipelines, while Core 1 renders 60 FPS audio visualizer spectrum on 1.3″ OLED and dual-line real-time lyrics across two 16×2 LCDs.",
     support_heading: "Support Creative Innovations",
     support_para: "Your support fuels hardware components, embedded system development, and future open-source projects.",
-    copyright: "© A.H 5.1 · All Rights Reserved"
+    copyright: "© A.H 5.1 · All Rights Reserved",
+    decrypt_btn: "Unlock R&D Preview"
   },
   ms: {
     status_active: "Aktif Berkarya",
@@ -169,28 +194,57 @@ const translations = {
     project_link: "Lihat Repositori",
     project_description: "Peranti lirik karaoke pintar untuk modul LCD 16×2 dengan papan pemuka Wi-Fi, 20 model penyelarasan lirik, dan 20 animasi lancar.",
     upcoming_kicker: "PROJEK AKAN DATANG",
-    upcoming_title: "Tri-Screen Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
-    upcoming_description: "Evolusi seni bina berbilang paparan dengan penyelarasan I2C serentak: 1 unit OLED 1.3″ I2C untuk visualizer spektrum audio dan telemetri sistem, digandingkan 2 unit LCD 16×2 I2C untuk lirik aktif dan barisan seterusnya.",
+    upcoming_title: "Tri-Screen ESP32 Workstation: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Seni bina pelbagai paparan dikuasakan ESP32 Dual-Core (FreeRTOS): Core 0 mengendalikan telemetri Wi-Fi & saluran data, manakala Core 1 memproses visualizer spektrum audio 60 FPS pada OLED 1.3″ serta penyelarasan lirik pada dua LCD 16×2 secara masa nyata.",
     support_heading: "Sokong Terus Karya Kreatif",
     support_para: "Sokongan anda amat bermakna untuk komponen perkakasan, pembangunan sistem, dan penyelidikan projek sumber terbuka.",
-    copyright: "© A.H 5.1 · Hak Cipta Terpelihara"
+    copyright: "© A.H 5.1 · Hak Cipta Terpelihara",
+    decrypt_btn: "Nyahkunci Pratonton R&D"
+  },
+  cs: {
+    status_active: "Aktivně tvořím",
+    brand_core: "JÁDRO ZNAČKY",
+    local_time: "MÍSTNÍ ČAS (INDONÉSIE)",
+    base_on: "ZÁKLADNA",
+    established: "ZALOŽENO",
+    social_title: "Připojte se & Sledujte",
+    social_badge: "Oficiální odkazy",
+    whatsapp_channel: "Kanál WhatsApp",
+    project_kicker: "HLAVNÍ PROJEKT",
+    project_link: "Zobrazit repozitář",
+    project_description: "Chytré karaoke zobrazovací zařízení pro LCD modul 16×2 s ovládacím Wi-Fi panelem, 20 modely synchronizace textu a 20 plynulými přechodovými animacemi.",
+    upcoming_kicker: "PŘIPRAVOVANÝ PROJEKT",
+    upcoming_title: "Tri-Screen ESP32 Pracovní stanice: Dual LCD 16×2 + OLED 1.3″ I2C",
+    upcoming_description: "Víceobrazovková architektura poháněná dvoujádrovým procesorem ESP32 (FreeRTOS): Jádro 0 spravuje Wi-Fi telemetrii a datové toky, zatímco Jádro 1 vykresluje 60 FPS audio spektrum na OLED 1.3″ a synchronizuje texty písní v reálném čase na dvou LCD 16×2.",
+    support_heading: "Podpořte kreativní vývoj",
+    support_para: "Vaše podpora přímo financuje nákup hardwarových komponentů, vývoj vestavěných systémů a budoucí open-source projekty.",
+    copyright: "© A.H 5.1 · Všechna práva vyhrazena",
+    decrypt_btn: "Odemknout náhled R&D"
   }
 };
 
-const langButtons = document.querySelectorAll('.lang-btn');
-langButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    langButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const lang = btn.dataset.lang;
-
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
-      }
-    });
+function applyLanguage(lang) {
+  const langButtons = document.querySelectorAll('.lang-btn');
+  langButtons.forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
   });
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang] && translations[lang][key]) {
+      el.textContent = translations[lang][key];
+    }
+  });
+
+  localStorage.setItem('ah51_lang', lang);
+}
+
+// Inisialisasi bahasa dari penyimpanan lokal
+const savedLang = localStorage.getItem('ah51_lang') || 'id';
+applyLanguage(savedLang);
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
 });
 
 /* ============================================================
@@ -199,7 +253,7 @@ langButtons.forEach(btn => {
 const phrases = [
   "IoT & Embedded Developer",
   "Creator of BetterLyrics ESP32",
-  "Tri-Screen I2C Workstation in Dev",
+  "Tri-Screen ESP32 Workstation in Dev",
   "Adaptive Horizon 5.1 Core System"
 ];
 
@@ -234,7 +288,7 @@ function typeLoop() {
 typeLoop();
 
 /* ============================================================
-   6. INTERACTIVE MINI LCD 16x2 SIMULATOR (PROYEK 1)
+   6. INTERACTIVE MINI LCD 16x2 SIMULATOR
    ============================================================ */
 const lyricPresets = [
   { row1: "A.H 5.1 Karaoke", row2: "♪ BetterLyrics ♫", mode: "SYNC MODE 01/20" },
@@ -307,7 +361,7 @@ if (playBtn) {
 startAutoPlay();
 
 /* ============================================================
-   7. OLED 1.3" AUDIO SPECTRUM (BERJALAN DI BALIK BLUR SPOILER)
+   7. OLED 1.3" AUDIO SPECTRUM VISUALIZER
    ============================================================ */
 const oledCanvas = document.getElementById("oledVisualizer");
 if (oledCanvas) {
@@ -317,6 +371,10 @@ if (oledCanvas) {
   const gap = 1.4;
 
   function drawOledVisualizer() {
+    if (document.hidden) {
+      requestAnimationFrame(drawOledVisualizer);
+      return;
+    }
     oledCtx.fillStyle = "#01080e";
     oledCtx.fillRect(0, 0, oledCanvas.width, oledCanvas.height);
 
@@ -337,21 +395,30 @@ if (oledCanvas) {
 }
 
 /* ============================================================
-   8. INTERACTIVE LINUX TERMINAL CLI SIMULATOR
+   8. LINUX CLI DENGAN COMMAND HISTORY (PANAH UP / DOWN)
    ============================================================ */
 const terminalInput = document.getElementById("terminal-input");
 const terminalBody = document.getElementById("terminal-body");
+const terminalCard = document.getElementById("terminal");
+
+// Fokus ke input saat area terminal diklik di mana saja
+if (terminalCard && terminalInput) {
+  terminalCard.addEventListener('click', () => terminalInput.focus());
+}
+
+const commandHistory = [];
+let historyIndex = -1;
 
 const cliCommands = {
   help: () => `Perintah Tersedia:
 - <span class="highlight-cmd">about</span>    : Profil Adaptive Horizon 5.1
 - <span class="highlight-cmd">esp32</span>    : Info proyek BetterLyrics ESP32
-- <span class="highlight-cmd">upcoming</span> : Bocoran status proyek Tri-Screen (OLED + Dual LCD)
+- <span class="highlight-cmd">upcoming</span> : Bocoran status proyek Tri-Screen ESP32
 - <span class="highlight-cmd">skills</span>   : Tech stack hardware & software
 - <span class="highlight-cmd">socials</span>  : Daftar tautan medsos resmi
 - <span class="highlight-cmd">donate</span>   : Tautan donasi (Sociabuzz & Saweria)
 - <span class="highlight-cmd">time</span>     : Menampilkan waktu WIB server
-- <span class="highlight-cmd">whoami</span>   : Menampilkan peran pengguna
+- <span class="highlight-cmd">whoami</span>   : Menampilkan identitas pengguna
 - <span class="highlight-cmd">clear</span>    : Bersihkan layar terminal`,
 
   about: () => `Adaptive Horizon 5.1 (A.H 5.1):
@@ -361,13 +428,14 @@ Pengembang IoT & Embedded System berbasis ESP32, C/C++, dan sistem otomatisasi w
 Perangkat lirik karaoke pintar modul LCD 16x2 dengan dashboard kontrol Wi-Fi dan 20 mode transisi lirik.
 Repo: https://github.com/adaptivehorizon51/A.H51-esp32`,
 
-  upcoming: () => `[CLASSIFIED R&D] Tri-Screen Multi-Display Hub:
-- 1x OLED 1.3" I2C (0x3C) : Spektrum audio visualizer dinamis
+  upcoming: () => `[ESP32 MULTI-DISPLAY WORKSTATION]
+- Controller: ESP32 Xtensa Dual-Core 240MHz (FreeRTOS)
+- 1x OLED 1.3" I2C (0x3C) : Spektrum audio FFT visualizer
 - 2x LCD 16x2 I2C (0x27 & 0x26): Dual line live lyrics & queue
-- Status: Phase 2 Hardware Prototype. Detail preview disamarkan demi mencegah spoiler.`,
+- Status: Active Prototype R&D. Gunakan tombol decrypt pada web untuk melihat telemetri.`,
 
-  skills: () => `Hardware: ESP32, Arduino, I2C Bus, LCD 1602, OLED 1.3", Sensor Array
-Software: C/C++, Embedded C, JavaScript, Python, Git CLI, HTML5/CSS3`,
+  skills: () => `Hardware: ESP32 Dual-Core, FreeRTOS, I2C Bus, LCD 1602, OLED 1.3", Sensor Array
+Software: C/C++, ESP-IDF, Arduino, JavaScript, Python, Git CLI, HTML5/CSS3`,
 
   socials: () => `Instagram: @rfa_glng_p._a.h_5.1
 YouTube  : @A.H_5.1
@@ -375,12 +443,11 @@ TikTok   : @intel_uhd_graphics
 Twitter  : @absurd_humor_51
 WhatsApp : Saluran Adaptive Horizon 5.1`,
 
-  donate: () => `Dukung karya kreatif hardware A.H 5.1:
+  donate: () => `Dukung karya hardware A.H 5.1:
 - Sociabuzz: https://sociabuzz.com/ah51
 - Saweria  : https://saweria.co/Absurdhumor51`,
 
   time: () => new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + " WIB",
-
   whoami: () => `guest@adaptivehorizon-system [Auth: Level 1 Read-Only]`,
 
   clear: () => {
@@ -391,11 +458,37 @@ WhatsApp : Saluran Adaptive Horizon 5.1`,
 
 if (terminalInput && terminalBody) {
   terminalInput.addEventListener("keydown", function (e) {
+    // Navigasi History Panah Atas
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        this.value = commandHistory[commandHistory.length - 1 - historyIndex];
+      }
+      return;
+    }
+
+    // Navigasi History Panah Bawah
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        historyIndex--;
+        this.value = commandHistory[commandHistory.length - 1 - historyIndex];
+      } else if (historyIndex === 0) {
+        historyIndex = -1;
+        this.value = "";
+      }
+      return;
+    }
+
     if (e.key === "Enter") {
       const raw = this.value.trim();
       const cmd = raw.toLowerCase();
 
       if (raw !== "") {
+        commandHistory.push(raw);
+        historyIndex = -1;
+
         const inputLine = document.createElement("div");
         inputLine.className = "terminal-line";
         inputLine.innerHTML = `<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`;
@@ -432,7 +525,23 @@ function escapeHtml(text) {
 }
 
 /* ============================================================
-   9. SHARE BUTTON & TOAST NOTIFICATION
+   9. INTERACTIVE DECRYPT SPOILER TOGGLE
+   ============================================================ */
+const decryptToggleBtn = document.getElementById('decryptToggleBtn');
+const spoilerShield = document.getElementById('spoilerShield');
+const hardwareRack = document.getElementById('hardwareRack');
+
+if (decryptToggleBtn && spoilerShield && hardwareRack) {
+  decryptToggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    spoilerShield.classList.add('hidden-shield');
+    hardwareRack.classList.add('unlocked');
+    showToast("Sistem didekripsi: Telemetri ESP32 & Preview I2C Aktif!");
+  });
+}
+
+/* ============================================================
+   10. SHARE BUTTON & TOAST NOTIFICATION
    ============================================================ */
 const shareBtn = document.getElementById("share-btn");
 const toast = document.getElementById("toast-container");
@@ -463,27 +572,33 @@ if (shareBtn) {
 }
 
 /* ============================================================
-   10. THEME TOGGLE (DARK / LIGHT DENGAN REFRESH CANVAS)
+   11. THEME TOGGLE (DENGAN LOCALSTORAGE)
    ============================================================ */
 const themeToggle = document.getElementById("theme-toggle");
-if (themeToggle) {
-  themeToggle.addEventListener("click", () => {
-    const html = document.documentElement;
-    const current = html.getAttribute("data-theme");
-    const next = current === "light" ? "dark" : "light";
-    html.setAttribute("data-theme", next);
 
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("ah51_theme", theme);
+
+  if (themeToggle) {
     const icon = themeToggle.querySelector("i");
     if (icon) {
-      if (next === "light") {
-        icon.className = "fas fa-moon";
-      } else {
-        icon.className = "fas fa-sun";
-      }
+      icon.className = theme === "light" ? "fas fa-moon" : "fas fa-sun";
     }
+  }
+  if (ctx && canvas) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
 
-    if (ctx && canvas) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+// Muat tema yang tersimpan sebelumnya
+const savedTheme = localStorage.getItem("ah51_theme") || "dark";
+setTheme(savedTheme);
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    const next = current === "light" ? "dark" : "light";
+    setTheme(next);
   });
 }
