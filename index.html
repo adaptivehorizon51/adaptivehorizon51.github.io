@@ -1,307 +1,136 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Adaptive Horizon 5.1 · Official Website & Portfolio</title>
-    <meta name="description" content="Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer, Tech Enthusiast, and Creator of BetterLyrics ESP32.">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adaptive Horizon | IT & Dev System</title>
+  
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Background Canvas Animation -->
+  <canvas id="matrixCanvas"></canvas>
 
+  <div class="overlay"></div>
 
+  <main class="container">
+    <!-- Profile Header Card -->
+    <header class="profile-card">
+      <div class="avatar-wrapper">
+        <img src="profile picture.png" alt="Profile Picture" class="avatar-img" onerror="this.src='https://via.placeholder.com/150/00f0ff/0a0e17?text=IT'" />
+        <div class="status-indicator" title="System Online"></div>
+      </div>
 
-    <!-- Apple / Tech Boot Assistant Preloader -->
-    <div id="preloader">
-        <div class="pre-container">
-            <div class="apple-loader-box">
-                <div class="apple-spinner"></div>
-                <div class="pre-text-logo">A.H</div>
-            </div>
-            <div class="pre-brand">
-                <h2 class="pre-title">Adaptive Horizon 5.1</h2>
-                <div class="pre-sub" id="pre-sub">Memuat Sistem...</div>
-            </div>
-            <div class="pre-progress-wrapper">
-                <div class="pre-progress-bar"></div>
-                <div class="pre-percentage">00%</div>
-            </div>
-            <div class="pre-log" id="pre-log">Initializing modules...</div>
-        </div>
-    </div>
+      <div class="badge-status">
+        <span class="dot"></span> SYSTEM ONLINE &bull; KERNEL v2.5
+      </div>
 
-    <!-- Top Navigation Header -->
-    <header class="top-nav">
-        <div class="nav-container">
-            <a href="./" class="brand-signature" aria-label="Adaptive Horizon Home">
-                <span class="sig-main">A.H</span>
-                <span class="sig-ver">5.1</span>
-                <span class="sig-badge">CORE</span>
-            </a>
-            
-            <div class="nav-controls">
-                <!-- Language Switcher -->
-                <div class="controls-group lang-group" role="group" aria-label="Language Selector">
-                    <button class="lang-btn active" data-lang="id" title="Bahasa Indonesia">ID</button>
-                    <button class="lang-btn" data-lang="en" title="English">EN</button>
-                    <button class="lang-btn" data-lang="ms" title="Bahasa Melayu">MS</button>
-                </div>
-                
-                <!-- Action Controls -->
-                <div class="controls-group">
-                    <button id="share-btn" class="icon-btn" aria-label="Share Website" title="Bagikan / Salin Tautan">
-                        <i class="fas fa-share-nodes"></i>
-                    </button>
-                    <button id="theme-toggle" class="icon-btn theme-btn" aria-label="Toggle Interface Theme" title="Ganti Tema">
-                        <i class="fas fa-sun"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+      <h1 class="glitch-title" data-text="Adaptive Horizon">Adaptive Horizon</h1>
+      
+      <p class="typewriter-text">
+        <span class="prompt-symbol">></span> <span id="typed-text"></span><span class="cursor">|</span>
+      </p>
+
+      <div class="social-links">
+        <a href="https://github.com/adaptivehorizon51" target="_blank" title="GitHub" class="social-btn">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#terminal" title="Terminal Access" class="social-btn" onclick="focusTerminal()">
+          <i class="fas fa-terminal"></i>
+        </a>
+        <a href="mailto:admin@adaptivehorizon.local" title="Email" class="social-btn">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </div>
     </header>
 
-    <!-- Main Bento Grid -->
-    <main class="bento-container">
-        
-        <!-- Profile Card -->
-        <section class="bento-card profile-card" data-tilt>
-            <div class="card-spotlight"></div>
-            <div class="avatar-wrapper">
-                <img src="profile picture.png" alt="Profile Picture Adaptive Horizon 5.1" class="profile-avatar">
-                <div class="status-dot-ring">
-                    <div class="status-dot"></div>
-                </div>
-            </div>
-            <div class="profile-info">
-                <div class="greeting-row">
-                    <span id="greeting-text" class="greeting-bubble">SYSTEM ONLINE</span>
-                    <span class="status-pill">
-                        <span class="live-dot"></span>
-                        <span data-i18n="status_active">Aktif Berkreasi</span>
-                    </span>
-                </div>
-                <h1 class="profile-name">
-                    Adaptive Horizon 5.1
-                    <span class="verified-wrapper" title="Terverifikasi">
-                        <i class="fas fa-circle-check verified-badge"></i>
-                    </span>
-                </h1>
-                <div class="typewriter-container">
-                    <span class="terminal-prefix"><i class="fas fa-terminal"></i></span>
-                    <span class="typewriter" id="typewriter">Tech Enthusiast</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Identity & System Status Card -->
-        <section class="bento-card identity-card" data-tilt>
-            <div class="card-spotlight"></div>
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-fingerprint"></i></div>
-                <div class="info-meta">
-                    <span class="info-label" data-i18n="brand_core">BRAND CORE</span>
-                    <span class="info-val">ADAPTIVE HORIZON 5.1</span>
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-clock"></i></div>
-                <div class="info-meta">
-                    <span class="info-label" data-i18n="local_time">WAKTU LOKAL (INDONESIA)</span>
-                    <span class="info-val live-clock" id="live-clock">--:--:-- WIB</span>
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-location-dot"></i></div>
-                <div class="info-meta">
-                    <span class="info-label" data-i18n="base_on">BASE ON</span>
-                    <span class="info-val">INDONESIA <span class="flag-icon">🇮🇩</span></span>
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-rocket"></i></div>
-                <div class="info-meta">
-                    <span class="info-label" data-i18n="established">ESTABLISHED</span>
-                    <span class="info-val">2020 <span class="badge-sub">4+ Yrs</span></span>
-                </div>
-            </div>
-
-            <!-- Tech Badges -->
-            <div class="tech-stack-row">
-                <span class="tech-chip"><i class="fas fa-microchip"></i> ESP32</span>
-                <span class="tech-chip"><i class="fas fa-code"></i> C/C++</span>
-                <span class="tech-chip"><i class="fas fa-wifi"></i> IoT</span>
-                <span class="tech-chip"><i class="fab fa-html5"></i> Web UI</span>
-            </div>
-        </section>
-
-        <!-- Social Media Card -->
-        <section class="bento-card socials-card" data-tilt>
-            <div class="card-spotlight"></div>
-            <div class="card-header-flex">
-                <h3 class="card-title" data-i18n="social_title">Hubungkan & Ikuti</h3>
-                <span class="badge-pill" data-i18n="social_badge">Official Links</span>
-            </div>
-            
-            <div class="social-grid">
-                <a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer" class="social-btn ig" aria-label="Instagram">
-                    <div class="btn-icon-wrap"><i class="fab fa-instagram"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">Instagram</span>
-                        <span class="btn-handle">@rfa_glng_p._a.h_5.1</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
-                </a>
-                
-                <a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer" class="social-btn yt" aria-label="YouTube">
-                    <div class="btn-icon-wrap"><i class="fab fa-youtube"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">YouTube</span>
-                        <span class="btn-handle">@A.H_5.1</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
-                </a>
-                
-                <a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer" class="social-btn tt" aria-label="TikTok">
-                    <div class="btn-icon-wrap"><i class="fab fa-tiktok"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">TikTok</span>
-                        <span class="btn-handle">@intel_uhd_graphics</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
-                </a>
-                
-                <a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer" class="social-btn tw" aria-label="Twitter / X">
-                    <div class="btn-icon-wrap"><i class="fab fa-x-twitter"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">Twitter / X</span>
-                        <span class="btn-handle">@absurd_humor_51</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
-                </a>
-                
-                <a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer" class="social-btn wa" aria-label="WhatsApp Channel">
-                    <div class="btn-icon-wrap"><i class="fab fa-whatsapp"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name" data-i18n="whatsapp_channel">Saluran WhatsApp</span>
-                        <span class="btn-handle">Adaptive Horizon 5.1</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
-                </a>
-            </div>
-        </section>
-
-        <!-- BetterLyrics ESP32 Featured Project Card -->
-        <section class="bento-card project-card" data-tilt aria-labelledby="betterlyrics-title">
-            <div class="card-spotlight"></div>
-            
-            <div class="project-header">
-                <div class="project-icon-box">
-                    <i class="fas fa-microchip"></i>
-                </div>
-                <div class="project-headline">
-                    <div class="project-badge-row">
-                        <span class="project-kicker" data-i18n="project_kicker">PROJECT UNGGULAN</span>
-                        <span class="project-status-tag"><span class="pulse-dot"></span> v2.0 Active</span>
-                    </div>
-                    <h2 id="betterlyrics-title">BetterLyrics ESP32</h2>
-                </div>
-                <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link desktop-link" aria-label="Buka BetterLyrics di GitHub">
-                    <i class="fab fa-github"></i>
-                    <span data-i18n="project_link">Lihat Repository</span>
-                </a>
-            </div>
-
-            <p class="project-desc" data-i18n="project_description">
-                Perangkat lirik karaoke pintar untuk modul LCD 16×2 dengan dashboard kontrol Wi-Fi, 20 model sinkronisasi lirik, dan 20 preset animasi transisi mulus.
-            </p>
-
-            <!-- Interactive Mini LCD 16x2 Simulator -->
-            <div class="lcd-hardware-showcase">
-                <div class="lcd-bezel">
-                    <div class="lcd-header">
-                        <span class="lcd-brand"><i class="fas fa-bolt"></i> LCD 1602 HD44780 [ESP32 I2C]</span>
-                        <span class="lcd-indicator"><span class="lcd-led active"></span> SYNC ACTIVE</span>
-                    </div>
-                    <div class="lcd-screen" id="lcd-screen">
-                        <div class="lcd-row lcd-row-1" id="lcd-row-1">A.H 5.1 Karaoke</div>
-                        <div class="lcd-row lcd-row-2" id="lcd-row-2">♪ BetterLyrics ♫</div>
-                    </div>
-                    <div class="lcd-toolbar">
-                        <button type="button" id="lcd-prev-btn" class="lcd-btn" title="Lirik Sebelumnya"><i class="fas fa-backward-step"></i></button>
-                        <button type="button" id="lcd-play-btn" class="lcd-btn active" title="Play / Pause Simulasi"><i class="fas fa-pause"></i></button>
-                        <button type="button" id="lcd-next-btn" class="lcd-btn" title="Lirik Berikutnya"><i class="fas fa-forward-step"></i></button>
-                        <span class="lcd-mode-badge" id="lcd-mode-badge">SYNC MODE 07/20</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Features Highlights -->
-            <div class="project-tags">
-                <span class="tag-pill"><i class="fas fa-sliders"></i> 20 Sync Models</span>
-                <span class="tag-pill"><i class="fas fa-wand-magic-sparkles"></i> 20 FX Transitions</span>
-                <span class="tag-pill"><i class="fas fa-wifi"></i> Web Dashboard</span>
-                <span class="tag-pill"><i class="fab fa-spotify"></i> Real-time Sync</span>
-            </div>
-
-            <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link mobile-link">
-                <i class="fab fa-github"></i>
-                <span data-i18n="project_link">Lihat Repository</span>
-            </a>
-        </section>
-
-        <!-- Support / Sponsorship Card -->
-        <section class="bento-card support-card" data-tilt>
-            <div class="card-spotlight"></div>
-            <div class="support-content">
-                <div class="support-icon-halo">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <h3 data-i18n="support_heading">Dukung Terus Karya Kreatif</h3>
-                <p data-i18n="support_para" class="support-para">
-                    Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.
-                </p>
-                <div class="support-btn-group">
-                    <a href="https://sociabuzz.com/ah51" target="_blank" rel="noopener noreferrer" class="cta-button sociabuzz-btn">
-                        <span class="btn-shimmer"></span>
-                        <i class="fas fa-coffee"></i>
-                        <span>Traktir di Sociabuzz</span>
-                    </a>
-                    <a href="https://saweria.co/Absurdhumor51" target="_blank" rel="noopener noreferrer" class="cta-button saweria-btn">
-                        <span class="btn-shimmer"></span>
-                        <i class="fas fa-heart"></i>
-                        <span>Dukung via Saweria</span>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Bottom Footer -->
-    <footer class="bottom-footer">
-        <div class="footer-container">
-            <div class="badge-wrapper">
-                <img src="https://hits.sh/ah51.github.io/project-x2391.svg?style=flat-square&color=0a84ff" class="hit-badge" alt="Traffic Counter" loading="lazy">
-            </div>
-            <p class="copyright-text" data-i18n="copyright">© A.H 5.1 · All Rights Reserved</p>
-            <p class="sub-credit">Designed & Engineered with Apple Bento Glass UI</p>
+    <!-- Interactive Terminal Console -->
+    <section class="terminal-section" id="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
         </div>
+        <span class="terminal-title">guest@adaptivehorizon:~ (bash)</span>
+        <span class="terminal-badge">LIVE CLI</span>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <div class="terminal-line">
+          <span class="system-msg">Selamat datang di Adaptive Horizon Console [Versi 2.4.0-release]</span>
+        </div>
+        <div class="terminal-line">
+          <span class="system-msg">Ketik <span class="highlight-cmd">'help'</span> untuk melihat daftar perintah yang tersedia.</span>
+        </div>
+      </div>
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">adaptive@horizon:~$</span>
+        <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="Ketik perintah di sini..." />
+      </div>
+    </section>
+
+    <!-- Tech Stack / Skills Section -->
+    <section class="section-card">
+      <h2 class="section-title"><i class="fas fa-microchip"></i> TECH STACK & SKILLS</h2>
+      <div class="skills-grid">
+        <div class="skill-tag"><i class="fab fa-linux"></i> Linux OS</div>
+        <div class="skill-tag"><i class="fab fa-python"></i> Python</div>
+        <div class="skill-tag"><i class="fab fa-js-square"></i> JavaScript</div>
+        <div class="skill-tag"><i class="fas fa-shield-halfed"></i> Cyber Security</div>
+        <div class="skill-tag"><i class="fab fa-docker"></i> Docker</div>
+        <div class="skill-tag"><i class="fas fa-network-wired"></i> Networking</div>
+        <div class="skill-tag"><i class="fab fa-git-alt"></i> Git / VCS</div>
+        <div class="skill-tag"><i class="fas fa-database"></i> SQL / NoSQL</div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section-card">
+      <h2 class="section-title"><i class="fas fa-folder-open"></i> REPOSITORI & PROYEK</h2>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-header">
+            <i class="fas fa-code-branch project-icon"></i>
+            <span class="project-tag">Public</span>
+          </div>
+          <h3>adaptivehorizon51.github.io</h3>
+          <p>Personal cyber portfolio, custom CLI terminal simulator, dan dokumentasi teknologi web modern.</p>
+          <div class="project-tech">
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>Vanilla JS</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <i class="fas fa-user-secret project-icon"></i>
+            <span class="project-tag">Encrypted</span>
+          </div>
+          <h3>Secret Code Core</h3>
+          <p>Modul enkripsi data, algoritma penguraian sandi rahasia, serta analisis otomasi script.</p>
+          <div class="project-tech">
+            <span>Security</span>
+            <span>Python</span>
+            <span>Crypto</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 Adaptive Horizon. System Status: <strong>NORMAL</strong></p>
+      <p class="crypto-hash">SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</p>
     </footer>
+  </main>
 
-    <!-- Toast Notification Box -->
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
-
-    <!-- Main Logic Script -->
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
