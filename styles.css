@@ -675,7 +675,7 @@ body {
   color: var(--accent-green);
 }
 
-/* Socials Card */
+/* Socials Card & Grid */
 .card-header-flex {
   display: flex;
   justify-content: space-between;
@@ -729,6 +729,8 @@ body {
   width: 32px;
 }
 
+/* Social Icons Dynamic Theme Colors */
+.social-btn.gh .btn-icon-wrap { color: var(--tw-icon-color); }
 .social-btn.ig .btn-icon-wrap { color: #e1306c; }
 .social-btn.yt .btn-icon-wrap { color: #ff0000; }
 .social-btn.tt .btn-icon-wrap { color: #06b6d4; }

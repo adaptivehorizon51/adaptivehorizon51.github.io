@@ -1,10 +1,10 @@
 /**
- * Adaptive Horizon 5.1 · Core System Script
- * Complete Multi-Language (i18n), Terminal CLI, and Hardware Simulator
+ * Adaptive Horizon 5.1 · Core Embedded Hub System
+ * Architecture: ES6+ Modular Components with Two-Way CLI Binding
  */
 
 /* ============================================================
-   1. ANIMASI MATRIX CANVAS (HEMAT DAYA & DEBOUNCED)
+   1. MATRIX RAIN CANVAS (DEBOUNCED & POWER EFFICIENT)
    ============================================================ */
 const MatrixEngine = (() => {
   const canvas = document.getElementById('matrixCanvas');
@@ -69,7 +69,7 @@ const MatrixEngine = (() => {
 })();
 
 /* ============================================================
-   2. PRELOADER DENGAN FAILSAFE WATCHDOG
+   2. PRELOADER WITH FAILSAFE WATCHDOG
    ============================================================ */
 (() => {
   document.body.style.overflow = 'hidden';
@@ -97,6 +97,7 @@ const MatrixEngine = (() => {
     document.body.style.overflow = '';
   }
 
+  // Failsafe Watchdog: Layar tidak akan pernah macet selamanya
   const watchdog = setTimeout(dismissPreloader, 3200);
 
   const loaderInterval = setInterval(() => {
@@ -274,12 +275,11 @@ const I18nManager = (() => {
     currentLang = lang;
     localStorage.setItem('ah51_lang', lang);
 
-    // Update status aktif tombol bahasa di navbar
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
 
-    // 1. Terjemahkan semua elemen berbasis teks biasa
+    // Terjemahkan seluruh elemen teks
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (translations[lang] && translations[lang][key]) {
@@ -287,7 +287,7 @@ const I18nManager = (() => {
       }
     });
 
-    // 2. Terjemahkan atribut Placeholder (misal input CLI)
+    // Terjemahkan atribut Placeholder (misal input CLI)
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
       const key = el.getAttribute('data-i18n-placeholder');
       if (translations[lang] && translations[lang][key]) {
@@ -295,7 +295,7 @@ const I18nManager = (() => {
       }
     });
 
-    // 3. Sinkronkan kalimat pada Typewriter sesuai bahasa yang dipilih
+    // Sinkronkan kalimat Typewriter sesuai bahasa aktif
     if (window.TypewriterEngine) {
       window.TypewriterEngine.updatePhrases(lang);
     }
@@ -305,7 +305,7 @@ const I18nManager = (() => {
     return translations[currentLang]?.[key] || translations['id'][key] || key;
   }
 
-  // Jam Digital WIB
+  // Live Clock (Asia/Jakarta WIB)
   function startClock() {
     const clockEl = document.getElementById('live-clock');
     if (!clockEl) return;
@@ -347,7 +347,7 @@ function showToast(message) {
 }
 
 /* ============================================================
-   5. TYPEWRITER SUBTITLE EFFECT (MENDUKUNG 4 BAHASA)
+   5. TYPEWRITER SUBTITLE EFFECT (4 BAHASA DINAMIS)
    ============================================================ */
 window.TypewriterEngine = (() => {
   const localizedPhrases = {
@@ -423,7 +423,6 @@ window.TypewriterEngine = (() => {
   return { updatePhrases };
 })();
 
-// Terapkan bahasa tersimpan pada pemuatan awal
 document.addEventListener('DOMContentLoaded', () => {
   I18nManager.setLanguage(I18nManager.getCurrentLang());
 });
@@ -618,7 +617,7 @@ const HorizonSecurity = (() => {
     'about.txt': "Adaptive Horizon 5.1 (A.H 5.1)\nIoT, Embedded & Modern Web Architecture.\nBase in Indonesia. Est. 2020.",
     'betterlyrics.ino': "#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n// BetterLyrics v2.0 - 20 Sync Models with Wi-Fi Control\nvoid setup() { Wire.begin(21, 22); }",
     'specs.json': '{\n  "chip": "ESP32-WROOM-32D",\n  "cores": 2,\n  "frequency": "240MHz",\n  "flash": "4MB",\n  "sram": "520KB"\n}',
-    'contacts.txt': "Instagram: @rfa_glng_p._a.h_5.1\nYouTube: @A.H_5.1\nGitHub: adaptivehorizon51"
+    'contacts.txt': "GitHub: https://github.com/adaptivehorizon51\nInstagram: @rfa_glng_p._a.h_5.1\nYouTube: @A.H_5.1\nTikTok: @intel_uhd_graphics\nTwitter: @absurd_humor_51"
   };
 
   const commandRegistry = {
