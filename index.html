@@ -16,14 +16,14 @@
     <meta property="og:url" content="https://adaptivehorizon51.github.io/">
     <meta property="og:title" content="Adaptive Horizon 5.1 · IoT & Embedded System">
     <meta property="og:description" content="Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer, Creator of BetterLyrics ESP32.">
-    <meta property="og:image" content="https://adaptivehorizon51.github.io/profile%20picture.png">
+    <meta property="og:image" content="https://adaptivehorizon51.github.io/profile-picture.png">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@absurd_humor_51">
     <meta name="twitter:title" content="Adaptive Horizon 5.1 · Official Portfolio">
     <meta name="twitter:description" content="Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer.">
-    <meta name="twitter:image" content="https://adaptivehorizon51.github.io/profile%20picture.png">
+    <meta name="twitter:image" content="https://adaptivehorizon51.github.io/profile-picture.png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,37 +33,37 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Stylesheet -->
+    <!-- External Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <!-- Matrix Background Rain Canvas -->
-    <canvas id="matrixCanvas"></canvas>
-    <div class="matrix-overlay"></div>
+    <canvas id="matrixCanvas" aria-hidden="true"></canvas>
+    <div class="matrix-overlay" aria-hidden="true"></div>
 
     <!-- Tech Boot Assistant Preloader -->
-    <div id="preloader">
+    <div id="preloader" role="status" aria-label="Loading System">
         <div class="pre-container">
             <div class="tech-loader-box">
-                <div class="cyber-spinner"></div>
+                <div class="cyber-spinner" aria-hidden="true"></div>
                 <div class="pre-text-logo">A.H</div>
             </div>
             <div class="pre-brand">
                 <h2 class="pre-title">Adaptive Horizon 5.1</h2>
                 <div class="pre-sub" id="pre-sub">Memuat Kernel & Sistem I2C...</div>
             </div>
-            <div class="pre-progress-wrapper">
+            <div class="pre-progress-wrapper" aria-hidden="true">
                 <div class="pre-progress-bar" id="pre-bar"></div>
-                <div class="pre-percentage" id="pre-perc">00%</div>
             </div>
+            <div class="pre-percentage" id="pre-perc">00%</div>
             <div class="pre-log" id="pre-log">Initializing ESP32 & Web Modules...</div>
         </div>
     </div>
 
     <!-- Top Navigation Header -->
     <header class="top-nav">
-        <div class="nav-container">
+        <nav class="nav-container" aria-label="Main Navigation">
             <a href="./" class="brand-signature" aria-label="Adaptive Horizon Home">
                 <span class="sig-main">A.H</span>
                 <span class="sig-ver">5.1</span>
@@ -73,33 +73,39 @@
             <div class="nav-controls">
                 <!-- Multi-Language Selector (ID, EN, MS, CS) -->
                 <div class="controls-group lang-group" role="group" aria-label="Language Selector">
-                    <button class="lang-btn active" data-lang="id" title="Bahasa Indonesia">ID</button>
-                    <button class="lang-btn" data-lang="en" title="English">EN</button>
-                    <button class="lang-btn" data-lang="ms" title="Bahasa Melayu">MS</button>
-                    <button class="lang-btn" data-lang="cs" title="Čeština">CS</button>
+                    <button type="button" class="lang-btn active" data-lang="id" title="Bahasa Indonesia">ID</button>
+                    <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
+                    <button type="button" class="lang-btn" data-lang="ms" title="Bahasa Melayu">MS</button>
+                    <button type="button" class="lang-btn" data-lang="cs" title="Čeština">CS</button>
                 </div>
                 
                 <!-- Action Controls -->
                 <div class="controls-group">
-                    <button id="share-btn" class="icon-btn" aria-label="Share Website" title="Bagikan / Salin Tautan">
-                        <i class="fas fa-share-nodes"></i>
+                    <button type="button" id="share-btn" class="icon-btn" aria-label="Bagikan Tautan Website" title="Bagikan / Salin Tautan">
+                        <i class="fas fa-share-nodes" aria-hidden="true"></i>
                     </button>
-                    <button id="theme-toggle" class="icon-btn theme-btn" aria-label="Toggle Interface Theme" title="Ganti Tema">
-                        <i class="fas fa-sun"></i>
+                    <button type="button" id="theme-toggle" class="icon-btn theme-btn" aria-label="Ganti Mode Tema Tampilan" title="Ganti Tema">
+                        <i class="fas fa-sun" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
-        </div>
+        </nav>
     </header>
 
-    <!-- Main Bento Grid -->
+    <!-- Main Bento Grid Layout -->
     <main class="bento-container">
         
         <!-- 1. Profile Card -->
-        <section class="bento-card profile-card">
+        <section class="bento-card profile-card" aria-label="Profil Utama">
             <div class="avatar-wrapper">
-                <img src="profile picture.png" alt="Profile Picture Adaptive Horizon 5.1" class="profile-avatar" onerror="this.src='https://via.placeholder.com/150/00f0ff/080b11?text=A.H+5.1'">
-                <div class="status-dot-ring">
+                <img 
+                    src="profile picture.png" 
+                    alt="Foto Profil Adaptive Horizon 5.1" 
+                    class="profile-avatar" 
+                    loading="eager"
+                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'><rect width=\'120\' height=\'120\' fill=\'%230b111c\'/><text x=\'50%25\' y=\'54%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300f0ff\' font-family=\'monospace\' font-size=\'20\' font-weight=\'bold\'>A.H 5.1</text></svg>';"
+                >
+                <div class="status-dot-ring" title="Hardware Bus Online">
                     <div class="status-dot"></div>
                 </div>
             </div>
@@ -107,74 +113,92 @@
                 <div class="greeting-row">
                     <span id="greeting-text" class="greeting-bubble">SYSTEM ONLINE</span>
                     <span class="status-pill">
-                        <span class="live-dot"></span>
+                        <span class="live-dot" aria-hidden="true"></span>
                         <span data-i18n="status_active">Aktif Berkreasi</span>
                     </span>
                 </div>
                 <h1 class="profile-name">
                     Adaptive Horizon 5.1
                     <span class="verified-wrapper" title="Terverifikasi">
-                        <i class="fas fa-circle-check verified-badge"></i>
+                        <i class="fas fa-circle-check verified-badge" aria-hidden="true"></i>
                     </span>
                 </h1>
                 <div class="typewriter-container">
-                    <span class="terminal-prefix"><i class="fas fa-terminal"></i></span>
-                    <span class="typewriter" id="typewriter">IoT & Embedded Developer</span><span class="cursor">|</span>
+                    <span class="terminal-prefix" aria-hidden="true"><i class="fas fa-terminal"></i></span>
+                    <span class="typewriter" id="typewriter">IoT &amp; Embedded Developer</span><span class="cursor" aria-hidden="true">|</span>
                 </div>
             </div>
         </section>
 
-        <!-- 2. Interactive Linux Terminal CLI Simulator -->
-        <section class="bento-card terminal-card" id="terminal">
+        <!-- 2. Next-Gen Linux/ESP32 Terminal Simulator -->
+        <section class="bento-card terminal-card" id="terminal" aria-label="Terminal CLI Simulator">
             <div class="terminal-bar">
-                <div class="terminal-dots">
+                <div class="terminal-dots" aria-hidden="true">
                     <span class="dot red"></span>
                     <span class="dot yellow"></span>
                     <span class="dot green"></span>
                 </div>
-                <span class="terminal-title">guest@adaptivehorizon51:~ (bash)</span>
-                <span class="terminal-badge">LIVE CLI</span>
-            </div>
-            <div class="terminal-body" id="terminal-body">
-                <div class="terminal-line">
-                    <span class="system-msg">[BOOT] Adaptive Horizon 5.1 IoT Console [v2.5]</span>
-                </div>
-                <div class="terminal-line">
-                    <span class="system-msg">Ketik <span class="highlight-cmd">'help'</span> untuk panduan perintah. (Gunakan tombol panah ↑/↓ untuk history)</span>
+                <span class="terminal-title">ah51@xtensa-esp32:~ (bash v5.2)</span>
+                <div class="terminal-actions">
+                    <span class="terminal-hint-key" title="Tekan Tab untuk autokomplit">TAB = AUTOCOMPLETE</span>
+                    <span class="terminal-badge">LIVE CLI</span>
                 </div>
             </div>
+            
+            <div class="terminal-body" id="terminal-body" role="log" aria-live="polite">
+                <div class="terminal-line">
+                    <span class="system-msg" data-i18n="terminal_welcome_1">[SYSTEM] Adaptive Horizon 5.1 Hybrid Kernel v2.5.8 Dimuat.</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="system-msg" data-i18n="terminal_welcome_2">Ketik 'help' untuk daftar perintah, atau gunakan 'neofetch', 'i2cdetect', 'ping'.</span>
+                </div>
+            </div>
+
+            <!-- Autocomplete Floating Preview -->
+            <div class="terminal-suggest-bar" id="terminal-suggest-bar" aria-hidden="true"></div>
+
             <div class="terminal-input-row">
-                <span class="terminal-prompt">ah51@system:~$</span>
-                <input type="text" id="terminal-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Ketik perintah... (contoh: help)" />
+                <label for="terminal-input" class="terminal-prompt">ah51@system:~$</label>
+                <input 
+                    type="text" 
+                    id="terminal-input" 
+                    autocomplete="off" 
+                    autocorrect="off" 
+                    autocapitalize="off" 
+                    spellcheck="false" 
+                    data-i18n-placeholder="terminal_placeholder"
+                    placeholder="Ketik perintah... (contoh: help, neofetch, i2cdetect)" 
+                    aria-label="Input Baris Perintah Terminal CLI"
+                />
             </div>
         </section>
 
         <!-- 3. Identity & System Status Card -->
-        <section class="bento-card identity-card">
+        <section class="bento-card identity-card" aria-label="Informasi Inti Sistem">
             <div class="info-grid">
                 <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-fingerprint"></i></div>
+                    <div class="info-icon" aria-hidden="true"><i class="fas fa-fingerprint"></i></div>
                     <div class="info-meta">
                         <span class="info-label" data-i18n="brand_core">BRAND CORE</span>
                         <span class="info-val">ADAPTIVE HORIZON 5.1</span>
                     </div>
                 </div>
                 <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                    <div class="info-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
                     <div class="info-meta">
                         <span class="info-label" data-i18n="local_time">WAKTU LOKAL (INDONESIA)</span>
                         <span class="info-val live-clock" id="live-clock">--:--:-- WIB</span>
                     </div>
                 </div>
                 <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-location-dot"></i></div>
+                    <div class="info-icon" aria-hidden="true"><i class="fas fa-location-dot"></i></div>
                     <div class="info-meta">
                         <span class="info-label" data-i18n="base_on">BASE ON</span>
-                        <span class="info-val">INDONESIA <span class="flag-icon">🇮🇩</span></span>
+                        <span class="info-val">INDONESIA <span class="flag-icon" aria-hidden="true">🇮🇩</span></span>
                     </div>
                 </div>
                 <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="info-icon" aria-hidden="true"><i class="fas fa-rocket"></i></div>
                     <div class="info-meta">
                         <span class="info-label" data-i18n="established">ESTABLISHED</span>
                         <span class="info-val">2020 <span class="badge-sub">4+ Yrs</span></span>
@@ -183,67 +207,67 @@
             </div>
 
             <!-- Tech Badges -->
-            <div class="tech-stack-row">
-                <span class="tech-chip"><i class="fas fa-microchip"></i> ESP32 Xtensa Dual-Core</span>
-                <span class="tech-chip"><i class="fas fa-code"></i> C / C++ (ESP-IDF / Arduino)</span>
-                <span class="tech-chip"><i class="fas fa-wifi"></i> IoT Systems & WebSocket</span>
-                <span class="tech-chip"><i class="fab fa-html5"></i> Web UI & Dashboard</span>
-                <span class="tech-chip"><i class="fas fa-network-wired"></i> I2C & Sensor Bus</span>
-                <span class="tech-chip"><i class="fab fa-git-alt"></i> Git CLI</span>
+            <div class="tech-stack-row" aria-label="Tech Stack Hardware and Software">
+                <span class="tech-chip"><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 Xtensa Dual-Core</span>
+                <span class="tech-chip"><i class="fas fa-code" aria-hidden="true"></i> C / C++ (ESP-IDF / Arduino)</span>
+                <span class="tech-chip"><i class="fas fa-wifi" aria-hidden="true"></i> IoT Systems &amp; WebSocket</span>
+                <span class="tech-chip"><i class="fab fa-html5" aria-hidden="true"></i> Modern Web UI &amp; Engine</span>
+                <span class="tech-chip"><i class="fas fa-network-wired" aria-hidden="true"></i> I2C &amp; SPI Sensor Bus</span>
+                <span class="tech-chip"><i class="fab fa-git-alt" aria-hidden="true"></i> Git CLI &amp; CI/CD</span>
             </div>
         </section>
 
         <!-- 4. Social Media Card -->
-        <section class="bento-card socials-card">
+        <section class="bento-card socials-card" aria-label="Media Sosial dan Kontak">
             <div class="card-header-flex">
-                <h3 class="card-title" data-i18n="social_title">Hubungkan & Ikuti</h3>
+                <h3 class="card-title" data-i18n="social_title">Hubungkan &amp; Ikuti</h3>
                 <span class="badge-pill" data-i18n="social_badge">Official Links</span>
             </div>
             
             <div class="social-grid">
-                <a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer" class="social-btn ig" aria-label="Instagram">
-                    <div class="btn-icon-wrap"><i class="fab fa-instagram"></i></div>
+                <a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer" class="social-btn ig" aria-label="Kunjungi Profil Instagram">
+                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-instagram"></i></div>
                     <div class="btn-text-wrap">
                         <span class="btn-name">Instagram</span>
                         <span class="btn-handle">@rfa_glng_p._a.h_5.1</span>
                     </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
+                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
                 </a>
                 
-                <a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer" class="social-btn yt" aria-label="YouTube">
-                    <div class="btn-icon-wrap"><i class="fab fa-youtube"></i></div>
+                <a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer" class="social-btn yt" aria-label="Kunjungi Channel YouTube">
+                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-youtube"></i></div>
                     <div class="btn-text-wrap">
                         <span class="btn-name">YouTube</span>
                         <span class="btn-handle">@A.H_5.1</span>
                     </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
+                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
                 </a>
                 
-                <a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer" class="social-btn tt" aria-label="TikTok">
-                    <div class="btn-icon-wrap"><i class="fab fa-tiktok"></i></div>
+                <a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer" class="social-btn tt" aria-label="Kunjungi Akun TikTok">
+                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-tiktok"></i></div>
                     <div class="btn-text-wrap">
                         <span class="btn-name">TikTok</span>
                         <span class="btn-handle">@intel_uhd_graphics</span>
                     </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
+                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
                 </a>
                 
-                <a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer" class="social-btn tw" aria-label="Twitter / X">
-                    <div class="btn-icon-wrap"><i class="fab fa-x-twitter"></i></div>
+                <a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer" class="social-btn tw" aria-label="Kunjungi Akun Twitter X">
+                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-x-twitter"></i></div>
                     <div class="btn-text-wrap">
                         <span class="btn-name">Twitter / X</span>
                         <span class="btn-handle">@absurd_humor_51</span>
                     </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
+                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
                 </a>
                 
-                <a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer" class="social-btn wa" aria-label="WhatsApp Channel">
-                    <div class="btn-icon-wrap"><i class="fab fa-whatsapp"></i></div>
+                <a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer" class="social-btn wa" aria-label="Gabung Saluran WhatsApp">
+                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
                     <div class="btn-text-wrap">
                         <span class="btn-name" data-i18n="whatsapp_channel">Saluran WhatsApp</span>
                         <span class="btn-handle">Adaptive Horizon 5.1</span>
                     </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon"></i>
+                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
                 </a>
             </div>
         </section>
@@ -251,18 +275,18 @@
         <!-- 5. BetterLyrics ESP32 Featured Project Card -->
         <section class="bento-card project-card" aria-labelledby="betterlyrics-title">
             <div class="project-header">
-                <div class="project-icon-box">
+                <div class="project-icon-box" aria-hidden="true">
                     <i class="fas fa-microchip"></i>
                 </div>
                 <div class="project-headline">
                     <div class="project-badge-row">
                         <span class="project-kicker" data-i18n="project_kicker">PROJECT UNGGULAN</span>
-                        <span class="project-status-tag"><span class="pulse-dot"></span> v2.0 Active</span>
+                        <span class="project-status-tag"><span class="pulse-dot" aria-hidden="true"></span> v2.0 Active</span>
                     </div>
                     <h2 id="betterlyrics-title">BetterLyrics ESP32</h2>
                 </div>
-                <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link desktop-link" aria-label="Buka BetterLyrics di GitHub">
-                    <i class="fab fa-github"></i>
+                <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link desktop-link" aria-label="Buka Repository BetterLyrics di GitHub">
+                    <i class="fab fa-github" aria-hidden="true"></i>
                     <span data-i18n="project_link">Lihat Repository</span>
                 </a>
             </div>
@@ -272,53 +296,59 @@
             </p>
 
             <!-- Interactive Mini LCD 16x2 Simulator -->
-            <div class="lcd-hardware-showcase">
+            <div class="lcd-hardware-showcase" aria-label="Simulasi Layar LCD 1602 Hardware">
                 <div class="lcd-bezel">
                     <div class="lcd-header">
-                        <span class="lcd-brand"><i class="fas fa-bolt"></i> LCD 1602 HD44780 [ESP32 I2C 0x27]</span>
-                        <span class="lcd-indicator"><span class="lcd-led active" id="lcd-led"></span> SYNC ACTIVE</span>
+                        <span class="lcd-brand"><i class="fas fa-bolt" aria-hidden="true"></i> LCD 1602 HD44780 [ESP32 I2C 0x27]</span>
+                        <span class="lcd-indicator"><span class="lcd-led active" id="lcd-led" aria-hidden="true"></span> SYNC ACTIVE</span>
                     </div>
-                    <div class="lcd-screen" id="lcd-screen">
+                    <div class="lcd-screen" id="lcd-screen" role="region" aria-live="polite">
                         <div class="lcd-row lcd-row-1" id="lcd-row-1">A.H 5.1 Karaoke</div>
                         <div class="lcd-row lcd-row-2" id="lcd-row-2">♪ BetterLyrics ♫</div>
                     </div>
                     <div class="lcd-toolbar">
-                        <button type="button" id="lcd-prev-btn" class="lcd-btn" title="Lirik Sebelumnya"><i class="fas fa-backward-step"></i></button>
-                        <button type="button" id="lcd-play-btn" class="lcd-btn active" title="Play / Pause Simulasi"><i class="fas fa-pause"></i></button>
-                        <button type="button" id="lcd-next-btn" class="lcd-btn" title="Lirik Berikutnya"><i class="fas fa-forward-step"></i></button>
-                        <span class="lcd-mode-badge" id="lcd-mode-badge">SYNC MODE 07/20</span>
+                        <button type="button" id="lcd-prev-btn" class="lcd-btn" title="Lirik Sebelumnya" aria-label="Lirik Sebelumnya">
+                            <i class="fas fa-backward-step" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" id="lcd-play-btn" class="lcd-btn active" title="Putar atau Jeda Simulasi" aria-label="Putar atau Jeda">
+                            <i class="fas fa-pause" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" id="lcd-next-btn" class="lcd-btn" title="Lirik Berikutnya" aria-label="Lirik Berikutnya">
+                            <i class="fas fa-forward-step" aria-hidden="true"></i>
+                        </button>
+                        <span class="lcd-mode-badge" id="lcd-mode-badge">SYNC MODE 01/20</span>
                     </div>
                 </div>
             </div>
 
             <!-- Features Highlights -->
             <div class="project-tags">
-                <span class="tag-pill"><i class="fas fa-sliders"></i> 20 Sync Models</span>
-                <span class="tag-pill"><i class="fas fa-wand-magic-sparkles"></i> 20 FX Transitions</span>
-                <span class="tag-pill"><i class="fas fa-wifi"></i> ESP32 Web Server</span>
-                <span class="tag-pill"><i class="fab fa-spotify"></i> Real-time Sync</span>
+                <span class="tag-pill"><i class="fas fa-sliders" aria-hidden="true"></i> 20 Sync Models</span>
+                <span class="tag-pill"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> 20 FX Transitions</span>
+                <span class="tag-pill"><i class="fas fa-wifi" aria-hidden="true"></i> ESP32 Web Server</span>
+                <span class="tag-pill"><i class="fab fa-spotify" aria-hidden="true"></i> Real-time Sync</span>
             </div>
 
-            <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link mobile-link">
-                <i class="fab fa-github"></i>
+            <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link mobile-link" aria-label="Buka Repository BetterLyrics di GitHub">
+                <i class="fab fa-github" aria-hidden="true"></i>
                 <span data-i18n="project_link">Lihat Repository</span>
             </a>
         </section>
 
-        <!-- 6. UPCOMING PROJECT: ESP32 Classified R&D (Bersih, Misterius, Tanpa Bocoran Cara Kerja) -->
-        <section class="bento-card upcoming-card">
+        <!-- 6. UPCOMING PROJECT: ESP32 Classified R&D -->
+        <section class="bento-card upcoming-card" aria-labelledby="upcoming-title">
             <div class="project-header">
-                <div class="project-icon-box oled-icon">
+                <div class="project-icon-box oled-icon" aria-hidden="true">
                     <i class="fas fa-user-secret"></i>
                 </div>
                 <div class="project-headline">
                     <div class="project-badge-row">
                         <span class="project-kicker" data-i18n="upcoming_kicker">PROYEK MENDATANG</span>
-                        <span class="project-status-tag status-wip"><span class="pulse-dot orange"></span> In Development</span>
+                        <span class="project-status-tag status-wip"><span class="pulse-dot orange" aria-hidden="true"></span> In Development</span>
                     </div>
-                    <h2 data-i18n="upcoming_title">Project Codename: Horizon-X (ESP32)</h2>
+                    <h2 id="upcoming-title" data-i18n="upcoming_title">Project Codename: Horizon-X (ESP32)</h2>
                 </div>
-                <span class="prototype-badge"><i class="fas fa-microchip"></i> ESP32 Architecture</span>
+                <span class="prototype-badge"><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 Architecture</span>
             </div>
 
             <p class="project-desc" data-i18n="upcoming_description">
@@ -326,33 +356,41 @@
             </p>
 
             <!-- Spoiler Blurred Container -->
-            <div class="spoiler-wrapper">
+            <div class="spoiler-wrapper" id="spoilerWrapper">
+                
+                <!-- Quick Re-lock Floating Button -->
+                <button type="button" class="relock-btn" id="relockBtn" title="Kunci Kembali Telemetri Rahasia" aria-label="Kunci Kembali Telemetri">
+                    <i class="fas fa-lock" aria-hidden="true"></i> 
+                    <span data-i18n="relock_btn">Kunci Kembali (Lock)</span>
+                </button>
+
                 <!-- Overlay Spoiler Shield -->
                 <div class="spoiler-shield" id="spoilerShield">
-                    <div class="shield-icon"><i class="fas fa-shield-halved"></i></div>
-                    <div class="shield-title">TOP SECRET // HARDWARE IN DEVELOPMENT</div>
-                    <p class="shield-desc">
-                        Konfigurasi sirkuit dan firmware diamankan untuk mencegah spoiler sebelum peluncuran resmi. Tekan tombol untuk melihat sinyal telemetri.
+                    <div class="shield-icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></div>
+                    <div class="shield-title" data-i18n="shield_title">TOP SECRET // HARDWARE IN DEVELOPMENT</div>
+                    <p class="shield-desc" data-i18n="shield_desc">
+                        Konfigurasi sirkuit dan firmware diamankan untuk mencegah spoiler sebelum peluncuran resmi. Tekan tombol untuk melihat sinyal telemetri atau gunakan perintah terminal.
                     </p>
                     <button type="button" class="decrypt-trigger-btn" id="decryptToggleBtn">
-                        <i class="fas fa-unlock-keyhole"></i> <span id="decryptBtnText" data-i18n="decrypt_btn">Buka Kunci Preview R&D</span>
+                        <i class="fas fa-unlock-keyhole" aria-hidden="true"></i> 
+                        <span id="decryptBtnText" data-i18n="decrypt_btn">Buka Kunci Preview R&amp;D</span>
                     </button>
                     <div class="shield-tags">
-                        <span><i class="fas fa-microchip"></i> ESP32 Master Core</span>
-                        <span><i class="fas fa-lock"></i> Confidential R&D</span>
-                        <span><i class="fas fa-flask"></i> Prototype Phase</span>
+                        <span><i class="fas fa-microchip" aria-hidden="true"></i> <span data-i18n="shield_tag1">ESP32 Master Core</span></span>
+                        <span><i class="fas fa-lock" aria-hidden="true"></i> <span data-i18n="shield_tag2">Confidential R&amp;D</span></span>
+                        <span><i class="fas fa-flask" aria-hidden="true"></i> <span data-i18n="shield_tag3">Prototype Phase</span></span>
                     </div>
                 </div>
 
-                <!-- Hardware Rack Preview (Animasi tetap berjalan di balik efek blur) -->
-                <div class="multi-hardware-rack blurred-content" id="hardwareRack">
+                <!-- Hardware Rack Preview -->
+                <div class="multi-hardware-rack blurred-content" id="hardwareRack" role="region" aria-label="Telemetri Hardware Multi-Bus">
                     <div class="rack-header">
-                        <span><i class="fas fa-microchip"></i> ESP32 BUS TELEMETRY [CLASSIFIED]</span>
-                        <span class="rack-status"><span class="pulse-dot green"></span> HARDWARE SYNC LIVE</span>
+                        <span><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 BUS TELEMETRY [CLASSIFIED]</span>
+                        <span class="rack-status"><span class="pulse-dot green" aria-hidden="true"></span> HARDWARE SYNC LIVE</span>
                     </div>
 
                     <div class="display-cluster-grid">
-                        <!-- Module 1 -->
+                        <!-- Module 1: OLED Display -->
                         <div class="hardware-module oled-module">
                             <div class="module-bar">
                                 <span class="mod-title">SYSTEM TELEMETRY</span>
@@ -364,7 +402,7 @@
                                         <span id="oled-track">ESP32 SIGNAL FX</span>
                                         <span>60 FPS</span>
                                     </div>
-                                    <canvas id="oledVisualizer" width="128" height="34"></canvas>
+                                    <canvas id="oledVisualizer" width="128" height="34" aria-label="Visualizer Spektrum Sinyal"></canvas>
                                     <div class="oled-bot-meta">
                                         <span>BUFFER: ACTIVE</span>
                                         <span>Real-time</span>
@@ -373,7 +411,7 @@
                             </div>
                         </div>
 
-                        <!-- Module 2 & 3 -->
+                        <!-- Module 2 & 3: Dual LCD Mini Cluster -->
                         <div class="dual-lcd-container">
                             <div class="hardware-module lcd-half-module">
                                 <div class="module-bar">
@@ -381,7 +419,7 @@
                                     <span class="mod-addr">0x27</span>
                                 </div>
                                 <div class="lcd-screen mini-lcd">
-                                    <div class="lcd-row" id="tri-lcd1-row1">▶ ESP32 SYSTEM</div>
+                                    <div class="lcd-row" id="tri-lcd1-row1">&#9654; ESP32 HORIZON-X</div>
                                     <div class="lcd-row" id="tri-lcd1-row2">Confidential line...</div>
                                 </div>
                             </div>
@@ -392,51 +430,51 @@
                                     <span class="mod-addr">0x26</span>
                                 </div>
                                 <div class="lcd-screen mini-lcd">
-                                    <div class="lcd-row" id="tri-lcd2-row1">STATUS:</div>
-                                    <div class="lcd-row" id="tri-lcd2-row2">Data Encrypted...</div>
+                                    <div class="lcd-row" id="tri-lcd2-row1">SYS BUS: ENCRYPTED</div>
+                                    <div class="lcd-row" id="tri-lcd2-row2">Telemetri Active...</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="rack-toolbar">
-                        <button type="button" class="lcd-btn" title="Simulasi"><i class="fas fa-backward-step"></i></button>
-                        <button type="button" class="lcd-btn active" title="Simulasi Berjalan"><i class="fas fa-pause"></i></button>
-                        <button type="button" class="lcd-btn" title="Simulasi"><i class="fas fa-forward-step"></i></button>
-                        <span class="rack-mode-badge" id="tri-mode-badge">ESP32 TELEMETRY ONLINE</span>
+                        <button type="button" id="rack-cycle-btn" class="lcd-btn" title="Ganti Sinyal Telemetri" aria-label="Ganti Kanal Telemetri">
+                            <i class="fas fa-arrows-rotate" aria-hidden="true"></i>
+                        </button>
+                        <span class="rack-mode-badge" id="tri-mode-badge">CH-01: HIGH SPEED I2C BUS ACTIVE</span>
                     </div>
                 </div>
             </div>
 
             <!-- Tags Misterius & Elegan -->
             <div class="project-tags">
-                <span class="tag-pill"><i class="fas fa-microchip"></i> ESP32 Architecture</span>
-                <span class="tag-pill"><i class="fas fa-network-wired"></i> Multi-Bus System</span>
-                <span class="tag-pill"><i class="fas fa-code-branch"></i> Custom Firmware</span>
-                <span class="tag-pill"><i class="fas fa-flask"></i> Confidential R&D</span>
+                <span class="tag-pill"><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 Architecture</span>
+                <span class="tag-pill"><i class="fas fa-network-wired" aria-hidden="true"></i> Multi-Bus System</span>
+                <span class="tag-pill"><i class="fas fa-code-branch" aria-hidden="true"></i> Custom Firmware</span>
+                <span class="tag-pill"><i class="fas fa-flask" aria-hidden="true"></i> Confidential R&amp;D</span>
             </div>
         </section>
 
         <!-- 7. Support / Sponsorship Card -->
-        <section class="bento-card support-card">
+        <section class="bento-card support-card" aria-labelledby="support-heading">
             <div class="support-content">
-                <div class="support-icon-halo">
+                <div class="support-icon-halo" aria-hidden="true">
                     <i class="fas fa-heart"></i>
                 </div>
-                <h3 data-i18n="support_heading">Dukung Terus Karya Kreatif</h3>
+                <h3 id="support-heading" data-i18n="support_heading">Dukung Terus Karya Kreatif</h3>
                 <p data-i18n="support_para" class="support-para">
                     Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.
                 </p>
                 <div class="support-btn-group">
-                    <a href="https://sociabuzz.com/ah51" target="_blank" rel="noopener noreferrer" class="cta-button sociabuzz-btn">
-                        <span class="btn-shimmer"></span>
-                        <i class="fas fa-coffee"></i>
-                        <span>Traktir di Sociabuzz</span>
+                    <a href="https://sociabuzz.com/ah51" target="_blank" rel="noopener noreferrer" class="cta-button sociabuzz-btn" aria-label="Dukung Traktir di Sociabuzz">
+                        <span class="btn-shimmer" aria-hidden="true"></span>
+                        <i class="fas fa-coffee" aria-hidden="true"></i>
+                        <span data-i18n="support_sociabuzz">Traktir di Sociabuzz</span>
                     </a>
-                    <a href="https://saweria.co/Absurdhumor51" target="_blank" rel="noopener noreferrer" class="cta-button saweria-btn">
-                        <span class="btn-shimmer"></span>
-                        <i class="fas fa-heart"></i>
-                        <span>Dukung via Saweria</span>
+                    <a href="https://saweria.co/Absurdhumor51" target="_blank" rel="noopener noreferrer" class="cta-button saweria-btn" aria-label="Dukung Donasi via Saweria">
+                        <span class="btn-shimmer" aria-hidden="true"></span>
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                        <span data-i18n="support_saweria">Dukung via Saweria</span>
                     </a>
                 </div>
             </div>
@@ -444,21 +482,21 @@
 
     </main>
 
-    <!-- Bottom Footer (Traffic Counter Sesuai Domain GitHub Anda) -->
+    <!-- Bottom Footer -->
     <footer class="bottom-footer">
         <div class="footer-container">
             <div class="badge-wrapper">
                 <img src="https://hits.sh/adaptivehorizon51.github.io.svg?style=flat-square&color=00f0ff" class="hit-badge" alt="Traffic Counter" loading="lazy">
             </div>
-            <p class="copyright-text" data-i18n="copyright">© A.H 5.1 · All Rights Reserved</p>
-            <p class="sub-credit">Engineered with Cyber Bento UI & Matrix Kernel</p>
+            <p class="copyright-text" data-i18n="copyright">&copy; A.H 5.1 &middot; All Rights Reserved</p>
+            <p class="sub-credit" data-i18n="sub_credit">Engineered with Cyber Bento UI &amp; Matrix Kernel</p>
         </div>
     </footer>
 
     <!-- Toast Notification Box -->
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+    <div id="toast-container" class="toast-container" role="status" aria-live="polite"></div>
 
-    <!-- Main Logic Script (Deferred) -->
+    <!-- Main Logic Script -->
     <script src="script.js" defer></script>
 </body>
 </html>
