@@ -10,6 +10,46 @@
     <!-- Browser Theme Color & Favicon -->
     <meta name="theme-color" content="#070a10">
     <link rel="icon" type="image/png" href="profile-picture.png">
+    
+    <!-- Progressive Web App (PWA) -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="A.H 5.1">
+    <link rel="apple-touch-icon" href="profile-picture.png">
+
+    <!-- Schema.org JSON-LD Structured Data for Google SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://adaptivehorizon51.github.io/#person",
+          "name": "Adaptive Horizon 5.1",
+          "url": "https://adaptivehorizon51.github.io/",
+          "image": "https://adaptivehorizon51.github.io/profile-picture.png",
+          "jobTitle": "IoT & Embedded Developer",
+          "description": "Creator of BetterLyrics ESP32, hardware researcher, and embedded systems developer.",
+          "sameAs": [
+            "https://github.com/adaptivehorizon51",
+            "https://youtube.com/@A.H_5.1",
+            "https://instagram.com/rfa_glng_p._a.h_5.1",
+            "https://twitter.com/absurd_humor_51"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://adaptivehorizon51.github.io/#betterlyrics",
+          "name": "BetterLyrics ESP32",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "ESP32 FreeRTOS",
+          "url": "https://github.com/adaptivehorizon51/A.H51-esp32",
+          "description": "Smart karaoke lyric display for LCD 16x2 with Wi-Fi dashboard, 20 sync models, and 20 transition presets."
+        }
+      ]
+    }
+    </script>
 
     <!-- Open Graph (WhatsApp, Discord, Telegram, Facebook) -->
     <meta property="og:type" content="website">
@@ -81,6 +121,9 @@
                 
                 <!-- Action Controls -->
                 <div class="controls-group">
+                    <button type="button" id="audio-toggle" class="icon-btn audio-btn" aria-label="Toggle Efek Suara Cyber" title="Efek Suara (Mute/Unmute)">
+                        <i class="fas fa-volume-xmark" aria-hidden="true"></i>
+                    </button>
                     <button type="button" id="share-btn" class="icon-btn" aria-label="Bagikan Tautan Website" title="Bagikan / Salin Tautan">
                         <i class="fas fa-share-nodes" aria-hidden="true"></i>
                     </button>
@@ -99,7 +142,7 @@
         <section class="bento-card profile-card" aria-label="Profil Utama">
             <div class="avatar-wrapper">
                 <img 
-                    src="profile picture.png" 
+                    src="profile-picture.png" 
                     alt="Foto Profil Adaptive Horizon 5.1" 
                     class="profile-avatar" 
                     loading="eager"
@@ -152,6 +195,17 @@
                 <div class="terminal-line">
                     <span class="system-msg" data-i18n="terminal_welcome_2">Ketik 'help' untuk daftar perintah, atau gunakan 'neofetch', 'i2cdetect', 'ping'.</span>
                 </div>
+            </div>
+
+            <!-- Mobile & Quick Command Chips -->
+            <div class="terminal-quick-chips" role="toolbar" aria-label="Aksi Cepat Terminal">
+                <span class="chips-label">QUICK:</span>
+                <button type="button" class="quick-chip" data-cmd="help">help</button>
+                <button type="button" class="quick-chip" data-cmd="neofetch">neofetch</button>
+                <button type="button" class="quick-chip" data-cmd="i2cdetect">i2cdetect</button>
+                <button type="button" class="quick-chip" data-cmd="wifi">wifi</button>
+                <button type="button" class="quick-chip" data-cmd="stats">stats</button>
+                <button type="button" class="quick-chip" data-cmd="clear">clear</button>
             </div>
 
             <!-- Autocomplete Floating Preview -->
@@ -280,7 +334,7 @@
                     <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
                     <div class="btn-text-wrap">
                         <span class="btn-name" data-i18n="whatsapp_channel">Saluran WhatsApp</span>
-                        <span class="btn-handle">Adaptive Horizon 5.1</span>
+                        <span class="btn-handle">Kumpulan Source Code Hasil Eksperimen (K.S.C.H.E.)</span>
                     </div>
                     <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
                 </a>
@@ -297,6 +351,9 @@
                     <div class="project-badge-row">
                         <span class="project-kicker" data-i18n="project_kicker">PROJECT UNGGULAN</span>
                         <span class="project-status-tag"><span class="pulse-dot" aria-hidden="true"></span> v2.0 Active</span>
+                        <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-status-tag gh-stars-badge" id="gh-stats-badge" title="Live GitHub Telemetry" aria-label="Lihat Bintang GitHub">
+                            <i class="fab fa-github" aria-hidden="true"></i> <span id="gh-stars-count">⭐ ...</span>
+                        </a>
                     </div>
                     <h2 id="betterlyrics-title">BetterLyrics ESP32</h2>
                 </div>
@@ -331,7 +388,31 @@
                         <button type="button" id="lcd-next-btn" class="lcd-btn" title="Lirik Berikutnya" aria-label="Lirik Berikutnya">
                             <i class="fas fa-forward-step" aria-hidden="true"></i>
                         </button>
+                        <button type="button" id="lcd-custom-btn" class="lcd-btn" title="Ketik Teks Sendiri ke LCD" aria-label="Ketik Teks Sendiri">
+                            <i class="fas fa-pen-to-square" aria-hidden="true"></i>
+                        </button>
                         <span class="lcd-mode-badge" id="lcd-mode-badge">SYNC MODE 01/20</span>
+                    </div>
+
+                    <!-- LCD Interactive Custom Text Drawer -->
+                    <div class="lcd-custom-drawer" id="lcd-custom-drawer" aria-hidden="true">
+                        <div class="lcd-drawer-header">
+                            <span><i class="fas fa-keyboard" aria-hidden="true"></i> <span data-i18n="lcd_writer_title">LCD 16x2 Text Writer</span></span>
+                            <button type="button" id="lcd-drawer-close" class="lcd-mini-close" aria-label="Tutup Panel">&times;</button>
+                        </div>
+                        <div class="lcd-drawer-body">
+                            <div class="lcd-input-group">
+                                <label for="lcd-input-r1">Line 1 (Max 16):</label>
+                                <input type="text" id="lcd-input-r1" maxlength="16" placeholder="Ketik baris 1..." value="Halo Dunia!">
+                            </div>
+                            <div class="lcd-input-group">
+                                <label for="lcd-input-r2">Line 2 (Max 16):</label>
+                                <input type="text" id="lcd-input-r2" maxlength="16" placeholder="Ketik baris 2..." value="A.H 5.1 ESP32">
+                            </div>
+                            <button type="button" id="lcd-custom-send-btn" class="lcd-send-btn">
+                                <i class="fas fa-terminal" aria-hidden="true"></i> <span data-i18n="lcd_writer_send">Kirim ke LCD</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

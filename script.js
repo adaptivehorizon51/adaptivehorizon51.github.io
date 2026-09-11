@@ -25,13 +25,21 @@ const MatrixEngine = (() => {
     drops = Array.from({ length: columns }, () => Math.random() * -80);
   }
 
+  let activeColor = localStorage.getItem('ah51_matrix_color') || 'cyan';
+  const colorPalette = {
+    cyan: { dark: '#00f0ff', light: 'rgba(2, 132, 199, 0.45)' },
+    green: { dark: '#00ff88', light: 'rgba(5, 150, 105, 0.45)' },
+    amber: { dark: '#f59e0b', light: 'rgba(217, 119, 6, 0.45)' }
+  };
+
   function draw() {
     if (!ctx) return;
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     ctx.fillStyle = isLight ? 'rgba(241, 245, 249, 0.16)' : 'rgba(7, 10, 16, 0.14)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = isLight ? 'rgba(2, 132, 199, 0.45)' : '#00f0ff';
+    const palette = colorPalette[activeColor] || colorPalette.cyan;
+    ctx.fillStyle = isLight ? palette.light : palette.dark;
     ctx.font = `${fontSize}px monospace`;
 
     for (let i = 0; i < drops.length; i++) {
@@ -54,6 +62,13 @@ const MatrixEngine = (() => {
     intervalId = null;
   }
 
+  function setColor(color) {
+    if (colorPalette[color]) {
+      activeColor = color;
+      localStorage.setItem('ah51_matrix_color', color);
+    }
+  }
+
   resize();
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -65,7 +80,7 @@ const MatrixEngine = (() => {
   });
 
   resume();
-  return { pause, resume };
+  return { pause, resume, setColor, getColor: () => activeColor };
 })();
 
 /* ============================================================
@@ -159,7 +174,12 @@ const I18nManager = (() => {
       terminal_welcome_2: "Ketik 'help' untuk daftar perintah, atau gunakan 'neofetch', 'i2cdetect', 'ping'.",
       toast_copied: "Tautan portofolio disalin ke clipboard!",
       toast_decrypted: "Telemetri ESP32 didekripsi!",
-      toast_locked: "Sistem Horizon-X dikunci kembali."
+      toast_locked: "Sistem Horizon-X dikunci kembali.",
+      lcd_writer_title: "Simulator Penulis Teks LCD (16×2)",
+      lcd_writer_send: "Kirim ke LCD",
+      toast_custom_lcd: "Teks kustom berhasil dikirim ke LCD 1602!",
+      toast_audio_on: "Efek Suara Aktif (Cyber Audio FX ON)",
+      toast_audio_off: "Efek Suara Dinonaktifkan"
     },
     en: {
       status_active: "Actively Creating",
@@ -194,7 +214,12 @@ const I18nManager = (() => {
       terminal_welcome_2: "Type 'help' for commands, or explore 'neofetch', 'i2cdetect', 'ping'.",
       toast_copied: "Portfolio link copied to clipboard!",
       toast_decrypted: "ESP32 Horizon-X Telemetry decrypted!",
-      toast_locked: "Horizon-X system re-locked (Confidential Mode)."
+      toast_locked: "Horizon-X system re-locked (Confidential Mode).",
+      lcd_writer_title: "LCD 16x2 Text Writer Simulator",
+      lcd_writer_send: "Send to LCD",
+      toast_custom_lcd: "Custom text transmitted to LCD 1602!",
+      toast_audio_on: "Cyber Audio FX Enabled",
+      toast_audio_off: "Audio FX Muted"
     },
     ms: {
       status_active: "Aktif Berkarya",
@@ -229,7 +254,12 @@ const I18nManager = (() => {
       terminal_welcome_2: "Taip 'help' untuk senarai arahan, atau cuba 'neofetch', 'i2cdetect', 'ping'.",
       toast_copied: "Pautan berjaya disalin ke papan keratan!",
       toast_decrypted: "Telemetri ESP32 Horizon-X dinyahkunci!",
-      toast_locked: "Sistem Horizon-X dikunci semula."
+      toast_locked: "Sistem Horizon-X dikunci semula.",
+      lcd_writer_title: "Simulator Penulis Teks LCD (16×2)",
+      lcd_writer_send: "Hantar ke LCD",
+      toast_custom_lcd: "Teks tersuai berjaya dihantar ke LCD 1602!",
+      toast_audio_on: "Kesan Bunyi Siber Diaktifkan",
+      toast_audio_off: "Kesan Bunyi Dimatikan"
     },
     cs: {
       status_active: "Aktivně tvořím",
@@ -264,7 +294,12 @@ const I18nManager = (() => {
       terminal_welcome_2: "Zadejte 'help' pro seznam příkazů, nebo vyzkoušejte 'neofetch', 'i2cdetect', 'ping'.",
       toast_copied: "Odkaz byl zkopírován do schránky!",
       toast_decrypted: "Telemetrie ESP32 Horizon-X dešifrována!",
-      toast_locked: "Systém Horizon-X opět uzamčen."
+      toast_locked: "Systém Horizon-X opět uzamčen.",
+      lcd_writer_title: "Simulátor zápisu textu na LCD (16×2)",
+      lcd_writer_send: "Odeslat na LCD",
+      toast_custom_lcd: "Vlastní text úspěšně odeslán na LCD 1602!",
+      toast_audio_on: "Kybernetické zvukové efekty zapnuty",
+      toast_audio_off: "Zvukové efekty ztlumeny"
     }
   };
 
@@ -274,6 +309,7 @@ const I18nManager = (() => {
     if (!translations[lang]) return;
     currentLang = lang;
     localStorage.setItem('ah51_lang', lang);
+    document.documentElement.setAttribute('lang', lang);
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
@@ -428,7 +464,166 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============================================================
-   6. SIMULATOR LCD 1602 HARDWARE
+   6. CYBER AUDIO FX ENGINE (ZERO-DEPENDENCY WEB AUDIO API)
+   ============================================================ */
+const AudioEngine = (() => {
+  let audioCtx = null;
+  let isMuted = localStorage.getItem('ah51_audio') !== '1';
+
+  function initCtx() {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) audioCtx = new AudioContext();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playClick() {
+    if (isMuted) return;
+    initCtx();
+    if (!audioCtx) return;
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(320, audioCtx.currentTime + 0.03);
+      gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.031);
+    } catch(e) {}
+  }
+
+  function playRelay() {
+    if (isMuted) return;
+    initCtx();
+    if (!audioCtx) return;
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.045);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.046);
+    } catch(e) {}
+  }
+
+  function playBoot() {
+    if (isMuted) return;
+    initCtx();
+    if (!audioCtx) return;
+    try {
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        const startTime = audioCtx.currentTime + (idx * 0.08);
+        gain.gain.setValueAtTime(0.06, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.22);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.23);
+      });
+    } catch(e) {}
+  }
+
+  function toggle() {
+    initCtx();
+    isMuted = !isMuted;
+    localStorage.setItem('ah51_audio', isMuted ? '0' : '1');
+    updateBtn();
+    if (!isMuted) {
+      playBoot();
+      showToast(I18nManager.getText('toast_audio_on'));
+    } else {
+      showToast(I18nManager.getText('toast_audio_off'));
+    }
+  }
+
+  function updateBtn() {
+    const btn = document.getElementById('audio-toggle');
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    if (isMuted) {
+      btn.classList.remove('active');
+      if (icon) icon.className = 'fas fa-volume-xmark';
+    } else {
+      btn.classList.add('active');
+      if (icon) icon.className = 'fas fa-volume-high';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', updateBtn);
+  document.getElementById('audio-toggle')?.addEventListener('click', toggle);
+
+  return { playClick, playRelay, playBoot, toggle, isMuted: () => isMuted };
+})();
+window.AudioEngine = AudioEngine;
+
+/* ============================================================
+   7. LIVE GITHUB TELEMETRY (BETTERLYRICS ESP32 REPO)
+   ============================================================ */
+const GitHubTelemetry = (() => {
+  const countEl = document.getElementById('gh-stars-count');
+  const CACHE_KEY = 'ah51_gh_stars_cache';
+  const CACHE_TTL = 3600 * 1000;
+
+  async function fetchStats() {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      try {
+        const data = JSON.parse(cached);
+        if (Date.now() - data.timestamp < CACHE_TTL) {
+          render(data.stars, data.forks);
+          return data;
+        }
+      } catch (e) {}
+    }
+
+    try {
+      const res = await fetch('https://api.github.com/repos/adaptivehorizon51/A.H51-esp32');
+      if (res.ok) {
+        const json = await res.json();
+        const stars = json.stargazers_count ?? 0;
+        const forks = json.forks_count ?? 0;
+        const openIssues = json.open_issues_count ?? 0;
+        const payload = { stars, forks, openIssues, timestamp: Date.now() };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+        render(stars, forks);
+        return payload;
+      }
+    } catch (err) {
+      // Fallback
+    }
+    render(0, 0);
+    return null;
+  }
+
+  function render(stars, forks) {
+    if (countEl) {
+      countEl.textContent = `⭐ ${stars} · 🍴 ${forks}`;
+    }
+  }
+
+  fetchStats();
+  return { fetchStats };
+})();
+
+/* ============================================================
+   8. SIMULATOR LCD 1602 HARDWARE & CUSTOM PLAYGROUND
    ============================================================ */
 const LcdSimulator = (() => {
   const presets = [
@@ -449,6 +644,13 @@ const LcdSimulator = (() => {
   const modeEl = document.getElementById("lcd-mode-badge");
   const playBtn = document.getElementById("lcd-play-btn");
   const ledEl = document.getElementById("lcd-led");
+
+  const drawer = document.getElementById("lcd-custom-drawer");
+  const customBtn = document.getElementById("lcd-custom-btn");
+  const closeBtn = document.getElementById("lcd-drawer-close");
+  const sendBtn = document.getElementById("lcd-custom-send-btn");
+  const row1Input = document.getElementById("lcd-input-r1");
+  const row2Input = document.getElementById("lcd-input-r2");
 
   function render() {
     if (row1El) row1El.textContent = presets[current].row1;
@@ -488,9 +690,41 @@ const LcdSimulator = (() => {
     }
   }
 
-  document.getElementById("lcd-next-btn")?.addEventListener("click", next);
-  document.getElementById("lcd-prev-btn")?.addEventListener("click", prev);
-  playBtn?.addEventListener("click", () => isPlaying ? pause() : play());
+  document.getElementById("lcd-next-btn")?.addEventListener("click", () => {
+    AudioEngine.playClick();
+    next();
+  });
+  document.getElementById("lcd-prev-btn")?.addEventListener("click", () => {
+    AudioEngine.playClick();
+    prev();
+  });
+  playBtn?.addEventListener("click", () => {
+    AudioEngine.playRelay();
+    isPlaying ? pause() : play();
+  });
+
+  customBtn?.addEventListener("click", () => {
+    AudioEngine.playClick();
+    drawer?.classList.toggle("open");
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    AudioEngine.playClick();
+    drawer?.classList.remove("open");
+  });
+
+  sendBtn?.addEventListener("click", () => {
+    AudioEngine.playRelay();
+    pause();
+    const r1 = row1Input?.value.padEnd(16, " ").slice(0, 16) || "A.H 5.1 Karaoke";
+    const r2 = row2Input?.value.padEnd(16, " ").slice(0, 16) || "Custom Text";
+    if (row1El) row1El.textContent = r1;
+    if (row2El) row2El.textContent = r2;
+    if (modeEl) modeEl.textContent = "CUSTOM USER TEXT";
+    if (ledEl) ledEl.classList.add("active");
+    drawer?.classList.remove("open");
+    showToast(I18nManager.getText("toast_custom_lcd"));
+  });
 
   play();
   return { next, prev, play, pause, isPlaying: () => isPlaying };
@@ -616,7 +850,6 @@ const HorizonSecurity = (() => {
   const virtualFS = {
     'about.txt': "Adaptive Horizon 5.1 (A.H 5.1)\nIoT, Embedded & Modern Web Architecture.\nBase in Indonesia. Est. 2020.",
     'betterlyrics.ino': "#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n// BetterLyrics v2.0 - 20 Sync Models with Wi-Fi Control\nvoid setup() { Wire.begin(21, 22); }",
-    'specs.json': '{\n  "chip": "ESP32-WROOM-32D",\n  "cores": 2,\n  "frequency": "240MHz",\n  "flash": "4MB",\n  "sram": "520KB"\n}',
     'contacts.txt': "GitHub: https://github.com/adaptivehorizon51\nInstagram: @rfa_glng_p._a.h_5.1\nYouTube: @A.H_5.1\nTikTok: @intel_uhd_graphics\nTwitter: @absurd_humor_51"
   };
 
@@ -624,19 +857,63 @@ const HorizonSecurity = (() => {
     help: () => {
       return `[SYSTEM COMMAND DIRECTORY]
 - <span class="highlight-cmd">neofetch</span>    : Spesifikasi hardware chip & ASCII art
+- <span class="highlight-cmd">stats</span>       : Live telemetry GitHub BetterLyrics
 - <span class="highlight-cmd">i2cdetect</span>   : Pindai bus I2C (0x26, 0x27, 0x3C)
 - <span class="highlight-cmd">ping &lt;host&gt;</span>  : Tes latensi jaringan ICMP
 - <span class="highlight-cmd">wifi</span>        : Info koneksi IP & RSSI nirkabel
 - <span class="highlight-cmd">ls</span>          : Daftar file virtual filesystem
 - <span class="highlight-cmd">cat &lt;file&gt;</span>  : Buka file (contoh: cat specs.json)
+- <span class="highlight-cmd">audio &lt;cmd&gt;</span> : Efek suara ('on' | 'off')
+- <span class="highlight-cmd">matrix &lt;col&gt;</span>: Warna matrix ('cyan' | 'green' | 'amber')
 - <span class="highlight-cmd">theme &lt;mode&gt;</span>: Ubah tema web ('dark' | 'light')
 - <span class="highlight-cmd">lang &lt;code&gt;</span> : Ubah bahasa web ('id' | 'en' | 'ms' | 'cs')
 - <span class="highlight-cmd">lcd &lt;action&gt;</span>: Kontrol simulator LCD ('next' | 'prev' | 'play' | 'pause')
 - <span class="highlight-cmd">decrypt</span>     : Buka preview rahasia Horizon-X
 - <span class="highlight-cmd">lock</span>        : Kunci kembali preview Horizon-X
+- <span class="highlight-cmd">repo</span>        : Buka repositori GitHub BetterLyrics
 - <span class="highlight-cmd">history</span>     : Tampilkan riwayat perintah
 - <span class="highlight-cmd">clear</span>       : Bersihkan layar terminal (Ctrl+L)
 - <span class="highlight-cmd">whoami</span>      : Tampilkan info pengguna`;
+    },
+
+    stats: () => {
+      const cached = localStorage.getItem('ah51_gh_stars_cache');
+      let stars = "...", forks = "...", issues = "...";
+      if (cached) {
+        try {
+          const d = JSON.parse(cached);
+          stars = d.stars; forks = d.forks; issues = d.openIssues;
+        } catch(e) {}
+      }
+      return `[BETTERLYRICS ESP32 TELEMETRY]
+Repository  : adaptivehorizon51/A.H51-esp32
+⭐ Stars     : ${stars}
+🍴 Forks     : ${forks}
+📌 Issues    : ${issues}
+Firmware    : FreeRTOS v10.4.3 / ESP-IDF
+I2C Display : HD44780 1602 LCD (0x27)`;
+    },
+
+    audio: (args) => {
+      const act = args[0]?.toLowerCase();
+      if (act === 'on' && AudioEngine.isMuted()) AudioEngine.toggle();
+      else if (act === 'off' && !AudioEngine.isMuted()) AudioEngine.toggle();
+      else if (!act) AudioEngine.toggle();
+      return `Audio FX: <span class="highlight-cmd">${AudioEngine.isMuted() ? 'MUTED' : 'ACTIVE'}</span>`;
+    },
+
+    matrix: (args) => {
+      const c = args[0]?.toLowerCase();
+      if (['cyan', 'green', 'amber'].includes(c)) {
+        MatrixEngine.setColor(c);
+        return `Matrix Rain diubah ke warna: <span class="highlight-cmd">${c.toUpperCase()}</span>`;
+      }
+      return `Pilihan warna valid: <span class="highlight-cmd">matrix cyan | green | amber</span>`;
+    },
+
+    repo: () => {
+      window.open('https://github.com/adaptivehorizon51/A.H51-esp32', '_blank');
+      return `Membuka repositori GitHub BetterLyrics ESP32...`;
     },
 
     neofetch: () => {
@@ -646,12 +923,12 @@ const HorizonSecurity = (() => {
   |   __|   __|  _  |_  |_  |  ah51@xtensa-esp32
   |   __|__   |   __|  _|  _|  -------------------
   |_____|_____|__|  |___|___|  OS: FreeRTOS Kernel v10.4.3
-                               Host: ESP32-D0WDQ6 (Xtensa LX6)
-                               Cores: 2 Cores @ 240 MHz
-                               Memory: 520 KB SRAM / 4 MB Flash
-                               Firmware: BetterLyrics ESP32 v2.0
-                               Language: ${I18nManager.getCurrentLang().toUpperCase()}
-                               Theme: ${theme.toUpperCase()}
+                                Host: ESP32-D0WDQ6 (Xtensa LX6)
+                                Cores: 2 Cores @ 240 MHz
+                                Memory: 520 KB SRAM / 4 MB Flash
+                                Firmware: BetterLyrics ESP32 v2.0
+                                Language: ${I18nManager.getCurrentLang().toUpperCase()}
+                                Theme: ${theme.toUpperCase()}
 </div>`;
     },
 
@@ -773,7 +1050,50 @@ Perangkat terdeteksi:
     }
   }
 
+  function executeCommand(raw) {
+    raw = raw.trim();
+    if (!raw) return;
+
+    AudioEngine.playRelay();
+    commandHistory.push(raw);
+    historyIdx = -1;
+    tempInput = "";
+
+    printLine(`<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`);
+
+    const parts = raw.split(/\s+/);
+    const command = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    if (commandRegistry[command]) {
+      try {
+        const result = commandRegistry[command](args);
+        if (result !== null) {
+          printLine(result.replace(/\n/g, "<br>"));
+        }
+      } catch (err) {
+        printLine(`Execution Error: ${err.message}`, true);
+      }
+    } else {
+      printLine(`bash: ${escapeHtml(command)}: command not found. Tekan 'Tab' atau ketik 'help'.`, true);
+    }
+
+    input.value = "";
+  }
+
+  // Quick Action Chips Listener
+  document.querySelectorAll('.quick-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const cmd = chip.getAttribute('data-cmd');
+      if (cmd) executeCommand(cmd);
+    });
+  });
+
   input.addEventListener("keydown", (e) => {
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+      AudioEngine.playClick();
+    }
+
     if (e.key === "Tab") {
       e.preventDefault();
       handleAutocomplete();
@@ -822,33 +1142,7 @@ Perangkat terdeteksi:
     }
 
     if (e.key === "Enter") {
-      const raw = input.value.trim();
-      if (!raw) return;
-
-      commandHistory.push(raw);
-      historyIdx = -1;
-      tempInput = "";
-
-      printLine(`<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`);
-
-      const parts = raw.split(/\s+/);
-      const command = parts[0].toLowerCase();
-      const args = parts.slice(1);
-
-      if (commandRegistry[command]) {
-        try {
-          const result = commandRegistry[command](args);
-          if (result !== null) {
-            printLine(result.replace(/\n/g, "<br>"));
-          }
-        } catch (err) {
-          printLine(`Execution Error: ${err.message}`, true);
-        }
-      } else {
-        printLine(`bash: ${escapeHtml(command)}: command not found. Tekan 'Tab' atau ketik 'help'.`, true);
-      }
-
-      input.value = "";
+      executeCommand(input.value);
     }
   });
 })();
@@ -906,4 +1200,34 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+/* ============================================================
+   11. BENTO CARD MOUSE SPOTLIGHT GLOW
+   ============================================================ */
+(() => {
+  document.querySelectorAll('.bento-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+})();
+
+/* ============================================================
+   12. PWA SERVICE WORKER REGISTRATION (GITHUB PAGES READY)
+   ============================================================ */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('[PWA] Service Worker registered with scope:', reg.scope);
+      })
+      .catch(err => {
+        console.warn('[PWA] Service Worker registration skipped:', err);
+      });
+  });
 }
