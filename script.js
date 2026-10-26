@@ -1,1237 +1,160 @@
-/**
- * Adaptive Horizon 5.1 · Core Embedded Hub System
- * Architecture: ES6+ Modular Components with Two-Way CLI Binding
- */
-
-/* ============================================================
-   1. MATRIX RAIN CANVAS (DEBOUNCED & POWER EFFICIENT)
-   ============================================================ */
-const MatrixEngine = (() => {
-  const canvas = document.getElementById('matrixCanvas');
-  if (!canvas) return { pause: () => {}, resume: () => {} };
-
-  const ctx = canvas.getContext('2d');
-  const matrixChars = '0101AH51ESP32C++I2CWIFI<>#&*$%';
-  const fontSize = 14;
-  let columns = 0;
-  let drops = [];
-  let intervalId = null;
-  let resizeTimer = null;
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array.from({ length: columns }, () => Math.random() * -80);
+const translations = {
+  id: {
+    skip:'Lewati ke konten', nav_work:'Proyek', nav_about:'Tentang', nav_connect:'Kontak',
+    hero_kicker:'ESP32 · EMBEDDED · WEB', hero_before:'Merancang ide menjadi', hero_accent:'sesuatu yang nyata.',
+    hero_lede:'Saya membangun proyek IoT dan embedded dari firmware sampai antarmuka yang dipakai orang.',
+    hero_cta:'Lihat proyek', github_profile:'Profil GitHub', hero_status:'Sedang membangun hal baru', hero_location:'Berbasis di Indonesia', scroll_hint:'Gulir untuk menjelajah',
+    work_kicker:'KARYA PILIHAN', work_title:'Proyek yang sedang saya bangun.', audio_type:'AUDIO · EMBEDDED',
+    audio_desc:'Penerima audio Bluetooth berbasis ESP32 dengan A2DP, equalizer 9-band, dan keluaran DAC I2S.',
+    open_repo:'Buka repositori', lyrics_type:'IOT · DISPLAY', lyrics_desc:'Tampilan lirik karaoke untuk LCD 16×2 dengan dashboard Wi-Fi dan kontrol sinkronisasi.',
+    project_note:'Daftar proyek akan bertambah seiring eksperimen baru siap dibagikan.', about_kicker:'TENTANG SAYA',
+    about_title:'Suka menghubungkan hardware dan software.',
+    about_text:'Fokus saya ada pada sistem embedded, perangkat ESP32, dan pengalaman digital yang mudah digunakan. Saya belajar dengan membuat, menguji, lalu menyempurnakan setiap proyek.',
+    more_work:'Jelajahi kode di GitHub', toolkit:'TOOLKIT', tool_iot:'Prototipe perangkat', tool_cpp:'Firmware embedded', tool_audio:'Alur audio digital', tool_bus:'Display dan sensor', tool_web:'Antarmuka web', tool_build:'Build dan iterasi',
+    connect_kicker:'TERHUBUNG', connect_title:'Punya ide atau ingin ngobrol?', connect_text:'Temukan proyek, eksperimen, dan kabar terbaru lewat kanal berikut.',
+    say_hello:'Kunjungi GitHub', whatsapp_channel:'Saluran eksperimen ↗', footer_note:'Dibuat dengan rasa ingin tahu di Indonesia.',
+    theme_light:'Aktifkan tema terang', theme_dark:'Aktifkan tema gelap', menu_open:'Buka navigasi', menu_close:'Tutup navigasi',
+    share_done:'Tautan website disalin.', share_error:'Tautan tidak dapat dibagikan dari browser ini.'
+  },
+  en: {
+    skip:'Skip to content', nav_work:'Projects', nav_about:'About', nav_connect:'Contact',
+    hero_kicker:'ESP32 · EMBEDDED · WEB', hero_before:'Turning ideas into', hero_accent:'things you can use.',
+    hero_lede:'I build IoT and embedded projects, from firmware to the interfaces people use.',
+    hero_cta:'Explore projects', github_profile:'GitHub profile', hero_status:'Building something new', hero_location:'Based in Indonesia', scroll_hint:'Scroll to explore',
+    work_kicker:'SELECTED WORK', work_title:'Projects I’m building.', audio_type:'AUDIO · EMBEDDED',
+    audio_desc:'An ESP32 Bluetooth audio receiver with A2DP, a 9-band equalizer, and I2S DAC output.',
+    open_repo:'Open repository', lyrics_type:'IOT · DISPLAY', lyrics_desc:'Karaoke lyrics for a 16×2 LCD, with a Wi-Fi dashboard and sync controls.',
+    project_note:'More projects will appear as new experiments are ready to share.', about_kicker:'ABOUT ME',
+    about_title:'Bringing hardware and software together.',
+    about_text:'I focus on embedded systems, ESP32 devices, and digital experiences that are straightforward to use. I learn by building, testing, and improving each project.',
+    more_work:'Explore code on GitHub', toolkit:'TOOLKIT', tool_iot:'Device prototypes', tool_cpp:'Embedded firmware', tool_audio:'Digital audio paths', tool_bus:'Displays and sensors', tool_web:'Web interfaces', tool_build:'Build and iteration',
+    connect_kicker:'LET’S CONNECT', connect_title:'Have an idea or want to chat?', connect_text:'Find projects, experiments, and updates through these channels.',
+    say_hello:'Visit GitHub', whatsapp_channel:'Project updates ↗', footer_note:'Made with curiosity in Indonesia.',
+    theme_light:'Switch to light theme', theme_dark:'Switch to dark theme', menu_open:'Open navigation', menu_close:'Close navigation',
+    share_done:'Website link copied.', share_error:'This browser cannot share the link.'
+  },
+  ms: {
+    skip:'Langkau ke kandungan', nav_work:'Projek', nav_about:'Tentang', nav_connect:'Hubungi',
+    hero_kicker:'ESP32 · EMBEDDED · WEB', hero_before:'Mengubah idea menjadi', hero_accent:'sesuatu yang berguna.',
+    hero_lede:'Saya membina projek IoT dan embedded daripada firmware hingga antara muka untuk pengguna.',
+    hero_cta:'Lihat projek', github_profile:'Profil GitHub', hero_status:'Sedang membina sesuatu yang baharu', hero_location:'Berpangkalan di Indonesia', scroll_hint:'Tatal untuk meneroka',
+    work_kicker:'KARYA PILIHAN', work_title:'Projek yang sedang saya bina.', audio_type:'AUDIO · EMBEDDED',
+    audio_desc:'Penerima audio Bluetooth ESP32 dengan A2DP, equalizer 9 jalur dan output DAC I2S.',
+    open_repo:'Buka repositori', lyrics_type:'IOT · PAPARAN', lyrics_desc:'Lirik karaoke untuk LCD 16×2 dengan papan pemuka Wi-Fi dan kawalan penyegerakan.',
+    project_note:'Projek akan ditambah apabila eksperimen baharu sedia dikongsi.', about_kicker:'TENTANG SAYA',
+    about_title:'Menghubungkan perkakasan dan perisian.',
+    about_text:'Fokus saya ialah sistem embedded, peranti ESP32 dan pengalaman digital yang mudah digunakan. Saya belajar dengan membina, menguji dan menambah baik setiap projek.',
+    more_work:'Lihat kod di GitHub', toolkit:'TOOLKIT', tool_iot:'Prototaip peranti', tool_cpp:'Firmware embedded', tool_audio:'Aliran audio digital', tool_bus:'Paparan dan sensor', tool_web:'Antara muka web', tool_build:'Build dan iterasi',
+    connect_kicker:'HUBUNGI', connect_title:'Ada idea atau mahu berbual?', connect_text:'Lihat projek, eksperimen dan perkembangan terkini melalui saluran ini.',
+    say_hello:'Kunjungi GitHub', whatsapp_channel:'Saluran eksperimen ↗', footer_note:'Dibina dengan rasa ingin tahu di Indonesia.',
+    theme_light:'Tukar kepada tema cerah', theme_dark:'Tukar kepada tema gelap', menu_open:'Buka navigasi', menu_close:'Tutup navigasi',
+    share_done:'Pautan laman web disalin.', share_error:'Pautan tidak dapat dikongsi melalui pelayar ini.'
+  },
+  cs: {
+    skip:'Přejít k obsahu', nav_work:'Projekty', nav_about:'O mně', nav_connect:'Kontakt',
+    hero_kicker:'ESP32 · EMBEDDED · WEB', hero_before:'Měním nápady v', hero_accent:'věci, které fungují.',
+    hero_lede:'Vytvářím IoT a embedded projekty — od firmwaru až po rozhraní pro uživatele.',
+    hero_cta:'Prohlédnout projekty', github_profile:'Profil na GitHubu', hero_status:'Pracuji na něčem novém', hero_location:'Působím v Indonésii', scroll_hint:'Posuňte stránku níže',
+    work_kicker:'VYBRANÉ PROJEKTY', work_title:'Na čem právě pracuji.', audio_type:'AUDIO · EMBEDDED',
+    audio_desc:'Bluetooth audio přijímač s ESP32, A2DP, 9pásmovým ekvalizérem a výstupem I2S DAC.',
+    open_repo:'Otevřít repozitář', lyrics_type:'IOT · DISPLEJ', lyrics_desc:'Karaoke texty pro LCD 16×2 s Wi-Fi dashboardem a ovládáním synchronizace.',
+    project_note:'Další projekty přidám, až budou nové experimenty připravené ke sdílení.', about_kicker:'O MNĚ',
+    about_title:'Propojuji hardware a software.',
+    about_text:'Zaměřuji se na embedded systémy, zařízení ESP32 a digitální prostředí, které se snadno používá. Učím se tvorbou, testováním a vylepšováním projektů.',
+    more_work:'Prozkoumat kód na GitHubu', toolkit:'NÁSTROJE', tool_iot:'Prototypy zařízení', tool_cpp:'Embedded firmware', tool_audio:'Digitální audio', tool_bus:'Displeje a senzory', tool_web:'Webová rozhraní', tool_build:'Build a iterace',
+    connect_kicker:'KONTAKT', connect_title:'Máte nápad nebo si chcete popovídat?', connect_text:'Projekty, experimenty a novinky najdete na těchto kanálech.',
+    say_hello:'Navštívit GitHub', whatsapp_channel:'Novinky z projektů ↗', footer_note:'Tvořeno se zvědavostí v Indonésii.',
+    theme_light:'Zapnout světlý motiv', theme_dark:'Zapnout tmavý motiv', menu_open:'Otevřít navigaci', menu_close:'Zavřít navigaci',
+    share_done:'Odkaz na web byl zkopírován.', share_error:'Tento prohlížeč neumí odkaz sdílet.'
   }
+};
 
-  let activeColor = localStorage.getItem('ah51_matrix_color') || 'cyan';
-  const colorPalette = {
-    cyan: { dark: '#00f0ff', light: 'rgba(2, 132, 199, 0.45)' },
-    green: { dark: '#00ff88', light: 'rgba(5, 150, 105, 0.45)' },
-    amber: { dark: '#f59e0b', light: 'rgba(217, 119, 6, 0.45)' }
-  };
+const root = document.documentElement;
+const themeButton = document.getElementById('theme-toggle');
+const menuButton = document.getElementById('menu-toggle');
+const nav = document.getElementById('site-nav');
+const toast = document.getElementById('toast');
+let toastTimer;
 
-  function draw() {
-    if (!ctx) return;
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    ctx.fillStyle = isLight ? 'rgba(241, 245, 249, 0.16)' : 'rgba(7, 10, 16, 0.14)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const palette = colorPalette[activeColor] || colorPalette.cyan;
-    ctx.fillStyle = isLight ? palette.light : palette.dark;
-    ctx.font = `${fontSize}px monospace`;
-
-    for (let i = 0; i < drops.length; i++) {
-      const char = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
-      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i]++;
-    }
-  }
-
-  function resume() {
-    if (!intervalId) intervalId = setInterval(draw, 45);
-  }
-
-  function pause() {
-    clearInterval(intervalId);
-    intervalId = null;
-  }
-
-  function setColor(color) {
-    if (colorPalette[color]) {
-      activeColor = color;
-      localStorage.setItem('ah51_matrix_color', color);
-    }
-  }
-
-  resize();
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 150);
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    document.hidden ? pause() : resume();
-  });
-
-  resume();
-  return { pause, resume, setColor, getColor: () => activeColor };
-})();
-
-/* ============================================================
-   2. PRELOADER WITH FAILSAFE WATCHDOG
-   ============================================================ */
-(() => {
-  document.body.style.overflow = 'hidden';
-
-  const preloader = document.getElementById('preloader');
-  const preBar = document.getElementById('pre-bar');
-  const prePerc = document.getElementById('pre-perc');
-  const preLog = document.getElementById('pre-log');
-
-  const bootLogs = [
-    "Checking ESP32 Xtensa Architecture...",
-    "Mounting I2C Bus [0x26, 0x27, 0x3C]...",
-    "Synchronizing NTP Network Clock...",
-    "Loading Virtual Shell & CLI Kernel...",
-    "System Ready: Kernel Online."
-  ];
-
-  let progress = 0;
-  let logStep = 0;
-
-  function dismissPreloader() {
-    if (!preloader || preloader.style.visibility === 'hidden') return;
-    preloader.style.opacity = '0';
-    preloader.style.visibility = 'hidden';
-    document.body.style.overflow = '';
-  }
-
-  // Failsafe Watchdog: Layar tidak akan pernah macet selamanya
-  const watchdog = setTimeout(dismissPreloader, 3200);
-
-  const loaderInterval = setInterval(() => {
-    progress += Math.floor(Math.random() * 15) + 12;
-    if (progress > 100) progress = 100;
-
-    if (preBar) preBar.style.width = `${progress}%`;
-    if (prePerc) prePerc.textContent = `${progress < 10 ? '0' : ''}${progress}%`;
-
-    const expectedLog = Math.floor((progress / 100) * (bootLogs.length - 1));
-    if (expectedLog > logStep && preLog) {
-      logStep = expectedLog;
-      preLog.textContent = bootLogs[logStep];
-    }
-
-    if (progress >= 100) {
-      clearInterval(loaderInterval);
-      clearTimeout(watchdog);
-      setTimeout(dismissPreloader, 280);
-    }
-  }, 65);
-})();
-
-/* ============================================================
-   3. MULTI-LANGUAGE SYSTEM (i18n) LENGKAP & DINAMIS
-   ============================================================ */
-const I18nManager = (() => {
-  const translations = {
-    id: {
-      profile_summary: "Saya merancang proyek IoT dan sistem embedded berbasis ESP32, dari firmware hingga antarmuka web.",
-      status_active: "Aktif Berkreasi",
-      brand_core: "BRAND CORE",
-      local_time: "WAKTU LOKAL (INDONESIA)",
-      base_on: "BASE ON",
-      established: "SEJAK",
-      social_title: "Hubungkan & Ikuti",
-      social_badge: "Official Links",
-      whatsapp_channel: "Saluran WhatsApp",
-      project_kicker: "PROJECT UNGGULAN",
-      project_link: "Lihat Repository",
-      project_description: "BetterLyrics menampilkan lirik karaoke pada LCD 16×2. ESP32 menyediakan dashboard Wi-Fi untuk mengatur sinkronisasi dan animasi, sementara simulator di bawah memberi gambaran cara kerja tampilannya.",
-      upcoming_kicker: "PROYEK MENDATANG",
-      upcoming_title: "Project Codename: Horizon-X (ESP32)",
-      upcoming_description: "Eksperimen perangkat keras berbasis ESP32 yang masih dalam tahap riset dan prototipe. Detail teknis akan dibagikan saat sudah siap dipublikasikan.",
-      shield_title: "HORIZON-X // PRATINJAU PROTOTIPE",
-      shield_desc: "Lihat visualisasi telemetri simulasi Horizon-X. Pratinjau ini menunjukkan konsep antarmuka, bukan data dari perangkat yang sedang berjalan.",
-      decrypt_btn: "Buka Kunci Preview R&D",
-      relock_btn: "Kunci Kembali (Lock)",
-      shield_tag1: "ESP32 Master Core",
-      shield_tag2: "Riset Berjalan",
-      shield_tag3: "Fase Prototipe",
-      support_heading: "Dukung Terus Karya Kreatif",
-      support_para: "Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.",
-      support_sociabuzz: "Traktir di Sociabuzz",
-      support_saweria: "Dukung via Saweria",
-      copyright: "© A.H 5.1 · All Rights Reserved",
-      sub_credit: "Engineered with Cyber Bento UI & Matrix Kernel",
-      terminal_placeholder: "Ketik perintah... (contoh: help, neofetch, i2cdetect)",
-      terminal_welcome_1: "[SYSTEM] Adaptive Horizon 5.1 Hybrid Kernel v2.5.8 Dimuat.",
-      terminal_welcome_2: "Ketik 'help' untuk daftar perintah, atau gunakan 'neofetch', 'i2cdetect', 'ping'.",
-      toast_copied: "Tautan portofolio disalin ke clipboard!",
-      toast_decrypted: "Telemetri ESP32 didekripsi!",
-      toast_locked: "Sistem Horizon-X dikunci kembali.",
-      lcd_writer_title: "Simulator Penulis Teks LCD (16×2)",
-      lcd_writer_send: "Kirim ke LCD",
-      toast_custom_lcd: "Teks kustom berhasil dikirim ke LCD 1602!",
-      toast_audio_on: "Efek Suara Aktif (Cyber Audio FX ON)",
-      toast_audio_off: "Efek Suara Dinonaktifkan"
-    },
-    en: {
-      profile_summary: "I build ESP32-based IoT and embedded projects, from firmware to the web interfaces that control them.",
-      status_active: "Actively Creating",
-      brand_core: "BRAND CORE",
-      local_time: "LOCAL TIME (INDONESIA)",
-      base_on: "BASE ON",
-      established: "SINCE",
-      social_title: "Connect & Follow",
-      social_badge: "Official Links",
-      whatsapp_channel: "WhatsApp Channel",
-      project_kicker: "FEATURED PROJECT",
-      project_link: "View Repository",
-      project_description: "BetterLyrics displays karaoke lyrics on a 16×2 LCD. The ESP32 runs a Wi-Fi dashboard for sync and animation controls; the simulator below previews the display experience.",
-      upcoming_kicker: "UPCOMING PROJECT",
-      upcoming_title: "Project Codename: Horizon-X (ESP32)",
-      upcoming_description: "An ESP32 hardware experiment in the research and prototyping stage. Technical details will be shared when they are ready to publish.",
-      shield_title: "HORIZON-X // PROTOTYPE PREVIEW",
-      shield_desc: "Explore a simulated Horizon-X telemetry display. This preview shows the interface concept, not data from a live device.",
-      decrypt_btn: "Unlock R&D Preview",
-      relock_btn: "Re-lock Telemetry",
-      shield_tag1: "ESP32 Master Core",
-      shield_tag2: "Research in Progress",
-      shield_tag3: "Prototype Phase",
-      support_heading: "Support Creative Innovations",
-      support_para: "Your support fuels hardware components, embedded system development, and future open-source projects.",
-      support_sociabuzz: "Treat via Sociabuzz",
-      support_saweria: "Donate via Saweria",
-      copyright: "© A.H 5.1 · All Rights Reserved",
-      sub_credit: "Engineered with Cyber Bento UI & Matrix Kernel",
-      terminal_placeholder: "Type a command... (e.g. help, neofetch, i2cdetect)",
-      terminal_welcome_1: "[SYSTEM] Adaptive Horizon 5.1 Hybrid Kernel v2.5.8 Loaded.",
-      terminal_welcome_2: "Type 'help' for commands, or explore 'neofetch', 'i2cdetect', 'ping'.",
-      toast_copied: "Portfolio link copied to clipboard!",
-      toast_decrypted: "ESP32 Horizon-X Telemetry decrypted!",
-      toast_locked: "Horizon-X system re-locked (Confidential Mode).",
-      lcd_writer_title: "LCD 16x2 Text Writer Simulator",
-      lcd_writer_send: "Send to LCD",
-      toast_custom_lcd: "Custom text transmitted to LCD 1602!",
-      toast_audio_on: "Cyber Audio FX Enabled",
-      toast_audio_off: "Audio FX Muted"
-    },
-    ms: {
-      profile_summary: "Saya membina projek IoT dan sistem terbenam berasaskan ESP32, daripada firmware hingga antara muka web.",
-      status_active: "Aktif Berkarya",
-      brand_core: "TERAS JENAMA",
-      local_time: "WAKTU TEMPATAN (INDONESIA)",
-      base_on: "PANGKALAN",
-      established: "SEJAK",
-      social_title: "Sambung & Ikuti",
-      social_badge: "Pautan Rasmi",
-      whatsapp_channel: "Saluran WhatsApp",
-      project_kicker: "PROJEK UTAMA",
-      project_link: "Lihat Repositori",
-      project_description: "BetterLyrics memaparkan lirik karaoke pada LCD 16×2. ESP32 menyediakan papan pemuka Wi-Fi untuk kawalan penyegerakan dan animasi; simulator di bawah menunjukkan rupa paparannya.",
-      upcoming_kicker: "PROJEK AKAN DATANG",
-      upcoming_title: "Project Codename: Horizon-X (ESP32)",
-      upcoming_description: "Eksperimen perkakasan berasaskan ESP32 yang masih di peringkat penyelidikan dan prototaip. Butiran teknikal akan dikongsi apabila sedia diterbitkan.",
-      shield_title: "SULIT // PERKAKASAN DALAM PEMBANGUNAN",
-      shield_desc: "Lihat paparan telemetri simulasi Horizon-X. Pratonton ini menunjukkan konsep antara muka, bukan data daripada peranti langsung.",
-      decrypt_btn: "Nyahkunci Pratonton R&D",
-      relock_btn: "Kunci Semula (Lock)",
-      shield_tag1: "Teras Utama ESP32",
-      shield_tag2: "Penyelidikan Berjalan",
-      shield_tag3: "Fasa Prototaip",
-      support_heading: "Sokong Terus Karya Kreatif",
-      support_para: "Sokongan anda amat bermakna untuk komponen perkakasan, pembangunan sistem, dan penyelidikan projek sumber terbuka.",
-      support_sociabuzz: "Belanja di Sociabuzz",
-      support_saweria: "Sokong via Saweria",
-      copyright: "© A.H 5.1 · Hak Cipta Terpelihara",
-      sub_credit: "Direka dengan Cyber Bento UI & Matrix Kernel",
-      terminal_placeholder: "Taip arahan... (contoh: help, neofetch, i2cdetect)",
-      terminal_welcome_1: "[SISTEM] Adaptive Horizon 5.1 Kernel Hibrid v2.5.8 Dimuatkan.",
-      terminal_welcome_2: "Taip 'help' untuk senarai arahan, atau cuba 'neofetch', 'i2cdetect', 'ping'.",
-      toast_copied: "Pautan berjaya disalin ke papan keratan!",
-      toast_decrypted: "Telemetri ESP32 Horizon-X dinyahkunci!",
-      toast_locked: "Sistem Horizon-X dikunci semula.",
-      lcd_writer_title: "Simulator Penulis Teks LCD (16×2)",
-      lcd_writer_send: "Hantar ke LCD",
-      toast_custom_lcd: "Teks tersuai berjaya dihantar ke LCD 1602!",
-      toast_audio_on: "Kesan Bunyi Siber Diaktifkan",
-      toast_audio_off: "Kesan Bunyi Dimatikan"
-    },
-    cs: {
-      profile_summary: "Vytvářím IoT a vestavěné projekty s ESP32, od firmwaru až po webové ovládací rozhraní.",
-      status_active: "Aktivně tvořím",
-      brand_core: "JÁDRO ZNAČKY",
-      local_time: "MÍSTNÍ ČAS (INDONÉSIE)",
-      base_on: "ZÁKLADNA",
-      established: "OD ROKU",
-      social_title: "Připojte se & Sledujte",
-      social_badge: "Oficiální odkazy",
-      whatsapp_channel: "Kanál WhatsApp",
-      project_kicker: "HLAVNÍ PROJEKT",
-      project_link: "Zobrazit repozitář",
-      project_description: "BetterLyrics zobrazuje text karaoke na LCD 16×2. ESP32 nabízí Wi-Fi panel pro ovládání synchronizace a animací; simulátor níže ukazuje podobu displeje.",
-      upcoming_kicker: "PŘIPRAVOVANÝ PROJEKT",
-      upcoming_title: "Project Codename: Horizon-X (ESP32)",
-      upcoming_description: "Experiment s hardwarem ESP32, který je ve fázi výzkumu a prototypování. Technické podrobnosti zveřejním, až budou připravené.",
-      shield_title: "HORIZON-X // NÁHLED PROTOTYPU",
-      shield_desc: "Prohlédněte si simulovaný panel telemetrie Horizon-X. Náhled ukazuje návrh rozhraní, nikoli data z běžícího zařízení.",
-      decrypt_btn: "Odemknout náhled R&D",
-      relock_btn: "Znovu uzamknout",
-      shield_tag1: "Hlavní jádro ESP32",
-      shield_tag2: "Probíhající výzkum",
-      shield_tag3: "Fáze prototypu",
-      support_heading: "Podpořte kreativní vývoj",
-      support_para: "Vaše podpora přímo financuje nákup hardwarových komponentů, vývoj vestavěných systémů a budoucí open-source projekty.",
-      support_sociabuzz: "Podpořit přes Sociabuzz",
-      support_saweria: "Podpořit přes Saweria",
-      copyright: "© A.H 5.1 · Všechna práva vyhrazena",
-      sub_credit: "Navrženo s Cyber Bento UI & Matrix Kernel",
-      terminal_placeholder: "Zadejte příkaz... (např. help, neofetch, i2cdetect)",
-      terminal_welcome_1: "[SYSTÉM] Hybridní jádro Adaptive Horizon 5.1 v2.5.8 načteno.",
-      terminal_welcome_2: "Zadejte 'help' pro seznam příkazů, nebo vyzkoušejte 'neofetch', 'i2cdetect', 'ping'.",
-      toast_copied: "Odkaz byl zkopírován do schránky!",
-      toast_decrypted: "Telemetrie ESP32 Horizon-X dešifrována!",
-      toast_locked: "Systém Horizon-X opět uzamčen.",
-      lcd_writer_title: "Simulátor zápisu textu na LCD (16×2)",
-      lcd_writer_send: "Odeslat na LCD",
-      toast_custom_lcd: "Vlastní text úspěšně odeslán na LCD 1602!",
-      toast_audio_on: "Kybernetické zvukové efekty zapnuty",
-      toast_audio_off: "Zvukové efekty ztlumeny"
-    }
-  };
-
-  let currentLang = localStorage.getItem('ah51_lang') || 'id';
-
-  function setLanguage(lang) {
-    if (!translations[lang]) return;
-    currentLang = lang;
-    localStorage.setItem('ah51_lang', lang);
-    document.documentElement.setAttribute('lang', lang);
-
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
-    });
-
-    // Terjemahkan seluruh elemen teks
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
-      }
-    });
-
-    // Terjemahkan atribut Placeholder (misal input CLI)
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-      const key = el.getAttribute('data-i18n-placeholder');
-      if (translations[lang] && translations[lang][key]) {
-        el.setAttribute('placeholder', translations[lang][key]);
-      }
-    });
-
-    // Sinkronkan kalimat Typewriter sesuai bahasa aktif
-    if (window.TypewriterEngine) {
-      window.TypewriterEngine.updatePhrases(lang);
-    }
-  }
-
-  function getText(key) {
-    return translations[currentLang]?.[key] || translations['id'][key] || key;
-  }
-
-  // Live Clock (Asia/Jakarta WIB)
-  function startClock() {
-    const clockEl = document.getElementById('live-clock');
-    if (!clockEl) return;
-    const update = () => {
-      const timeStr = new Intl.DateTimeFormat('id-ID', {
-        timeZone: 'Asia/Jakarta',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      }).format(new Date());
-      clockEl.textContent = `${timeStr.replace(/\./g, ':')} WIB`;
-    };
-    setInterval(update, 1000);
-    update();
-  }
-
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
-  });
-
-  startClock();
-
-  return { setLanguage, getText, getCurrentLang: () => currentLang };
-})();
-
-/* ============================================================
-   4. TOAST NOTIFICATION UTILITY
-   ============================================================ */
-function showToast(message) {
-  const toast = document.getElementById("toast-container");
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2600);
+function storageGet(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function storageSet(key, value) {
+  try { localStorage.setItem(key, value); } catch { /* Storage is optional. */ }
 }
 
-/* ============================================================
-   5. TYPEWRITER SUBTITLE EFFECT (4 BAHASA DINAMIS)
-   ============================================================ */
-window.TypewriterEngine = (() => {
-  const localizedPhrases = {
-    id: [
-      "IoT & Embedded Developer",
-      "Kreator BetterLyrics ESP32",
-      "Riset Hardware: Proyek Horizon-X",
-      "Arsitektur ESP-IDF & WebSocket"
-    ],
-    en: [
-      "IoT & Embedded Developer",
-      "Creator of BetterLyrics ESP32",
-      "Hardware R&D: Project Horizon-X",
-      "ESP-IDF & WebSocket Architecture"
-    ],
-    ms: [
-      "Pembangun IoT & Sistem Terbenam",
-      "Pencipta BetterLyrics ESP32",
-      "Penyelidikan Perkakasan: Projek Horizon-X",
-      "Seni Bina ESP-IDF & WebSocket"
-    ],
-    cs: [
-      "Vývojář IoT & vestavěných systémů",
-      "Tvůrce BetterLyrics ESP32",
-      "Hardwarový výzkum: Projekt Horizon-X",
-      "Architektura ESP-IDF & WebSocket"
-    ]
-  };
+function applyLanguage(language) {
+  const selected = translations[language] ? language : 'id';
+  root.lang = selected;
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    const value = translations[selected][element.dataset.i18n];
+    if (value) element.textContent = value;
+  });
+  document.querySelectorAll('[data-lang]').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.lang === selected));
+  });
+  storageSet('ah51-language', selected);
+  updateControlLabels();
+}
 
-  let phrases = localizedPhrases[I18nManager.getCurrentLang()] || localizedPhrases.id;
-  let phraseIdx = 0;
-  let charIdx = 0;
-  let isDeleting = false;
-  let timeoutId = null;
-  const typewriterEl = document.getElementById("typewriter");
+function applyTheme(theme) {
+  const selected = theme === 'light' ? 'light' : 'dark';
+  root.dataset.theme = selected;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', selected === 'dark' ? '#101713' : '#f4f5ef');
+  storageSet('ah51-theme', selected);
+  updateControlLabels();
+}
 
-  function loop() {
-    if (!typewriterEl) return;
-    const current = phrases[phraseIdx];
-    if (!isDeleting) {
-      typewriterEl.textContent = current.substring(0, charIdx + 1);
-      charIdx++;
-      if (charIdx === current.length) {
-        isDeleting = true;
-        timeoutId = setTimeout(loop, 2200);
-        return;
-      }
-    } else {
-      typewriterEl.textContent = current.substring(0, charIdx - 1);
-      charIdx--;
-      if (charIdx === 0) {
-        isDeleting = false;
-        phraseIdx = (phraseIdx + 1) % phrases.length;
-        timeoutId = setTimeout(loop, 400);
-        return;
-      }
-    }
-    timeoutId = setTimeout(loop, isDeleting ? 40 : 80);
+function updateControlLabels() {
+  const language = root.lang || 'id';
+  const strings = translations[language] || translations.id;
+  const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  themeButton.setAttribute('aria-label', strings[nextTheme === 'light' ? 'theme_light' : 'theme_dark']);
+  themeButton.title = themeButton.getAttribute('aria-label');
+  const menuIsOpen = menuButton.getAttribute('aria-expanded') === 'true';
+  menuButton.setAttribute('aria-label', strings[menuIsOpen ? 'menu_close' : 'menu_open']);
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
+}
+
+document.querySelectorAll('[data-lang]').forEach((button) => {
+  button.addEventListener('click', () => applyLanguage(button.dataset.lang));
+});
+themeButton.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+menuButton.addEventListener('click', () => {
+  const open = menuButton.getAttribute('aria-expanded') !== 'true';
+  menuButton.setAttribute('aria-expanded', String(open));
+  nav.classList.toggle('open', open);
+  updateControlLabels();
+});
+nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+  menuButton.setAttribute('aria-expanded', 'false');
+  nav.classList.remove('open');
+  updateControlLabels();
+}));
+document.getElementById('share-btn').addEventListener('click', async () => {
+  const strings = translations[root.lang] || translations.id;
+  try {
+    if (navigator.share) await navigator.share({ title: document.title, url: location.href });
+    else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(location.href);
+      showToast(strings.share_done);
+    } else throw new Error('Share unavailable');
+  } catch (error) {
+    if (error?.name !== 'AbortError') showToast(strings.share_error);
   }
-
-  function updatePhrases(lang) {
-    if (localizedPhrases[lang]) {
-      phrases = localizedPhrases[lang];
-      phraseIdx = 0;
-      charIdx = 0;
-      isDeleting = false;
-      clearTimeout(timeoutId);
-      loop();
-    }
-  }
-
-  loop();
-  return { updatePhrases };
-})();
-
-document.addEventListener('DOMContentLoaded', () => {
-  I18nManager.setLanguage(I18nManager.getCurrentLang());
 });
 
-/* ============================================================
-   6. CYBER AUDIO FX ENGINE (ZERO-DEPENDENCY WEB AUDIO API)
-   ============================================================ */
-const AudioEngine = (() => {
-  let audioCtx = null;
-  let isMuted = localStorage.getItem('ah51_audio') !== '1';
-
-  function initCtx() {
-    if (!audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) audioCtx = new AudioContext();
-    }
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-  }
-
-  function playClick() {
-    if (isMuted) return;
-    initCtx();
-    if (!audioCtx) return;
-    try {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(320, audioCtx.currentTime + 0.03);
-      gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.031);
-    } catch(e) {}
-  }
-
-  function playRelay() {
-    if (isMuted) return;
-    initCtx();
-    if (!audioCtx) return;
-    try {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(350, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.045);
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.046);
-    } catch(e) {}
-  }
-
-  function playBoot() {
-    if (isMuted) return;
-    initCtx();
-    if (!audioCtx) return;
-    try {
-      const notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.value = freq;
-        const startTime = audioCtx.currentTime + (idx * 0.08);
-        gain.gain.setValueAtTime(0.06, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.22);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + 0.23);
-      });
-    } catch(e) {}
-  }
-
-  function toggle() {
-    initCtx();
-    isMuted = !isMuted;
-    localStorage.setItem('ah51_audio', isMuted ? '0' : '1');
-    updateBtn();
-    if (!isMuted) {
-      playBoot();
-      showToast(I18nManager.getText('toast_audio_on'));
-    } else {
-      showToast(I18nManager.getText('toast_audio_off'));
-    }
-  }
-
-  function updateBtn() {
-    const btn = document.getElementById('audio-toggle');
-    if (!btn) return;
-    const icon = btn.querySelector('i');
-    if (isMuted) {
-      btn.classList.remove('active');
-      if (icon) icon.className = 'fas fa-volume-xmark';
-    } else {
-      btn.classList.add('active');
-      if (icon) icon.className = 'fas fa-volume-high';
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', updateBtn);
-  document.getElementById('audio-toggle')?.addEventListener('click', toggle);
-
-  return { playClick, playRelay, playBoot, toggle, isMuted: () => isMuted };
-})();
-window.AudioEngine = AudioEngine;
-
-/* ============================================================
-   7. LIVE GITHUB TELEMETRY (BETTERLYRICS ESP32 REPO)
-   ============================================================ */
-const GitHubTelemetry = (() => {
-  const countEl = document.getElementById('gh-stars-count');
-  const CACHE_KEY = 'ah51_gh_stars_cache';
-  const CACHE_TTL = 3600 * 1000;
-
-  async function fetchStats() {
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-      try {
-        const data = JSON.parse(cached);
-        if (Date.now() - data.timestamp < CACHE_TTL) {
-          render(data.stars, data.forks);
-          return data;
-        }
-      } catch (e) {}
-    }
-
-    try {
-      const res = await fetch('https://api.github.com/repos/adaptivehorizon51/A.H51-esp32');
-      if (res.ok) {
-        const json = await res.json();
-        const stars = json.stargazers_count ?? 0;
-        const forks = json.forks_count ?? 0;
-        const openIssues = json.open_issues_count ?? 0;
-        const payload = { stars, forks, openIssues, timestamp: Date.now() };
-        localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
-        render(stars, forks);
-        return payload;
-      }
-    } catch (err) {
-      // Fallback
-    }
-    render(0, 0);
-    return null;
-  }
-
-  function render(stars, forks) {
-    if (countEl) {
-      countEl.textContent = `⭐ ${stars} · 🍴 ${forks}`;
-    }
-  }
-
-  fetchStats();
-  return { fetchStats };
-})();
-
-/* ============================================================
-   8. SIMULATOR LCD 1602 HARDWARE & CUSTOM PLAYGROUND
-   ============================================================ */
-const LcdSimulator = (() => {
-  const presets = [
-    { row1: "A.H 5.1 Karaoke", row2: "♪ BetterLyrics ♫", mode: "SYNC MODE 01/20" },
-    { row1: "[ESP32 System]", row2: "WiFi: Connected", mode: "I2C BUS 0x27" },
-    { row1: "Now Playing:", row2: "Radiohead - Creep", mode: "SYNC MODE 07/20" },
-    { row1: "I'm a creep...", row2: "I'm a weirdo...", mode: "SYNC MODE 07/20" },
-    { row1: "What the hell am", row2: "I doing here?...", mode: "SYNC MODE 07/20" },
-    { row1: "Status: 200 OK", row2: "Latency: 12ms", mode: "HARDWARE LIVE" }
-  ];
-
-  let current = 0;
-  let isPlaying = true;
-  let timer = null;
-
-  const row1El = document.getElementById("lcd-row-1");
-  const row2El = document.getElementById("lcd-row-2");
-  const modeEl = document.getElementById("lcd-mode-badge");
-  const playBtn = document.getElementById("lcd-play-btn");
-  const ledEl = document.getElementById("lcd-led");
-
-  const drawer = document.getElementById("lcd-custom-drawer");
-  const customBtn = document.getElementById("lcd-custom-btn");
-  const closeBtn = document.getElementById("lcd-drawer-close");
-  const sendBtn = document.getElementById("lcd-custom-send-btn");
-  const row1Input = document.getElementById("lcd-input-r1");
-  const row2Input = document.getElementById("lcd-input-r2");
-
-  function render() {
-    if (row1El) row1El.textContent = presets[current].row1;
-    if (row2El) row2El.textContent = presets[current].row2;
-    if (modeEl) modeEl.textContent = presets[current].mode;
-  }
-
-  function next() {
-    current = (current + 1) % presets.length;
-    render();
-  }
-
-  function prev() {
-    current = (current - 1 + presets.length) % presets.length;
-    render();
-  }
-
-  function play() {
-    if (timer) return;
-    isPlaying = true;
-    timer = setInterval(next, 2800);
-    if (ledEl) ledEl.classList.add("active");
-    if (playBtn) {
-      playBtn.classList.add("active");
-      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    }
-  }
-
-  function pause() {
-    clearInterval(timer);
-    timer = null;
-    isPlaying = false;
-    if (ledEl) ledEl.classList.remove("active");
-    if (playBtn) {
-      playBtn.classList.remove("active");
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-    }
-  }
-
-  document.getElementById("lcd-next-btn")?.addEventListener("click", () => {
-    AudioEngine.playClick();
-    next();
-  });
-  document.getElementById("lcd-prev-btn")?.addEventListener("click", () => {
-    AudioEngine.playClick();
-    prev();
-  });
-  playBtn?.addEventListener("click", () => {
-    AudioEngine.playRelay();
-    isPlaying ? pause() : play();
-  });
-
-  customBtn?.addEventListener("click", () => {
-    AudioEngine.playClick();
-    drawer?.classList.toggle("open");
-  });
-
-  closeBtn?.addEventListener("click", () => {
-    AudioEngine.playClick();
-    drawer?.classList.remove("open");
-  });
-
-  sendBtn?.addEventListener("click", () => {
-    AudioEngine.playRelay();
-    pause();
-    const r1 = row1Input?.value.padEnd(16, " ").slice(0, 16) || "A.H 5.1 Karaoke";
-    const r2 = row2Input?.value.padEnd(16, " ").slice(0, 16) || "Custom Text";
-    if (row1El) row1El.textContent = r1;
-    if (row2El) row2El.textContent = r2;
-    if (modeEl) modeEl.textContent = "CUSTOM USER TEXT";
-    if (ledEl) ledEl.classList.add("active");
-    drawer?.classList.remove("open");
-    showToast(I18nManager.getText("toast_custom_lcd"));
-  });
-
-  play();
-  return { next, prev, play, pause, isPlaying: () => isPlaying };
-})();
-
-/* ============================================================
-   7. OLED 1.3" AUDIO SPECTRUM (OBSERVER POWER-SAVING)
-   ============================================================ */
-(() => {
-  const canvas = document.getElementById("oledVisualizer");
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-  const numBars = 22;
-  const barWidth = 4;
-  const gap = 1.4;
-  let animId = null;
-  let isVisible = false;
-
-  function draw() {
-    if (!isVisible || document.hidden) return;
-
-    ctx.fillStyle = "#01080e";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < numBars; i++) {
-      const height = Math.floor(Math.sin(Date.now() / 200 + i * 0.45) * 9 + Math.random() * 9 + 11);
-      const x = i * (barWidth + gap) + 4;
-      const y = canvas.height - height;
-
-      ctx.fillStyle = "#00f0ff";
-      ctx.fillRect(x, y, barWidth, height);
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(x, Math.max(0, y - 3), barWidth, 1.5);
-    }
-    animId = requestAnimationFrame(draw);
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      isVisible = entry.isIntersecting;
-      if (isVisible) {
-        cancelAnimationFrame(animId);
-        draw();
-      } else {
-        cancelAnimationFrame(animId);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  observer.observe(canvas);
-})();
-
-/* ============================================================
-   8. CLASSIFIED R&D (HORIZON-X) SECURITY CONTROLLER
-   ============================================================ */
-const HorizonSecurity = (() => {
-  const wrapper = document.getElementById('spoilerWrapper');
-  const shield = document.getElementById('spoilerShield');
-  const rack = document.getElementById('hardwareRack');
-  const decryptBtn = document.getElementById('decryptToggleBtn');
-  const relockBtn = document.getElementById('relockBtn');
-  const cycleBtn = document.getElementById('rack-cycle-btn');
-  const badge = document.getElementById('tri-mode-badge');
-
-  let isUnlocked = false;
-  const channels = [
-    "CH-01: HIGH SPEED I2C BUS ACTIVE",
-    "CH-02: UART PACKET CAPTURE (115200)",
-    "CH-03: DUAL-CORE XTENSA INTERRUPTS",
-    "CH-04: DMA MEMORY STREAM ONLINE"
-  ];
-  let channelIdx = 0;
-
-  function unlock() {
-    isUnlocked = true;
-    shield?.classList.add('hidden-shield');
-    rack?.classList.add('unlocked');
-    wrapper?.classList.add('is-unlocked');
-    showToast(I18nManager.getText('toast_decrypted'));
-  }
-
-  function lock() {
-    isUnlocked = false;
-    shield?.classList.remove('hidden-shield');
-    rack?.classList.remove('unlocked');
-    wrapper?.classList.remove('is-unlocked');
-    showToast(I18nManager.getText('toast_locked'));
-  }
-
-  function cycleChannel() {
-    channelIdx = (channelIdx + 1) % channels.length;
-    if (badge) badge.textContent = channels[channelIdx];
-  }
-
-  decryptBtn?.addEventListener('click', unlock);
-  relockBtn?.addEventListener('click', lock);
-  cycleBtn?.addEventListener('click', cycleChannel);
-
-  return { unlock, lock, cycleChannel, isUnlocked: () => isUnlocked };
-})();
-
-/* ============================================================
-   9. ADVANCED LINUX / ESP32 CLI SIMULATOR
-   ============================================================ */
-(() => {
-  const input = document.getElementById("terminal-input");
-  const body = document.getElementById("terminal-body");
-  const card = document.getElementById("terminal");
-  const suggestBar = document.getElementById("terminal-suggest-bar");
-
-  if (!input || !body) return;
-
-  card?.addEventListener('click', () => {
-    if (window.getSelection().toString().length === 0) input.focus();
-  });
-
-  const commandHistory = [];
-  let historyIdx = -1;
-  let tempInput = "";
-
-  const virtualFS = {
-    'about.txt': "Adaptive Horizon 5.1 (A.H 5.1)\nIoT, Embedded & Modern Web Architecture.\nBase in Indonesia. Est. 2020.",
-    'betterlyrics.ino': "#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n// BetterLyrics v2.0 - 20 Sync Models with Wi-Fi Control\nvoid setup() { Wire.begin(21, 22); }",
-    'contacts.txt': "GitHub: https://github.com/adaptivehorizon51\nInstagram: @rfa_glng_p._a.h_5.1\nYouTube: @A.H_5.1\nTikTok: @intel_uhd_graphics\nTwitter: @absurd_humor_51"
-  };
-
-  const commandRegistry = {
-    help: () => {
-      return `[SYSTEM COMMAND DIRECTORY]
-- <span class="highlight-cmd">neofetch</span>    : Spesifikasi hardware chip & ASCII art
-- <span class="highlight-cmd">stats</span>       : Live telemetry GitHub BetterLyrics
-- <span class="highlight-cmd">i2cdetect</span>   : Pindai bus I2C (0x26, 0x27, 0x3C)
-- <span class="highlight-cmd">ping &lt;host&gt;</span>  : Tes latensi jaringan ICMP
-- <span class="highlight-cmd">wifi</span>        : Info koneksi IP & RSSI nirkabel
-- <span class="highlight-cmd">ls</span>          : Daftar file virtual filesystem
-- <span class="highlight-cmd">cat &lt;file&gt;</span>  : Buka file (contoh: cat specs.json)
-- <span class="highlight-cmd">audio &lt;cmd&gt;</span> : Efek suara ('on' | 'off')
-- <span class="highlight-cmd">matrix &lt;col&gt;</span>: Warna matrix ('cyan' | 'green' | 'amber')
-- <span class="highlight-cmd">theme &lt;mode&gt;</span>: Ubah tema web ('dark' | 'light')
-- <span class="highlight-cmd">lang &lt;code&gt;</span> : Ubah bahasa web ('id' | 'en' | 'ms' | 'cs')
-- <span class="highlight-cmd">lcd &lt;action&gt;</span>: Kontrol simulator LCD ('next' | 'prev' | 'play' | 'pause')
-- <span class="highlight-cmd">decrypt</span>     : Buka preview rahasia Horizon-X
-- <span class="highlight-cmd">lock</span>        : Kunci kembali preview Horizon-X
-- <span class="highlight-cmd">repo</span>        : Buka repositori GitHub BetterLyrics
-- <span class="highlight-cmd">history</span>     : Tampilkan riwayat perintah
-- <span class="highlight-cmd">clear</span>       : Bersihkan layar terminal (Ctrl+L)
-- <span class="highlight-cmd">whoami</span>      : Tampilkan info pengguna`;
-    },
-
-    stats: () => {
-      const cached = localStorage.getItem('ah51_gh_stars_cache');
-      let stars = "...", forks = "...", issues = "...";
-      if (cached) {
-        try {
-          const d = JSON.parse(cached);
-          stars = d.stars; forks = d.forks; issues = d.openIssues;
-        } catch(e) {}
-      }
-      return `[BETTERLYRICS ESP32 TELEMETRY]
-Repository  : adaptivehorizon51/A.H51-esp32
-⭐ Stars     : ${stars}
-🍴 Forks     : ${forks}
-📌 Issues    : ${issues}
-Firmware    : FreeRTOS v10.4.3 / ESP-IDF
-I2C Display : HD44780 1602 LCD (0x27)`;
-    },
-
-    audio: (args) => {
-      const act = args[0]?.toLowerCase();
-      if (act === 'on' && AudioEngine.isMuted()) AudioEngine.toggle();
-      else if (act === 'off' && !AudioEngine.isMuted()) AudioEngine.toggle();
-      else if (!act) AudioEngine.toggle();
-      return `Audio FX: <span class="highlight-cmd">${AudioEngine.isMuted() ? 'MUTED' : 'ACTIVE'}</span>`;
-    },
-
-    matrix: (args) => {
-      const c = args[0]?.toLowerCase();
-      if (['cyan', 'green', 'amber'].includes(c)) {
-        MatrixEngine.setColor(c);
-        return `Matrix Rain diubah ke warna: <span class="highlight-cmd">${c.toUpperCase()}</span>`;
-      }
-      return `Pilihan warna valid: <span class="highlight-cmd">matrix cyan | green | amber</span>`;
-    },
-
-    repo: () => {
-      window.open('https://github.com/adaptivehorizon51/A.H51-esp32', '_blank');
-      return `Membuka repositori GitHub BetterLyrics ESP32...`;
-    },
-
-    neofetch: () => {
-      const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-      return `<div class="terminal-ascii">
-   _____ _____ _____ ___ ___ 
-  |   __|   __|  _  |_  |_  |  ah51@xtensa-esp32
-  |   __|__   |   __|  _|  _|  -------------------
-  |_____|_____|__|  |___|___|  OS: FreeRTOS Kernel v10.4.3
-                                Host: ESP32-D0WDQ6 (Xtensa LX6)
-                                Cores: 2 Cores @ 240 MHz
-                                Memory: 520 KB SRAM / 4 MB Flash
-                                Firmware: BetterLyrics ESP32 v2.0
-                                Language: ${I18nManager.getCurrentLang().toUpperCase()}
-                                Theme: ${theme.toUpperCase()}
-</div>`;
-    },
-
-    i2cdetect: () => {
-      return `Pemeriksaan bus I2C pada SDA=21, SCL=22:
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
-10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-20: -- -- -- -- -- -- <span style="color:#00ff88;font-weight:bold">26</span> <span style="color:#00ff88;font-weight:bold">27</span> -- -- -- -- -- -- -- -- 
-30: -- -- -- -- -- -- -- -- -- -- -- -- <span style="color:#00f0ff;font-weight:bold">3C</span> -- -- -- 
-40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-Perangkat terdeteksi:
- [0x26]: Module Auxiliary LCD
- [0x27]: Module Primary LCD (BetterLyrics)
- [0x3C]: SSD1306 OLED Telemetry Display`;
-    },
-
-    ping: (args) => {
-      const host = args[0] || 'adaptivehorizon51.github.io';
-      return `PING ${escapeHtml(host)}: 56 data bytes
-64 bytes from ${escapeHtml(host)}: icmp_seq=0 ttl=58 time=${(Math.random() * 8 + 11).toFixed(2)} ms
-64 bytes from ${escapeHtml(host)}: icmp_seq=1 ttl=58 time=${(Math.random() * 8 + 10).toFixed(2)} ms
-64 bytes from ${escapeHtml(host)}: icmp_seq=2 ttl=58 time=${(Math.random() * 8 + 12).toFixed(2)} ms
---- ${escapeHtml(host)} ping statistics: 0.0% packet loss ---`;
-    },
-
-    wifi: () => {
-      return `ESP32 Wi-Fi Station Status:
-- SSID    : AdaptiveHorizon-AP
-- IP Addr : 192.168.1.151
-- Gateway : 192.168.1.1
-- RSSI    : -52 dBm (Excellent Link)`;
-    },
-
-    ls: () => {
-      return `total 4\n${Object.keys(virtualFS).map(f => `<span style="color:#38bdf8">${f}</span>`).join('   ')}`;
-    },
-
-    cat: (args) => {
-      if (!args[0]) return `cat: Sertakan nama file. Contoh: <span class="highlight-cmd">cat specs.json</span>`;
-      const fileName = args[0].toLowerCase();
-      if (virtualFS[fileName]) return escapeHtml(virtualFS[fileName]);
-      return `cat: ${escapeHtml(args[0])}: File tidak ditemukan.`;
-    },
-
-    theme: (args) => {
-      const target = args[0] ? args[0].toLowerCase() : null;
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = target === 'dark' || target === 'light' ? target : (current === 'light' ? 'dark' : 'light');
-      setTheme(next);
-      return `Tema antarmuka diubah ke: <span class="highlight-cmd">${next.toUpperCase()}</span>`;
-    },
-
-    lang: (args) => {
-      const valid = ['id', 'en', 'ms', 'cs'];
-      if (!args[0] || !valid.includes(args[0].toLowerCase())) {
-        return `Pilihan bahasa valid: ${valid.map(v => `<span class="highlight-cmd">${v}</span>`).join(', ')}`;
-      }
-      I18nManager.setLanguage(args[0].toLowerCase());
-      return `Bahasa sistem berhasil diubah ke: <span class="highlight-cmd">${args[0].toUpperCase()}</span>`;
-    },
-
-    lcd: (args) => {
-      const action = args[0] ? args[0].toLowerCase() : '';
-      if (action === 'next') { LcdSimulator.next(); return `LCD: Baris lirik berikutnya.`; }
-      if (action === 'prev') { LcdSimulator.prev(); return `LCD: Baris lirik sebelumnya.`; }
-      if (action === 'play') { LcdSimulator.play(); return `LCD: Sinkronisasi aktif.`; }
-      if (action === 'pause') { LcdSimulator.pause(); return `LCD: Sinkronisasi dijeda.`; }
-      return `Gunakan: <span class="highlight-cmd">lcd next | prev | play | pause</span>`;
-    },
-
-    decrypt: () => {
-      HorizonSecurity.unlock();
-      return `Horizon-X didekripsi: Telemetri hardware aktif di halaman web.`;
-    },
-
-    lock: () => {
-      HorizonSecurity.lock();
-      return `Horizon-X dikunci kembali (Confidential Mode).`;
-    },
-
-    whoami: () => `guest@adaptivehorizon-system [Auth: Level-1 Observer]`,
-
-    history: () => {
-      if (commandHistory.length === 0) return `Riwayat perintah kosong.`;
-      return commandHistory.map((cmd, i) => `${(i + 1).toString().padStart(3, ' ')}  ${escapeHtml(cmd)}`).join('\n');
-    },
-
-    clear: () => {
-      body.innerHTML = '';
-      return null;
-    }
-  };
-
-  const commandList = Object.keys(commandRegistry);
-
-  function printLine(htmlContent, isError = false) {
-    const line = document.createElement("div");
-    line.className = "terminal-line";
-    if (isError) line.style.color = "#ff5f56";
-    line.innerHTML = htmlContent;
-    body.appendChild(line);
-    body.scrollTop = body.scrollHeight;
-  }
-
-  function handleAutocomplete() {
-    const current = input.value.trim().toLowerCase();
-    if (!current) return;
-
-    const matches = commandList.filter(cmd => cmd.startsWith(current));
-    if (matches.length === 1) {
-      input.value = matches[0] + " ";
-      if (suggestBar) suggestBar.classList.remove('show');
-    } else if (matches.length > 1) {
-      if (suggestBar) {
-        suggestBar.textContent = `Pilihan Perintah: ${matches.join('   ')}`;
-        suggestBar.classList.add('show');
-      }
-    }
-  }
-
-  function executeCommand(raw) {
-    raw = raw.trim();
-    if (!raw) return;
-
-    AudioEngine.playRelay();
-    commandHistory.push(raw);
-    historyIdx = -1;
-    tempInput = "";
-
-    printLine(`<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(raw)}</span>`);
-
-    const parts = raw.split(/\s+/);
-    const command = parts[0].toLowerCase();
-    const args = parts.slice(1);
-
-    if (commandRegistry[command]) {
-      try {
-        const result = commandRegistry[command](args);
-        if (result !== null) {
-          printLine(result.replace(/\n/g, "<br>"));
-        }
-      } catch (err) {
-        printLine(`Execution Error: ${err.message}`, true);
-      }
-    } else {
-      printLine(`bash: ${escapeHtml(command)}: command not found. Tekan 'Tab' atau ketik 'help'.`, true);
-    }
-
-    input.value = "";
-  }
-
-  // Quick Action Chips Listener
-  document.querySelectorAll('.quick-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const cmd = chip.getAttribute('data-cmd');
-      if (cmd) executeCommand(cmd);
-    });
-  });
-
-  input.addEventListener("keydown", (e) => {
-    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
-      AudioEngine.playClick();
-    }
-
-    if (e.key === "Tab") {
-      e.preventDefault();
-      handleAutocomplete();
-      return;
-    }
-
-    if (suggestBar && e.key !== "Tab") {
-      suggestBar.classList.remove('show');
-    }
-
-    if (e.ctrlKey && e.key.toLowerCase() === 'l') {
-      e.preventDefault();
-      body.innerHTML = '';
-      return;
-    }
-
-    if (e.ctrlKey && e.key.toLowerCase() === 'c') {
-      e.preventDefault();
-      printLine(`<span class="terminal-prompt">ah51@system:~$</span> <span>${escapeHtml(input.value)}^C</span>`);
-      input.value = "";
-      historyIdx = -1;
-      return;
-    }
-
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (commandHistory.length === 0) return;
-      if (historyIdx === -1) tempInput = input.value;
-      if (historyIdx < commandHistory.length - 1) {
-        historyIdx++;
-        input.value = commandHistory[commandHistory.length - 1 - historyIdx];
-      }
-      return;
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (historyIdx > 0) {
-        historyIdx--;
-        input.value = commandHistory[commandHistory.length - 1 - historyIdx];
-      } else if (historyIdx === 0) {
-        historyIdx = -1;
-        input.value = tempInput;
-      }
-      return;
-    }
-
-    if (e.key === "Enter") {
-      executeCommand(input.value);
-    }
-  });
-})();
-
-/* ============================================================
-   10. MANAJEMEN TEMA & TOMBOL BAGIKAN
-   ============================================================ */
-function setTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem("ah51_theme", theme);
-
-  const themeToggle = document.getElementById("theme-toggle");
-  if (themeToggle) {
-    const icon = themeToggle.querySelector("i");
-    if (icon) {
-      icon.className = theme === "light" ? "fas fa-moon" : "fas fa-sun";
-    }
-  }
-
-  const c = document.getElementById('matrixCanvas');
-  if (c) {
-    const cx = c.getContext('2d');
-    cx?.clearRect(0, 0, c.width, c.height);
-  }
+document.getElementById('year').textContent = new Date().getFullYear();
+applyTheme(storageGet('ah51-theme') || 'dark');
+applyLanguage(storageGet('ah51-language') || 'id');
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
 
-(() => {
-  const saved = localStorage.getItem("ah51_theme") || "dark";
-  setTheme(saved);
-
-  document.getElementById("theme-toggle")?.addEventListener("click", () => {
-    const current = document.documentElement.getAttribute("data-theme");
-    setTheme(current === "light" ? "dark" : "light");
-  });
-
-  document.getElementById("share-btn")?.addEventListener("click", async () => {
-    const shareData = {
-      title: "Adaptive Horizon 5.1",
-      text: "Official Portfolio of Adaptive Horizon 5.1 - IoT & Embedded Developer",
-      url: window.location.href
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {}
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      showToast(I18nManager.getText('toast_copied'));
-    }
-  });
-})();
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-/* ============================================================
-   11. BENTO CARD MOUSE SPOTLIGHT GLOW
-   ============================================================ */
-(() => {
-  document.querySelectorAll('.bento-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-    });
-  });
-})();
-
-/* ============================================================
-   12. PWA SERVICE WORKER REGISTRATION (GITHUB PAGES READY)
-   ============================================================ */
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => {
-        console.log('[PWA] Service Worker registered with scope:', reg.scope);
-      })
-      .catch(err => {
-        console.warn('[PWA] Service Worker registration skipped:', err);
-      });
-  });
-}

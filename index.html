@@ -1,599 +1,123 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Adaptive Horizon 5.1 · Official System & Portfolio</title>
-    <meta name="description" content="Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer, Tech Enthusiast, and Creator of BetterLyrics ESP32.">
-    <link rel="canonical" href="https://adaptivehorizon51.github.io/">
-    
-    <!-- Browser Theme Color & Favicon -->
-    <meta name="theme-color" content="#070a10">
-    <link rel="icon" type="image/png" href="profile-picture.png">
-    
-    <!-- Progressive Web App (PWA) -->
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="A.H 5.1">
-    <link rel="apple-touch-icon" href="profile-picture.png">
-
-    <!-- Schema.org JSON-LD Structured Data for Google SEO -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Person",
-          "@id": "https://adaptivehorizon51.github.io/#person",
-          "name": "Adaptive Horizon 5.1",
-          "url": "https://adaptivehorizon51.github.io/",
-          "image": "https://adaptivehorizon51.github.io/profile-picture.png",
-          "jobTitle": "IoT & Embedded Developer",
-          "description": "Creator of BetterLyrics ESP32, hardware researcher, and embedded systems developer.",
-          "sameAs": [
-            "https://github.com/adaptivehorizon51",
-            "https://youtube.com/@A.H_5.1",
-            "https://instagram.com/rfa_glng_p._a.h_5.1",
-            "https://twitter.com/absurd_humor_51"
-          ]
-        },
-        {
-          "@type": "SoftwareApplication",
-          "@id": "https://adaptivehorizon51.github.io/#betterlyrics",
-          "name": "BetterLyrics ESP32",
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "ESP32 FreeRTOS",
-          "url": "https://github.com/adaptivehorizon51/A.H51-esp32",
-          "description": "Smart karaoke lyric display for LCD 16x2 with Wi-Fi dashboard, 20 sync models, and 20 transition presets."
-        }
-      ]
-    }
-    </script>
-
-    <!-- Open Graph (WhatsApp, Discord, Telegram, Facebook) -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://adaptivehorizon51.github.io/">
-    <meta property="og:title" content="Adaptive Horizon 5.1 · IoT & Embedded System">
-    <meta property="og:description" content="Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer, Creator of BetterLyrics ESP32.">
-    <meta property="og:image" content="https://adaptivehorizon51.github.io/profile-picture.png">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@absurd_humor_51">
-    <meta name="twitter:title" content="Adaptive Horizon 5.1 · Official Portfolio">
-    <meta name="twitter:description" content="Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer.">
-    <meta name="twitter:image" content="https://adaptivehorizon51.github.io/profile-picture.png">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=VT323&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- External Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101713">
+  <meta name="description" content="Portfolio Adaptive Horizon 5.1 — proyek ESP32, embedded, audio, dan web.">
+  <link rel="canonical" href="https://adaptivehorizon51.github.io/">
+  <link rel="icon" type="image/png" href="profile-picture.png">
+  <link rel="apple-touch-icon" href="profile-picture.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Adaptive Horizon 5.1 — Embedded & Digital Projects</title>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://adaptivehorizon51.github.io/">
+  <meta property="og:title" content="Adaptive Horizon 5.1 — Embedded & Digital Projects">
+  <meta property="og:description" content="Eksperimen ESP32, sistem embedded, audio, dan antarmuka web.">
+  <meta property="og:image" content="https://adaptivehorizon51.github.io/profile-picture.png">
+  <link rel="preconnect" href="https://github.com">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Adaptive Horizon 5.1",
+    "url":"https://adaptivehorizon51.github.io/",
+    "image":"https://adaptivehorizon51.github.io/profile-picture.png",
+    "jobTitle":"IoT & Embedded Developer",
+    "sameAs":[
+      "https://github.com/adaptivehorizon51",
+      "https://youtube.com/@A.H_5.1",
+      "https://instagram.com/rfa_glng_p._a.h_5.1",
+      "https://twitter.com/absurd_humor_51"
+    ]
+  }
+  </script>
 </head>
 <body>
-
-    <!-- Matrix Background Rain Canvas -->
-    <canvas id="matrixCanvas" aria-hidden="true"></canvas>
-    <div class="matrix-overlay" aria-hidden="true"></div>
-
-    <!-- Tech Boot Assistant Preloader -->
-    <div id="preloader" role="status" aria-label="Loading System">
-        <div class="pre-container">
-            <div class="tech-loader-box">
-                <div class="cyber-spinner" aria-hidden="true"></div>
-                <div class="pre-text-logo">A.H</div>
-            </div>
-            <div class="pre-brand">
-                <h2 class="pre-title">Adaptive Horizon 5.1</h2>
-                <div class="pre-sub" id="pre-sub">Memuat Kernel & Sistem I2C...</div>
-            </div>
-            <div class="pre-progress-wrapper" aria-hidden="true">
-                <div class="pre-progress-bar" id="pre-bar"></div>
-            </div>
-            <div class="pre-percentage" id="pre-perc">00%</div>
-            <div class="pre-log" id="pre-log">Initializing ESP32 & Web Modules...</div>
+  <a class="skip-link" href="#main" data-i18n="skip">Lewati ke konten</a>
+  <header class="site-header">
+    <nav class="nav-wrap" aria-label="Navigasi utama">
+      <a class="brand" href="#top" aria-label="Adaptive Horizon beranda">
+        <span class="brand-mark">AH<span>.</span></span>
+        <span class="brand-name">Adaptive Horizon <small>5.1</small></span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Buka navigasi">
+        <span></span><span></span>
+      </button>
+      <div class="nav-links" id="site-nav">
+        <a href="#work" data-i18n="nav_work">Proyek</a>
+        <a href="#about" data-i18n="nav_about">Tentang</a>
+        <a href="#connect" data-i18n="nav_connect">Kontak</a>
+      </div>
+      <div class="nav-actions">
+        <div class="language-switch" role="group" aria-label="Pilih bahasa">
+          <button type="button" data-lang="id" aria-pressed="true">ID</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang="ms" aria-pressed="false">MS</button>
+          <button type="button" data-lang="cs" aria-pressed="false">CS</button>
         </div>
-    </div>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Ganti tema" title="Ganti tema">
+          <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+        <button class="icon-button share-button" id="share-btn" type="button" aria-label="Bagikan website" title="Bagikan website">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4m-6.6 7 6.6 4.4"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
 
-    <!-- Top Navigation Header -->
-    <header class="top-nav">
-        <nav class="nav-container" aria-label="Main Navigation">
-            <a href="./" class="brand-signature" aria-label="Adaptive Horizon Home">
-                <span class="sig-main">A.H</span>
-                <span class="sig-ver">5.1</span>
-                <span class="sig-badge">CORE</span>
-            </a>
-            
-            <div class="nav-controls">
-                <!-- Multi-Language Selector (ID, EN, MS, CS) -->
-                <div class="controls-group lang-group" role="group" aria-label="Language Selector">
-                    <button type="button" class="lang-btn active" data-lang="id" title="Bahasa Indonesia">ID</button>
-                    <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
-                    <button type="button" class="lang-btn" data-lang="ms" title="Bahasa Melayu">MS</button>
-                    <button type="button" class="lang-btn" data-lang="cs" title="Čeština">CS</button>
-                </div>
-                
-                <!-- Action Controls -->
-                <div class="controls-group">
-                    <button type="button" id="audio-toggle" class="icon-btn audio-btn" aria-label="Toggle Efek Suara Cyber" title="Efek Suara (Mute/Unmute)">
-                        <i class="fas fa-volume-xmark" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" id="share-btn" class="icon-btn" aria-label="Bagikan Tautan Website" title="Bagikan / Salin Tautan">
-                        <i class="fas fa-share-nodes" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" id="theme-toggle" class="icon-btn theme-btn" aria-label="Ganti Mode Tema Tampilan" title="Ganti Tema">
-                        <i class="fas fa-sun" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Main Bento Grid Layout -->
-    <main class="bento-container">
-        
-        <!-- 1. Profile Card -->
-        <section class="bento-card profile-card" aria-label="Profil Utama">
-            <div class="avatar-wrapper">
-                <img 
-                    src="profile-picture.png" 
-                    alt="Foto Profil Adaptive Horizon 5.1" 
-                    class="profile-avatar" 
-                    loading="eager"
-                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'><rect width=\'120\' height=\'120\' fill=\'%230b111c\'/><text x=\'50%25\' y=\'54%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300f0ff\' font-family=\'monospace\' font-size=\'20\' font-weight=\'bold\'>A.H 5.1</text></svg>';"
-                >
-                <div class="status-dot-ring" title="Hardware Bus Online">
-                    <div class="status-dot"></div>
-                </div>
-            </div>
-            <div class="profile-info">
-                <div class="greeting-row">
-                    <span id="greeting-text" class="greeting-bubble">SYSTEM ONLINE</span>
-                    <span class="status-pill">
-                        <span class="live-dot" aria-hidden="true"></span>
-                        <span data-i18n="status_active">Aktif Berkreasi</span>
-                    </span>
-                </div>
-                <h1 class="profile-name">
-                    Adaptive Horizon 5.1
-                    <span class="verified-wrapper" title="Terverifikasi">
-                        <i class="fas fa-circle-check verified-badge" aria-hidden="true"></i>
-                    </span>
-                </h1>
-                <div class="typewriter-container">
-                    <span class="terminal-prefix" aria-hidden="true"><i class="fas fa-terminal"></i></span>
-                    <span class="typewriter" id="typewriter">IoT &amp; Embedded Developer</span><span class="cursor" aria-hidden="true">|</span>
-                </div>
-                <p class="profile-summary" data-i18n="profile_summary">Saya merancang proyek IoT dan sistem embedded berbasis ESP32, dari firmware hingga antarmuka web.</p>
-            </div>
-        </section>
-
-        <!-- 2. Next-Gen Linux/ESP32 Terminal Simulator -->
-        <section class="bento-card terminal-card" id="terminal" aria-label="Terminal CLI Simulator">
-            <div class="terminal-bar">
-                <div class="terminal-dots" aria-hidden="true">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
-                </div>
-                <span class="terminal-title">ah51@xtensa-esp32:~ (bash v5.2)</span>
-                <div class="terminal-actions">
-                    <span class="terminal-hint-key" title="Tekan Tab untuk autokomplit">TAB = AUTOCOMPLETE</span>
-                    <span class="terminal-badge">LIVE CLI</span>
-                </div>
-            </div>
-            
-            <div class="terminal-body" id="terminal-body" role="log" aria-live="polite">
-                <div class="terminal-line">
-                    <span class="system-msg" data-i18n="terminal_welcome_1">[SYSTEM] Adaptive Horizon 5.1 Hybrid Kernel v2.5.8 Dimuat.</span>
-                </div>
-                <div class="terminal-line">
-                    <span class="system-msg" data-i18n="terminal_welcome_2">Ketik 'help' untuk daftar perintah, atau gunakan 'neofetch', 'i2cdetect', 'ping'.</span>
-                </div>
-            </div>
-
-            <!-- Mobile & Quick Command Chips -->
-            <div class="terminal-quick-chips" role="toolbar" aria-label="Aksi Cepat Terminal">
-                <span class="chips-label">QUICK:</span>
-                <button type="button" class="quick-chip" data-cmd="help">help</button>
-                <button type="button" class="quick-chip" data-cmd="neofetch">neofetch</button>
-                <button type="button" class="quick-chip" data-cmd="i2cdetect">i2cdetect</button>
-                <button type="button" class="quick-chip" data-cmd="wifi">wifi</button>
-                <button type="button" class="quick-chip" data-cmd="stats">stats</button>
-                <button type="button" class="quick-chip" data-cmd="clear">clear</button>
-            </div>
-
-            <!-- Autocomplete Floating Preview -->
-            <div class="terminal-suggest-bar" id="terminal-suggest-bar" aria-hidden="true"></div>
-
-            <div class="terminal-input-row">
-                <label for="terminal-input" class="terminal-prompt">ah51@system:~$</label>
-                <input 
-                    type="text" 
-                    id="terminal-input" 
-                    autocomplete="off" 
-                    autocorrect="off" 
-                    autocapitalize="off" 
-                    spellcheck="false" 
-                    data-i18n-placeholder="terminal_placeholder"
-                    placeholder="Ketik perintah... (contoh: help, neofetch, i2cdetect)" 
-                    aria-label="Input Baris Perintah Terminal CLI"
-                />
-            </div>
-        </section>
-
-        <!-- 3. Identity & System Status Card -->
-        <section class="bento-card identity-card" aria-label="Informasi Inti Sistem">
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-icon" aria-hidden="true"><i class="fas fa-fingerprint"></i></div>
-                    <div class="info-meta">
-                        <span class="info-label" data-i18n="brand_core">BRAND CORE</span>
-                        <span class="info-val">ADAPTIVE HORIZON 5.1</span>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
-                    <div class="info-meta">
-                        <span class="info-label" data-i18n="local_time">WAKTU LOKAL (INDONESIA)</span>
-                        <span class="info-val live-clock" id="live-clock">--:--:-- WIB</span>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-icon" aria-hidden="true"><i class="fas fa-location-dot"></i></div>
-                    <div class="info-meta">
-                        <span class="info-label" data-i18n="base_on">BASE ON</span>
-                        <span class="info-val">INDONESIA <span class="flag-icon" aria-hidden="true">🇮🇩</span></span>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-icon" aria-hidden="true"><i class="fas fa-rocket"></i></div>
-                <div class="info-meta">
-                    <span class="info-label" data-i18n="established">SEJAK</span>
-                        <span class="info-val">2020</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tech Badges -->
-            <div class="tech-stack-row" aria-label="Tech Stack Hardware and Software">
-                <span class="tech-chip"><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 Xtensa Dual-Core</span>
-                <span class="tech-chip"><i class="fas fa-code" aria-hidden="true"></i> C / C++ (ESP-IDF / Arduino)</span>
-                <span class="tech-chip"><i class="fas fa-wifi" aria-hidden="true"></i> IoT Systems &amp; WebSocket</span>
-                <span class="tech-chip"><i class="fab fa-html5" aria-hidden="true"></i> Modern Web UI &amp; Engine</span>
-                <span class="tech-chip"><i class="fas fa-network-wired" aria-hidden="true"></i> I2C &amp; SPI Sensor Bus</span>
-                <span class="tech-chip"><i class="fab fa-git-alt" aria-hidden="true"></i> Git CLI &amp; CI/CD</span>
-            </div>
-        </section>
-
-        <!-- 4. Social Media Card (Connect & Follow - 6 Links Symmetrical Grid) -->
-        <section class="bento-card socials-card" aria-label="Media Sosial dan Kontak">
-            <div class="card-header-flex">
-                <h3 class="card-title" data-i18n="social_title">Hubungkan &amp; Ikuti</h3>
-                <span class="badge-pill" data-i18n="social_badge">Official Links</span>
-            </div>
-            
-            <div class="social-grid">
-                <!-- 1. GitHub (Developer Hub) -->
-                <a href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer" class="social-btn gh" aria-label="Kunjungi Profil GitHub">
-                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-github"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">GitHub</span>
-                        <span class="btn-handle">@adaptivehorizon51</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
-                </a>
-
-                <!-- 2. Instagram -->
-                <a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer" class="social-btn ig" aria-label="Kunjungi Profil Instagram">
-                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-instagram"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">Instagram</span>
-                        <span class="btn-handle">@rfa_glng_p._a.h_5.1</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
-                </a>
-                
-                <!-- 3. YouTube -->
-                <a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer" class="social-btn yt" aria-label="Kunjungi Channel YouTube">
-                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-youtube"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">YouTube</span>
-                        <span class="btn-handle">@A.H_5.1</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
-                </a>
-                
-                <!-- 4. TikTok -->
-                <a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer" class="social-btn tt" aria-label="Kunjungi Akun TikTok">
-                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-tiktok"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">TikTok</span>
-                        <span class="btn-handle">@intel_uhd_graphics</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
-                </a>
-                
-                <!-- 5. Twitter / X -->
-                <a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer" class="social-btn tw" aria-label="Kunjungi Akun Twitter X">
-                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-x-twitter"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name">Twitter / X</span>
-                        <span class="btn-handle">@absurd_humor_51</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
-                </a>
-                
-                <!-- 6. WhatsApp Channel -->
-                <a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer" class="social-btn wa" aria-label="Gabung Saluran WhatsApp">
-                    <div class="btn-icon-wrap" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-name" data-i18n="whatsapp_channel">Saluran WhatsApp</span>
-                        <span class="btn-handle">Kumpulan Source Code Hasil Eksperimen (K.S.C.H.E.)</span>
-                    </div>
-                    <i class="fas fa-arrow-up-right-from-square arrow-icon" aria-hidden="true"></i>
-                </a>
-            </div>
-        </section>
-
-        <!-- 5. BetterLyrics ESP32 Featured Project Card -->
-        <section class="bento-card project-card" aria-labelledby="betterlyrics-title">
-            <div class="project-header">
-                <div class="project-icon-box" aria-hidden="true">
-                    <i class="fas fa-microchip"></i>
-                </div>
-                <div class="project-headline">
-                    <div class="project-badge-row">
-                        <span class="project-kicker" data-i18n="project_kicker">PROJECT UNGGULAN</span>
-                        <span class="project-status-tag"><span class="pulse-dot" aria-hidden="true"></span> v2.0 Active</span>
-                        <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-status-tag gh-stars-badge" id="gh-stats-badge" title="Live GitHub Telemetry" aria-label="Lihat Bintang GitHub">
-                            <i class="fab fa-github" aria-hidden="true"></i> <span id="gh-stars-count">⭐ ...</span>
-                        </a>
-                    </div>
-                    <h2 id="betterlyrics-title">BetterLyrics ESP32</h2>
-                </div>
-                <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link desktop-link" aria-label="Buka Repository BetterLyrics di GitHub">
-                    <i class="fab fa-github" aria-hidden="true"></i>
-                    <span data-i18n="project_link">Lihat Repository</span>
-                </a>
-            </div>
-
-            <p class="project-desc" data-i18n="project_description">
-                Perangkat lirik karaoke pintar untuk modul LCD 16×2 dengan dashboard kontrol Wi-Fi, 20 model sinkronisasi lirik, dan 20 preset animasi transisi mulus.
-            </p>
-
-            <!-- Interactive Mini LCD 16x2 Simulator -->
-            <div class="lcd-hardware-showcase" aria-label="Simulasi Layar LCD 1602 Hardware">
-                <div class="lcd-bezel">
-                    <div class="lcd-header">
-                        <span class="lcd-brand"><i class="fas fa-bolt" aria-hidden="true"></i> LCD 1602 HD44780 [ESP32 I2C 0x27]</span>
-                        <span class="lcd-indicator"><span class="lcd-led active" id="lcd-led" aria-hidden="true"></span> SYNC ACTIVE</span>
-                    </div>
-                    <div class="lcd-screen" id="lcd-screen" role="region" aria-live="polite">
-                        <div class="lcd-row lcd-row-1" id="lcd-row-1">A.H 5.1 Karaoke</div>
-                        <div class="lcd-row lcd-row-2" id="lcd-row-2">♪ BetterLyrics ♫</div>
-                    </div>
-                    <div class="lcd-toolbar">
-                        <button type="button" id="lcd-prev-btn" class="lcd-btn" title="Lirik Sebelumnya" aria-label="Lirik Sebelumnya">
-                            <i class="fas fa-backward-step" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" id="lcd-play-btn" class="lcd-btn active" title="Putar atau Jeda Simulasi" aria-label="Putar atau Jeda">
-                            <i class="fas fa-pause" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" id="lcd-next-btn" class="lcd-btn" title="Lirik Berikutnya" aria-label="Lirik Berikutnya">
-                            <i class="fas fa-forward-step" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" id="lcd-custom-btn" class="lcd-btn" title="Ketik Teks Sendiri ke LCD" aria-label="Ketik Teks Sendiri">
-                            <i class="fas fa-pen-to-square" aria-hidden="true"></i>
-                        </button>
-                        <span class="lcd-mode-badge" id="lcd-mode-badge">SYNC MODE 01/20</span>
-                    </div>
-
-                    <!-- LCD Interactive Custom Text Drawer -->
-                    <div class="lcd-custom-drawer" id="lcd-custom-drawer" aria-hidden="true">
-                        <div class="lcd-drawer-header">
-                            <span><i class="fas fa-keyboard" aria-hidden="true"></i> <span data-i18n="lcd_writer_title">LCD 16x2 Text Writer</span></span>
-                            <button type="button" id="lcd-drawer-close" class="lcd-mini-close" aria-label="Tutup Panel">&times;</button>
-                        </div>
-                        <div class="lcd-drawer-body">
-                            <div class="lcd-input-group">
-                                <label for="lcd-input-r1">Line 1 (Max 16):</label>
-                                <input type="text" id="lcd-input-r1" maxlength="16" placeholder="Ketik baris 1..." value="Halo Dunia!">
-                            </div>
-                            <div class="lcd-input-group">
-                                <label for="lcd-input-r2">Line 2 (Max 16):</label>
-                                <input type="text" id="lcd-input-r2" maxlength="16" placeholder="Ketik baris 2..." value="A.H 5.1 ESP32">
-                            </div>
-                            <button type="button" id="lcd-custom-send-btn" class="lcd-send-btn">
-                                <i class="fas fa-terminal" aria-hidden="true"></i> <span data-i18n="lcd_writer_send">Kirim ke LCD</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Features Highlights -->
-            <div class="project-tags">
-                <span class="tag-pill"><i class="fas fa-sliders" aria-hidden="true"></i> 20 Sync Models</span>
-                <span class="tag-pill"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> 20 FX Transitions</span>
-                <span class="tag-pill"><i class="fas fa-wifi" aria-hidden="true"></i> ESP32 Web Server</span>
-                <span class="tag-pill"><i class="fab fa-spotify" aria-hidden="true"></i> Real-time Sync</span>
-            </div>
-
-            <a href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer" class="project-link mobile-link" aria-label="Buka Repository BetterLyrics di GitHub">
-                <i class="fab fa-github" aria-hidden="true"></i>
-                <span data-i18n="project_link">Lihat Repository</span>
-            </a>
-        </section>
-
-        <!-- 6. UPCOMING PROJECT: ESP32 Classified R&D -->
-        <section class="bento-card upcoming-card" aria-labelledby="upcoming-title">
-            <div class="project-header">
-                <div class="project-icon-box oled-icon" aria-hidden="true">
-                    <i class="fas fa-user-secret"></i>
-                </div>
-                <div class="project-headline">
-                    <div class="project-badge-row">
-                        <span class="project-kicker" data-i18n="upcoming_kicker">PROYEK MENDATANG</span>
-                        <span class="project-status-tag status-wip"><span class="pulse-dot orange" aria-hidden="true"></span> In Development</span>
-                    </div>
-                    <h2 id="upcoming-title" data-i18n="upcoming_title">Project Codename: Horizon-X (ESP32)</h2>
-                </div>
-                <span class="prototype-badge"><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 Architecture</span>
-            </div>
-
-            <p class="project-desc" data-i18n="upcoming_description">
-                Proyek perangkat keras eksperimental bertenaga ESP32 sedang dalam tahap riset dan perakitan rahasia. Detail fitur, skema sirkuit, dan cara kerja sistem saat ini masih dirahsiakan hingga peluncuran resmi.
-            </p>
-
-            <!-- Spoiler Blurred Container -->
-            <div class="spoiler-wrapper" id="spoilerWrapper">
-                
-                <!-- Quick Re-lock Floating Button -->
-                <button type="button" class="relock-btn" id="relockBtn" title="Kunci Kembali Telemetri Rahasia" aria-label="Kunci Kembali Telemetri">
-                    <i class="fas fa-lock" aria-hidden="true"></i> 
-                    <span data-i18n="relock_btn">Kunci Kembali (Lock)</span>
-                </button>
-
-                <!-- Overlay Spoiler Shield -->
-                <div class="spoiler-shield" id="spoilerShield">
-                    <div class="shield-icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></div>
-                    <div class="shield-title" data-i18n="shield_title">TOP SECRET // HARDWARE IN DEVELOPMENT</div>
-                    <p class="shield-desc" data-i18n="shield_desc">
-                        Konfigurasi sirkuit dan firmware diamankan untuk mencegah spoiler sebelum peluncuran resmi. Tekan tombol untuk melihat sinyal telemetri atau gunakan perintah terminal.
-                    </p>
-                    <button type="button" class="decrypt-trigger-btn" id="decryptToggleBtn">
-                        <i class="fas fa-unlock-keyhole" aria-hidden="true"></i> 
-                        <span id="decryptBtnText" data-i18n="decrypt_btn">Buka Kunci Preview R&amp;D</span>
-                    </button>
-                    <div class="shield-tags">
-                        <span><i class="fas fa-microchip" aria-hidden="true"></i> <span data-i18n="shield_tag1">ESP32 Master Core</span></span>
-                        <span><i class="fas fa-lock" aria-hidden="true"></i> <span data-i18n="shield_tag2">Confidential R&amp;D</span></span>
-                        <span><i class="fas fa-flask" aria-hidden="true"></i> <span data-i18n="shield_tag3">Prototype Phase</span></span>
-                    </div>
-                </div>
-
-                <!-- Hardware Rack Preview -->
-                <div class="multi-hardware-rack blurred-content" id="hardwareRack" role="region" aria-label="Telemetri Hardware Multi-Bus">
-                    <div class="rack-header">
-                        <span><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 BUS TELEMETRY · DEMO</span>
-                        <span class="rack-status"><span class="pulse-dot green" aria-hidden="true"></span> SIMULATED PREVIEW</span>
-                    </div>
-
-                    <div class="display-cluster-grid">
-                        <!-- Module 1: OLED Display -->
-                        <div class="hardware-module oled-module">
-                            <div class="module-bar">
-                                <span class="mod-title">SYSTEM TELEMETRY</span>
-                                <span class="mod-addr">0x3C</span>
-                            </div>
-                            <div class="oled-screen-bezel">
-                                <div class="oled-screen">
-                                    <div class="oled-top-meta">
-                                        <span id="oled-track">ESP32 SIGNAL FX</span>
-                                        <span>VISUALIZER</span>
-                                    </div>
-                                    <canvas id="oledVisualizer" width="128" height="34" aria-label="Visualizer Spektrum Sinyal"></canvas>
-                                    <div class="oled-bot-meta">
-                                        <span>BUFFER: ACTIVE</span>
-                                        <span>Real-time</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Module 2 & 3: Dual LCD Mini Cluster -->
-                        <div class="dual-lcd-container">
-                            <div class="hardware-module lcd-half-module">
-                                <div class="module-bar">
-                                    <span class="mod-title">MODULE PRIMARY</span>
-                                    <span class="mod-addr">0x27</span>
-                                </div>
-                                <div class="lcd-screen mini-lcd">
-                                    <div class="lcd-row" id="tri-lcd1-row1">&#9654; ESP32 HORIZON-X</div>
-                                    <div class="lcd-row" id="tri-lcd1-row2">Confidential line...</div>
-                                </div>
-                            </div>
-
-                            <div class="hardware-module lcd-half-module">
-                                <div class="module-bar">
-                                    <span class="mod-title">MODULE AUXILIARY</span>
-                                    <span class="mod-addr">0x26</span>
-                                </div>
-                                <div class="lcd-screen mini-lcd">
-                                    <div class="lcd-row" id="tri-lcd2-row1">SYS BUS: ENCRYPTED</div>
-                                    <div class="lcd-row" id="tri-lcd2-row2">Demo telemetry...</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rack-toolbar">
-                        <button type="button" id="rack-cycle-btn" class="lcd-btn" title="Ganti Sinyal Telemetri" aria-label="Ganti Kanal Telemetri">
-                            <i class="fas fa-arrows-rotate" aria-hidden="true"></i>
-                        </button>
-                        <span class="rack-mode-badge" id="tri-mode-badge">CH-01: HIGH SPEED I2C BUS ACTIVE</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tags Misterius & Elegan -->
-            <div class="project-tags">
-                <span class="tag-pill"><i class="fas fa-microchip" aria-hidden="true"></i> ESP32 Architecture</span>
-                <span class="tag-pill"><i class="fas fa-network-wired" aria-hidden="true"></i> Multi-Bus System</span>
-                <span class="tag-pill"><i class="fas fa-code-branch" aria-hidden="true"></i> Custom Firmware</span>
-                <span class="tag-pill"><i class="fas fa-flask" aria-hidden="true"></i> Prototype in Progress</span>
-            </div>
-        </section>
-
-        <!-- 7. Support / Sponsorship Card -->
-        <section class="bento-card support-card" aria-labelledby="support-heading">
-            <div class="support-content">
-                <div class="support-icon-halo" aria-hidden="true">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <h3 id="support-heading" data-i18n="support_heading">Dukung Terus Karya Kreatif</h3>
-                <p data-i18n="support_para" class="support-para">
-                    Dukungan Anda sangat berarti untuk membiayai komponen hardware, pengembangan sistem, dan riset proyek open-source selanjutnya.
-                </p>
-                <div class="support-btn-group">
-                    <a href="https://sociabuzz.com/ah51" target="_blank" rel="noopener noreferrer" class="cta-button sociabuzz-btn" aria-label="Dukung Traktir di Sociabuzz">
-                        <span class="btn-shimmer" aria-hidden="true"></span>
-                        <i class="fas fa-coffee" aria-hidden="true"></i>
-                        <span data-i18n="support_sociabuzz">Traktir di Sociabuzz</span>
-                    </a>
-                    <a href="https://saweria.co/Absurdhumor51" target="_blank" rel="noopener noreferrer" class="cta-button saweria-btn" aria-label="Dukung Donasi via Saweria">
-                        <span class="btn-shimmer" aria-hidden="true"></span>
-                        <i class="fas fa-heart" aria-hidden="true"></i>
-                        <span data-i18n="support_saweria">Dukung via Saweria</span>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Bottom Footer -->
-    <footer class="bottom-footer">
-        <div class="footer-container">
-            <div class="badge-wrapper">
-                <img src="https://hits.sh/adaptivehorizon51.github.io.svg?style=flat-square&color=00f0ff" class="hit-badge" alt="Traffic Counter" loading="lazy">
-            </div>
-            <p class="copyright-text" data-i18n="copyright">&copy; A.H 5.1 &middot; All Rights Reserved</p>
-            <p class="sub-credit" data-i18n="sub_credit">Engineered with Cyber Bento UI &amp; Matrix Kernel</p>
+  <main id="main" class="page-shell">
+    <section class="hero section" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="hero_kicker">ESP32 · EMBEDDED · WEB</span></p>
+        <h1 id="hero-title"><span data-i18n="hero_before">Merancang ide menjadi</span> <em data-i18n="hero_accent">sesuatu yang nyata.</em></h1>
+        <p class="hero-lede" data-i18n="hero_lede">Saya membangun proyek IoT dan embedded dari firmware sampai antarmuka yang dipakai orang.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#work"><span data-i18n="hero_cta">Lihat proyek</span><span aria-hidden="true">↘</span></a>
+          <a class="text-link" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="github_profile">Profil GitHub</span><span aria-hidden="true">↗</span></a>
         </div>
-    </footer>
+        <div class="hero-meta"><span class="availability"><span></span><span data-i18n="hero_status">Sedang membangun hal baru</span></span><span class="meta-separator"></span><span data-i18n="hero_location">Berbasis di Indonesia</span></div>
+      </div>
+      <div class="hero-art" aria-label="Ilustrasi papan sirkuit digital" role="img">
+        <div class="art-grid"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="chip-card"><div class="chip-top"><span class="chip-light"></span><span>AH / 5.1</span><span class="chip-dots">•••</span></div><div class="chip-core"><span>ESP</span><b>32</b></div><div class="chip-bottom"><span>IOT</span><span>BUILD / 2026</span></div></div>
+        <span class="float-tag tag-firmware">C++ <i>firmware</i></span><span class="float-tag tag-audio">♫ <i>audio</i></span><span class="float-tag tag-web">&lt;/&gt; <i>web UI</i></span>
+        <span class="art-caption">IDEA <span>→</span> PROTOTYPE <span>→</span> BUILD</span>
+      </div>
+      <div class="hero-bottom"><span class="scroll-hint"><span class="scroll-line"></span><span data-i18n="scroll_hint">Gulir untuk menjelajah</span></span><span class="hero-index">01 / 03</span></div>
+    </section>
 
-    <!-- Toast Notification Box -->
-    <div id="toast-container" class="toast-container" role="status" aria-live="polite"></div>
+    <section class="work-section section" id="work" aria-labelledby="work-title">
+      <div class="section-heading"><div><p class="eyebrow section-eyebrow" data-i18n="work_kicker">KARYA PILIHAN</p><h2 id="work-title" data-i18n="work_title">Proyek yang sedang saya bangun.</h2></div><span class="section-count">02 <i>PROJECTS</i></span></div>
+      <div class="project-grid">
+        <article class="project-card audio-project">
+          <div class="project-visual audio-visual" aria-hidden="true"><div class="visual-topline"><span>HORIZON / AUDIO</span><span>ESP32 · A2DP</span></div><div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="visual-footer"><span>WIRELESS AUDIO RECEIVER</span><span class="visual-live"><i></i> READY TO PLAY</span></div><div class="visual-glow"></div></div>
+          <div class="project-body"><div class="project-top"><span class="project-type" data-i18n="audio_type">AUDIO · EMBEDDED</span><span class="project-number">01</span></div><h3>Horizon Audio DLMS <span>Lite</span></h3><p data-i18n="audio_desc">Penerima audio Bluetooth berbasis ESP32 dengan A2DP, equalizer 9-band, dan keluaran DAC I2S.</p><div class="project-tags"><span>ESP32</span><span>Bluetooth A2DP</span><span>PCM5102A</span><span>PlatformIO</span></div><a class="project-link" href="https://github.com/adaptivehorizon51/A.H5.1_ESP32_bluetooth_receiver" target="_blank" rel="noopener noreferrer"><span data-i18n="open_repo">Buka repositori</span><span aria-hidden="true">↗</span></a></div>
+        </article>
 
-    <!-- Main Logic Script -->
-    <script src="script.js" defer></script>
+        <article class="project-card lyrics-project">
+          <div class="project-visual lcd-visual" aria-hidden="true"><div class="lcd-window"><span>ADAPTIVE HORIZON / LCD 1602</span><div class="lcd-display"><b>♪ BetterLyrics</b><b>ESP32 · I2C 0x27</b></div><div class="lcd-status"><i></i> SYNC PREVIEW</div></div><span class="lcd-pin pin-left"></span><span class="lcd-pin pin-right"></span></div>
+          <div class="project-body"><div class="project-top"><span class="project-type" data-i18n="lyrics_type">IOT · DISPLAY</span><span class="project-number">02</span></div><h3>BetterLyrics <span>ESP32</span></h3><p data-i18n="lyrics_desc">Tampilan lirik karaoke untuk LCD 16×2 dengan dashboard Wi-Fi dan kontrol sinkronisasi.</p><div class="project-tags"><span>ESP32</span><span>LCD 16×2</span><span>Wi-Fi</span><span>Web UI</span></div><a class="project-link" href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer"><span data-i18n="open_repo">Buka repositori</span><span aria-hidden="true">↗</span></a></div>
+        </article>
+      </div>
+      <p class="project-note"><span>↗</span> <span data-i18n="project_note">Daftar proyek akan bertambah seiring eksperimen baru siap dibagikan.</span></p>
+    </section>
+
+    <section class="about-section section" id="about" aria-labelledby="about-title">
+      <div class="about-intro"><p class="eyebrow section-eyebrow" data-i18n="about_kicker">TENTANG SAYA</p><h2 id="about-title" data-i18n="about_title">Suka menghubungkan hardware dan software.</h2><p data-i18n="about_text">Fokus saya ada pada sistem embedded, perangkat ESP32, dan pengalaman digital yang mudah digunakan. Saya belajar dengan membuat, menguji, lalu menyempurnakan setiap proyek.</p><a class="text-link" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="more_work">Jelajahi kode di GitHub</span><span aria-hidden="true">↗</span></a></div>
+      <div class="about-panel"><div class="panel-label"><span data-i18n="toolkit">TOOLKIT</span><span>01 — 06</span></div><div class="tool-list"><div><span class="tool-index">01</span><b>ESP32 &amp; IoT</b><span data-i18n="tool_iot">Prototipe perangkat</span></div><div><span class="tool-index">02</span><b>C / C++</b><span data-i18n="tool_cpp">Firmware embedded</span></div><div><span class="tool-index">03</span><b>Bluetooth &amp; I2S</b><span data-i18n="tool_audio">Alur audio digital</span></div><div><span class="tool-index">04</span><b>I2C &amp; SPI</b><span data-i18n="tool_bus">Display dan sensor</span></div><div><span class="tool-index">05</span><b>HTML / CSS / JS</b><span data-i18n="tool_web">Antarmuka web</span></div><div><span class="tool-index">06</span><b>PlatformIO</b><span data-i18n="tool_build">Build dan iterasi</span></div></div></div>
+    </section>
+
+    <section class="contact-section section" id="connect" aria-labelledby="contact-title">
+      <div class="contact-copy"><p class="eyebrow section-eyebrow" data-i18n="connect_kicker">TERHUBUNG</p><h2 id="contact-title" data-i18n="connect_title">Punya ide atau ingin ngobrol?</h2><p data-i18n="connect_text">Temukan proyek, eksperimen, dan kabar terbaru lewat kanal berikut.</p><a class="button button-primary" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="say_hello">Kunjungi GitHub</span><span aria-hidden="true">↗</span></a></div>
+      <div class="social-list" aria-label="Media sosial"><a href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>@adaptivehorizon51 ↗</span></a><a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer"><span>YouTube</span><span>@A.H_5.1 ↗</span></a><a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer"><span>Instagram</span><span>@rfa_glng_p._a.h_5.1 ↗</span></a><a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer"><span>X / Twitter</span><span>@absurd_humor_51 ↗</span></a><a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@intel_uhd_graphics ↗</span></a><a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer"><span>WhatsApp</span><span data-i18n="whatsapp_channel">Saluran eksperimen ↗</span></a></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="footer-brand" href="#top">AH<span>.</span></a><span>© <span id="year"></span> Adaptive Horizon 5.1</span><span data-i18n="footer_note">Dibuat dengan rasa ingin tahu di Indonesia.</span><a href="#top" class="back-top" aria-label="Kembali ke atas">↑</a></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js" defer></script>
 </body>
 </html>
+
