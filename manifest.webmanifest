@@ -1,12 +1,12 @@
-﻿{
-  "name": "Adaptive Horizon 5.1 · Official System & Portfolio",
-  "short_name": "A.H 5.1",
-  "description": "Official Portfolio & Hub of Adaptive Horizon 5.1 - IoT & Embedded Developer, Tech Enthusiast, and Creator of BetterLyrics ESP32.",
+{
+  "name": "Adaptive Horizon 5.1 · Portfolio",
+  "short_name": "Adaptive Horizon",
+  "description": "Portfolio proyek IoT, embedded, audio, dan web dari Adaptive Horizon 5.1.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#070a10",
-  "theme_color": "#070a10",
+  "background_color": "#101713",
+  "theme_color": "#101713",
   "orientation": "any",
   "icons": [
     {
@@ -16,5 +16,6 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["technology", "developer", "portfolio", "utilities"]
+  "categories": ["technology", "developer", "portfolio"]
 }
+
