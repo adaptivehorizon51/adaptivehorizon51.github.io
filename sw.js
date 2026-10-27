@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ah51-portfolio-v4';
+const CACHE_NAME = 'ah51-portfolio-v9';
 const STATIC_ASSETS = [
   './',
   './index.html',

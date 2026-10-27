@@ -37,8 +37,8 @@
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Lewati ke konten</a>
   <header class="site-header">
-    <nav class="nav-wrap" aria-label="Navigasi utama">
-      <a class="brand" href="#top" aria-label="Adaptive Horizon beranda">
+    <nav class="nav-wrap" aria-label="Navigasi utama" data-i18n-aria-label="nav_label">
+      <a class="brand" href="#top" aria-label="Adaptive Horizon beranda" data-i18n-aria-label="brand_home">
         <span class="brand-mark"><img src="profile-picture.png" alt="" width="40" height="40"></span>
         <span class="brand-name">Adaptive Horizon <small>5.1</small></span>
       </a>
@@ -51,16 +51,17 @@
         <a href="#connect" data-i18n="nav_connect">Kontak</a>
       </div>
       <div class="nav-actions">
-        <div class="language-switch" role="group" aria-label="Pilih bahasa">
-          <button type="button" data-lang="id" aria-pressed="true">ID</button>
-          <button type="button" data-lang="en" aria-pressed="false">EN</button>
-          <button type="button" data-lang="ms" aria-pressed="false">MS</button>
-          <button type="button" data-lang="cs" aria-pressed="false">CS</button>
+        <div class="language-switch" role="group" aria-label="Pilih bahasa" data-i18n-aria-label="language_label">
+          <button type="button" data-lang="id" data-i18n-aria-label="language_indonesian" aria-pressed="true">ID</button>
+          <button type="button" data-lang="en" data-i18n-aria-label="language_english" aria-pressed="false">EN</button>
+          <button type="button" data-lang="ms" data-i18n-aria-label="language_malay" aria-pressed="false">MS</button>
+          <button type="button" data-lang="cs" data-i18n-aria-label="language_czech" aria-pressed="false">CS</button>
+          <button type="button" data-lang="ru" data-i18n-aria-label="language_russian" aria-pressed="false">RU</button>
         </div>
         <button class="icon-button" id="theme-toggle" type="button" aria-label="Ganti tema" title="Ganti tema">
           <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         </button>
-        <button class="icon-button share-button" id="share-btn" type="button" aria-label="Bagikan website" title="Bagikan website">
+        <button class="icon-button share-button" id="share-btn" type="button" aria-label="Bagikan situs web" title="Bagikan situs web" data-i18n-aria-label="share_label" data-i18n-title="share_label">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4m-6.6 7 6.6 4.4"/></svg>
         </button>
       </div>
@@ -69,7 +70,7 @@
 
   <main id="main" class="page-shell">
     <section class="hero section" id="top" aria-labelledby="hero-title">
-      <div class="hero-copy">
+      <div class="hero-copy" data-reveal="rise">
         <p class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="hero_kicker">ESP32 · EMBEDDED · WEB</span></p>
         <h1 id="hero-title"><span data-i18n="hero_before">Merancang ide menjadi</span> <em data-i18n="hero_accent">sesuatu yang nyata.</em></h1>
         <p class="hero-lede" data-i18n="hero_lede">Saya membangun proyek IoT dan embedded dari firmware sampai antarmuka yang dipakai orang.</p>
@@ -79,43 +80,43 @@
         </div>
         <div class="hero-meta"><span class="availability"><span></span><span data-i18n="hero_status">Sedang membangun hal baru</span></span><span class="meta-separator"></span><span data-i18n="hero_location">Berbasis di Indonesia</span></div>
       </div>
-      <div class="hero-art" aria-label="Ilustrasi papan sirkuit digital" role="img">
+      <div class="hero-art" aria-label="Ilustrasi papan sirkuit digital" data-i18n-aria-label="hero_art_label" role="img" data-reveal="scale">
         <div class="art-grid"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
         <div class="chip-card"><div class="chip-top"><span class="chip-light"></span><span>AH / 5.1</span><span class="chip-dots">•••</span></div><div class="chip-core"><span>ESP</span><b>32</b></div><div class="chip-bottom"><span>IOT</span><span>BUILD / 2026</span></div></div>
-        <span class="float-tag tag-firmware">C++ <i>firmware</i></span><span class="float-tag tag-audio">♫ <i>audio</i></span><span class="float-tag tag-web">&lt;/&gt; <i>web UI</i></span>
-        <span class="art-caption">IDEA <span>→</span> PROTOTYPE <span>→</span> BUILD</span>
+        <span class="float-tag tag-firmware">C++ <i data-i18n="tag_firmware">firmware</i></span><span class="float-tag tag-audio">♫ <i data-i18n="tag_audio">audio</i></span><span class="float-tag tag-web">&lt;/&gt; <i data-i18n="tag_web">web UI</i></span>
+        <span class="art-caption"><span data-i18n="flow_idea">IDEA</span> <span>→</span> <span data-i18n="flow_prototype">PROTOTYPE</span> <span>→</span> <span data-i18n="flow_build">BUILD</span></span>
       </div>
-      <div class="hero-bottom"><span class="scroll-hint"><span class="scroll-line"></span><span data-i18n="scroll_hint">Gulir untuk menjelajah</span></span><span class="hero-index">01 / 03</span></div>
+      <div class="hero-bottom" data-reveal="fade"><span class="scroll-hint"><span class="scroll-line"></span><span data-i18n="scroll_hint">Gulir untuk menjelajah</span></span><span class="hero-index">01 / 03</span></div>
     </section>
 
     <section class="work-section section" id="work" aria-labelledby="work-title">
-      <div class="section-heading"><div><p class="eyebrow section-eyebrow" data-i18n="work_kicker">KARYA PILIHAN</p><h2 id="work-title" data-i18n="work_title">Proyek yang sedang saya bangun.</h2></div><span class="section-count">02 <i>PROJECTS</i></span></div>
+      <div class="section-heading" data-reveal="rise"><div><p class="eyebrow section-eyebrow" data-i18n="work_kicker">KARYA PILIHAN</p><h2 id="work-title" data-i18n="work_title">Proyek yang sedang saya bangun.</h2></div><span class="section-count">02 <i data-i18n="project_count">PROYEK</i></span></div>
       <div class="project-grid">
-        <article class="project-card audio-project">
-          <div class="project-visual audio-visual" aria-hidden="true"><div class="visual-topline"><span>HORIZON / AUDIO</span><span>ESP32 · A2DP</span></div><div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="visual-footer"><span>WIRELESS AUDIO RECEIVER</span><span class="visual-live"><i></i> READY TO PLAY</span></div><div class="visual-glow"></div></div>
+        <article class="project-card audio-project" data-reveal="rise">
+          <div class="project-visual audio-visual" aria-hidden="true"><div class="visual-topline"><span>HORIZON / AUDIO</span><span>ESP32 · A2DP</span></div><div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="visual-footer"><span data-i18n="wireless_receiver">PENERIMA AUDIO NIRKABEL</span><span class="visual-live"><i></i> <span data-i18n="ready_to_play">SIAP DIPUTAR</span></span></div><div class="visual-glow"></div></div>
           <div class="project-body"><div class="project-top"><span class="project-type" data-i18n="audio_type">AUDIO · EMBEDDED</span><span class="project-number">01</span></div><h3>Horizon Audio DLMS <span>Lite</span></h3><p data-i18n="audio_desc">Penerima audio Bluetooth berbasis ESP32 dengan A2DP, equalizer 9-band, dan keluaran DAC I2S.</p><div class="project-tags"><span>ESP32</span><span>Bluetooth A2DP</span><span>PCM5102A</span><span>PlatformIO</span></div><a class="project-link" href="https://github.com/adaptivehorizon51/A.H5.1_ESP32_bluetooth_receiver" target="_blank" rel="noopener noreferrer"><span data-i18n="open_repo">Buka repositori</span><span aria-hidden="true">↗</span></a></div>
         </article>
 
-        <article class="project-card lyrics-project">
-          <div class="project-visual lcd-visual" aria-hidden="true"><div class="lcd-window"><span>ADAPTIVE HORIZON / LCD 1602</span><div class="lcd-display"><b>♪ BetterLyrics</b><b>ESP32 · I2C 0x27</b></div><div class="lcd-status"><i></i> SYNC PREVIEW</div></div><span class="lcd-pin pin-left"></span><span class="lcd-pin pin-right"></span></div>
-          <div class="project-body"><div class="project-top"><span class="project-type" data-i18n="lyrics_type">IOT · DISPLAY</span><span class="project-number">02</span></div><h3>BetterLyrics <span>ESP32</span></h3><p data-i18n="lyrics_desc">Tampilan lirik karaoke untuk LCD 16×2 dengan dashboard Wi-Fi dan kontrol sinkronisasi.</p><div class="project-tags"><span>ESP32</span><span>LCD 16×2</span><span>Wi-Fi</span><span>Web UI</span></div><a class="project-link" href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer"><span data-i18n="open_repo">Buka repositori</span><span aria-hidden="true">↗</span></a></div>
+        <article class="project-card lyrics-project" data-reveal="rise" data-reveal-delay="90">
+          <div class="project-visual lcd-visual" aria-hidden="true"><div class="lcd-window"><span>ADAPTIVE HORIZON / LCD 1602</span><div class="lcd-display"><b>♪ BetterLyrics</b><b>ESP32 · I2C 0x27</b></div><div class="lcd-status"><i></i> <span data-i18n="sync_preview">PRATINJAU SINKRONISASI</span></div></div><span class="lcd-pin pin-left"></span><span class="lcd-pin pin-right"></span></div>
+          <div class="project-body"><div class="project-top"><span class="project-type" data-i18n="lyrics_type">IOT · DISPLAY</span><span class="project-number">02</span></div><h3>BetterLyrics <span>ESP32</span></h3><p data-i18n="lyrics_desc">Tampilan lirik karaoke untuk LCD 16×2 dengan dashboard Wi-Fi dan kontrol sinkronisasi.</p><div class="project-tags"><span>ESP32</span><span>LCD 16×2</span><span>Wi-Fi</span><span data-i18n="tag_web">Web UI</span></div><a class="project-link" href="https://github.com/adaptivehorizon51/A.H51-esp32" target="_blank" rel="noopener noreferrer"><span data-i18n="open_repo">Buka repositori</span><span aria-hidden="true">↗</span></a></div>
         </article>
       </div>
-      <p class="project-note"><span>↗</span> <span data-i18n="project_note">Daftar proyek akan bertambah seiring eksperimen baru siap dibagikan.</span></p>
+      <p class="project-note" data-reveal="fade"><span>↗</span> <span data-i18n="project_note">Daftar proyek akan bertambah seiring eksperimen baru siap dibagikan.</span></p>
     </section>
 
     <section class="about-section section" id="about" aria-labelledby="about-title">
-      <div class="about-intro"><p class="eyebrow section-eyebrow" data-i18n="about_kicker">TENTANG SAYA</p><h2 id="about-title" data-i18n="about_title">Suka menghubungkan hardware dan software.</h2><p data-i18n="about_text">Fokus saya ada pada sistem embedded, perangkat ESP32, dan pengalaman digital yang mudah digunakan. Saya belajar dengan membuat, menguji, lalu menyempurnakan setiap proyek.</p><a class="text-link" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="more_work">Jelajahi kode di GitHub</span><span aria-hidden="true">↗</span></a></div>
-      <div class="about-panel"><div class="panel-label"><span data-i18n="toolkit">TOOLKIT</span><span>01 — 06</span></div><div class="tool-list"><div><span class="tool-index">01</span><b>ESP32 &amp; IoT</b><span data-i18n="tool_iot">Prototipe perangkat</span></div><div><span class="tool-index">02</span><b>C / C++</b><span data-i18n="tool_cpp">Firmware embedded</span></div><div><span class="tool-index">03</span><b>Bluetooth &amp; I2S</b><span data-i18n="tool_audio">Alur audio digital</span></div><div><span class="tool-index">04</span><b>I2C &amp; SPI</b><span data-i18n="tool_bus">Display dan sensor</span></div><div><span class="tool-index">05</span><b>HTML / CSS / JS</b><span data-i18n="tool_web">Antarmuka web</span></div><div><span class="tool-index">06</span><b>PlatformIO</b><span data-i18n="tool_build">Build dan iterasi</span></div></div></div>
+      <div class="about-intro" data-reveal="left"><p class="eyebrow section-eyebrow" data-i18n="about_kicker">TENTANG SAYA</p><h2 id="about-title" data-i18n="about_title">Suka menghubungkan hardware dan software.</h2><p data-i18n="about_text">Fokus saya ada pada sistem embedded, perangkat ESP32, dan pengalaman digital yang mudah digunakan. Saya belajar dengan membuat, menguji, lalu menyempurnakan setiap proyek.</p><a class="text-link" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="more_work">Jelajahi kode di GitHub</span><span aria-hidden="true">↗</span></a></div>
+      <div class="about-panel" data-reveal="right"><div class="panel-label"><span data-i18n="toolkit">TOOLKIT</span><span>01 — 06</span></div><div class="tool-list"><div><span class="tool-index">01</span><b>ESP32 &amp; IoT</b><span data-i18n="tool_iot">Prototipe perangkat</span></div><div><span class="tool-index">02</span><b>C / C++</b><span data-i18n="tool_cpp">Firmware embedded</span></div><div><span class="tool-index">03</span><b>Bluetooth &amp; I2S</b><span data-i18n="tool_audio">Alur audio digital</span></div><div><span class="tool-index">04</span><b>I2C &amp; SPI</b><span data-i18n="tool_bus">Display dan sensor</span></div><div><span class="tool-index">05</span><b>HTML / CSS / JS</b><span data-i18n="tool_web">Antarmuka web</span></div><div><span class="tool-index">06</span><b>PlatformIO</b><span data-i18n="tool_build">Build dan iterasi</span></div></div></div>
     </section>
 
     <section class="contact-section section" id="connect" aria-labelledby="contact-title">
-      <div class="contact-copy"><p class="eyebrow section-eyebrow" data-i18n="connect_kicker">TERHUBUNG</p><h2 id="contact-title" data-i18n="connect_title">Punya ide atau ingin ngobrol?</h2><p data-i18n="connect_text">Temukan proyek, eksperimen, dan kabar terbaru lewat kanal berikut.</p><a class="button button-primary" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="say_hello">Kunjungi GitHub</span><span aria-hidden="true">↗</span></a></div>
-      <div class="social-list" aria-label="Media sosial"><a href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>@adaptivehorizon51 ↗</span></a><a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer"><span>YouTube</span><span>@A.H_5.1 ↗</span></a><a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer"><span>Instagram</span><span>@rfa_glng_p._a.h_5.1 ↗</span></a><a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer"><span>X / Twitter</span><span>@absurd_humor_51 ↗</span></a><a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@intel_uhd_graphics ↗</span></a><a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer"><span>WhatsApp</span><span data-i18n="whatsapp_channel">Saluran eksperimen ↗</span></a></div>
+      <div class="contact-copy" data-reveal="left"><p class="eyebrow section-eyebrow" data-i18n="connect_kicker">TERHUBUNG</p><h2 id="contact-title" data-i18n="connect_title">Punya ide atau ingin ngobrol?</h2><p data-i18n="connect_text">Temukan proyek, eksperimen, dan kabar terbaru lewat kanal berikut.</p><a class="button button-primary" href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span data-i18n="say_hello">Kunjungi GitHub</span><span aria-hidden="true">↗</span></a></div>
+      <div class="social-list" aria-label="Media sosial" data-i18n-aria-label="social_label" data-reveal="right"><a href="https://github.com/adaptivehorizon51" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>@adaptivehorizon51 ↗</span></a><a href="https://youtube.com/@A.H_5.1" target="_blank" rel="noopener noreferrer"><span>YouTube</span><span>@A.H_5.1 ↗</span></a><a href="https://instagram.com/rfa_glng_p._a.h_5.1" target="_blank" rel="noopener noreferrer"><span>Instagram</span><span>@rfa_glng_p._a.h_5.1 ↗</span></a><a href="https://twitter.com/absurd_humor_51" target="_blank" rel="noopener noreferrer"><span>X / Twitter</span><span>@absurd_humor_51 ↗</span></a><a href="https://tiktok.com/@intel_uhd_graphics" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@intel_uhd_graphics ↗</span></a><a href="https://whatsapp.com/channel/0029Vb90C2tC6ZvbDo2fnU0g" target="_blank" rel="noopener noreferrer"><span>WhatsApp</span><span data-i18n="whatsapp_channel">Saluran eksperimen ↗</span></a></div>
     </section>
   </main>
 
-  <footer class="site-footer"><a class="footer-brand" href="#top" aria-label="Adaptive Horizon beranda"><img src="profile-picture.png" alt="" width="30" height="30"></a><span>© <span id="year"></span> Adaptive Horizon 5.1</span><span data-i18n="footer_note">Dibuat dengan rasa ingin tahu di Indonesia.</span><a href="#top" class="back-top" aria-label="Kembali ke atas">↑</a></footer>
+  <footer class="site-footer"><a class="footer-brand" href="#top" aria-label="Adaptive Horizon beranda" data-i18n-aria-label="brand_home"><img src="profile-picture.png" alt="" width="30" height="30"></a><span>© <span id="year"></span> Adaptive Horizon 5.1</span><span data-i18n="footer_note">Dibuat dengan rasa ingin tahu di Indonesia.</span><a href="#top" class="back-top" aria-label="Kembali ke atas" data-i18n-aria-label="back_top">↑</a></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="script.js" defer></script>
 </body>
